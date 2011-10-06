@@ -1,0 +1,71 @@
+name: GrubsPlugin 
+main: emk.bukkit.plugins.GrubsPlugin
+version: 0.1 
+
+commands:
+    obm:
+        description: Obisidian Build Mode 
+        usage: /obm [on|off]
+    storm:
+        description: Enable/Disable rain storms.
+        usage: /storm [on|off]
+    thunder:
+        description: Enable/Disable lightening and thunder.
+        usage: /thunder [on|off]
+    strike:
+        description: Hit a player with lightening, but do no damage.
+        usage: /strike <player>
+    zap:
+        description: Hit a player with lightening, doing damage.
+        usage: /zap <player>
+    goto:
+        description: Teleport to a location or player. 
+        usage: /goto [<player>|<preset location>|last]
+    fetch:
+        description: Teleport a player to user. 
+        usage: /fetch <player>
+    send:
+        description: Teleport a player to a user or preset. 
+        usage: /fetch <player> [<player>|<preset name>]
+    tpset:
+        description: Store the current location as a preset. 
+        usage: /tpset <preset name> 
+    tpdel:
+        description: Remove a previously stored preset.
+        usage: /tpdel <preset name>
+    tplist:
+        description: List all stored presets.
+        usage: /tplist
+    eject:
+        description: Eject from a minecart.
+        usage: /eject
+    dataval:
+        description: Get the data value of a material.
+        usage: /dataval <name>
+    dataname:
+        description: Get the data name of a material.
+        usage: /dataname <id>
+    gettime:
+        description: Get the current game time.
+        usage: /gettime
+    getcoords:
+        description: Get the current coordinates.
+        usage: /getcoords <name>
+    sendcoords:
+        description: Send the current coordinates to another player.
+        usage: /sendcoords <name>
+    kitset:
+        description: Create a new item kit preset.
+        usage: /kitset <name>
+    kitget:
+        description: Load a kit into your inventory.
+        usage: /kitget <name>
+    kitdel:
+        description: Remove a stored item kit.
+        usage: /kitdel <name>
+    kitlist:
+        description: List stored kit names.
+        usage: /kitlist
+    clearinv:
+        description: Empty your inventory.
+        usage: /clearinv
