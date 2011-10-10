@@ -1,2 +1,5 @@
 #ignore eclipse class files
 *.class
+
+#don't assume any eclipse classpath
+.classpath
