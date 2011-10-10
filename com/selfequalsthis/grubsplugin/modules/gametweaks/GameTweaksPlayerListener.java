@@ -1,12 +1,12 @@
-package com.selfequalsthis.grubsplugin.listeners;
+package com.selfequalsthis.grubsplugin.modules.gametweaks;
 
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
 
-public class GrubsPlayerListener extends PlayerListener {
-	
+public class GameTweaksPlayerListener extends PlayerListener {
+
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player p = event.getPlayer();
 		World w = p.getWorld();

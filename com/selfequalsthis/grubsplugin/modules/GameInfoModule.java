@@ -13,9 +13,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.selfequalsthis.grubsplugin.GrubsModule;
+import com.selfequalsthis.grubsplugin.IGrubsModule;
 
-public class GameInfoModule implements CommandExecutor, GrubsModule {
+public class GameInfoModule implements CommandExecutor, IGrubsModule {
 
 	private final Logger log = Logger.getLogger("Minecraft");
 	private final String logPrefix = "[GameInfoModule]: ";

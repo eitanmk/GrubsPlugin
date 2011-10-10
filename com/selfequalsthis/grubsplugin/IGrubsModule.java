@@ -1,6 +1,6 @@
 package com.selfequalsthis.grubsplugin;
 
-public interface GrubsModule {
+public interface IGrubsModule {
 	
 	public void enable();
 	public void disable();

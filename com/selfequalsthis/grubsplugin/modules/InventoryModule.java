@@ -17,9 +17,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.selfequalsthis.grubsplugin.GrubsModule;
+import com.selfequalsthis.grubsplugin.IGrubsModule;
 
-public class InventoryModule implements CommandExecutor, GrubsModule {
+public class InventoryModule implements CommandExecutor, IGrubsModule {
 
 	private final Logger log = Logger.getLogger("Minecraft");
 	private final String logPrefix = "[InventoryModule]: ";

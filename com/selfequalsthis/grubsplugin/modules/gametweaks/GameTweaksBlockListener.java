@@ -1,23 +1,22 @@
-package com.selfequalsthis.grubsplugin.listeners;
-
-import java.util.logging.Logger;
+package com.selfequalsthis.grubsplugin.modules.gametweaks;
 
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBurnEvent;
-import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Rails;
 
-//import com.selfequalsthis.grubsplugin.commands.GrubsObsidianBuildModeCommand;
-
-public class GrubsBlockListener extends BlockListener {
-	private final Logger log = Logger.getLogger("Minecraft");
+public class GameTweaksBlockListener extends BlockListener {
 	
+	private GameTweaksModule moduleRef;
+	
+	public GameTweaksBlockListener(GameTweaksModule module) {
+		moduleRef = module;
+	}
+
 	public void onBlockPlace(BlockPlaceEvent event) {
 		ItemStack item = event.getItemInHand();
 		if (item.getMaxStackSize() > 1) {
@@ -27,16 +26,14 @@ public class GrubsBlockListener extends BlockListener {
 			}
 		}
 		
-		Block placedBlock = event.getBlock();
+		/*Block placedBlock = event.getBlock();
 		if (placedBlock.getType() == Material.RAILS) {
-			//Class<? extends MaterialData> materialDataObj = placedBlock.getType().getData();
 			Rails railsObj = new Rails(placedBlock.getType(), placedBlock.getData());
 			log.info("" + railsObj.getDirection());
 			log.info("" + railsObj.isCurve());
-		}
+		}*/
 	}
 	
-
 	public void onBlockDamage(BlockDamageEvent event) {
 		Player player = event.getPlayer();
 		
@@ -53,14 +50,14 @@ public class GrubsBlockListener extends BlockListener {
 		}
 		
 		// obsidian is protected
-		/*if (event.getBlock().getType() == Material.OBSIDIAN) {
+		if (event.getBlock().getType() == Material.OBSIDIAN) {
 			// if not an op, don't let them even break it
 			if (!player.isOp()) {
 				event.setCancelled(true);
 				return;
 			}
 			else {
-				if (GrubsObsidianBuildModeCommand.obsidianBuildModeEnabled) {
+				if (this.moduleRef.isObsidianModeEnabled()) {
 					ItemStack damageItem = event.getItemInHand();
 					
 					if (damageItem.getType() == Material.GOLD_PICKAXE) {
@@ -69,9 +66,8 @@ public class GrubsBlockListener extends BlockListener {
 					}
 				}
 			}
-		}*/
+		}
 	}
-	
 	
 	// disable fires
 	public void onBlockIgnite(BlockIgniteEvent event) {
