@@ -1,35 +1,65 @@
-package com.selfequalsthis.grubsplugin.commands;
+package com.selfequalsthis.grubsplugin.modules;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.Event.Priority;
+import org.bukkit.event.weather.WeatherChangeEvent;
+import org.bukkit.event.weather.WeatherListener;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 
-import com.selfequalsthis.grubsplugin.GrubsCommandHandler;
+import com.selfequalsthis.grubsplugin.GrubsModule;
 
-public class GrubsWeatherCommand implements GrubsCommandHandler {
+public class WeatherControlModule extends WeatherListener implements GrubsModule, CommandExecutor {
 
-	private static GrubsWeatherCommand instance = null;
-	private GrubsWeatherCommand() { }
-	public static GrubsCommandHandler getInstance() {
-		if (instance == null) {
-			instance = new GrubsWeatherCommand();
-		}
-		
-		return instance;
+	private final Logger log = Logger.getLogger("Minecraft");
+	private final String logPrefix = "[WeatherControlModule]: ";
+	private JavaPlugin pluginRef;
+	
+	public WeatherControlModule(JavaPlugin plugin) {
+		this.pluginRef = plugin;
 	}
 	
 	@Override
-	public boolean processCommand(Server server, Player executingPlayer, String cmdName, String[] args) {
+	public void enable() {
+		log.info(logPrefix + "Initializing event listeners.");
+		PluginManager pm = this.pluginRef.getServer().getPluginManager();
+		pm.registerEvent(Event.Type.WEATHER_CHANGE, this, Priority.Monitor, this.pluginRef);
+		
+		log.info(logPrefix + "Initializing command handlers.");
+		this.pluginRef.getCommand("strike").setExecutor(this);
+		this.pluginRef.getCommand("zap").setExecutor(this);
+		this.pluginRef.getCommand("storm").setExecutor(this);
+		this.pluginRef.getCommand("thunder").setExecutor(this);
+	}
+
+	@Override
+	public void disable() {	}
+	
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		
+		String cmdName = command.getName();
+		Player executingPlayer = (Player) sender;
+		
+		if (!executingPlayer.isOp()) {
+			return false;
+		}
 		
 		if (cmdName.equalsIgnoreCase("strike") || cmdName.equalsIgnoreCase("zap")) {
 			if (args.length > 0) {
 				// there is a player as an arg
 				// find the player's object
-				List<Player> matches = server.matchPlayer(args[0]);
+				List<Player> matches = this.pluginRef.getServer().matchPlayer(args[0]);
 				if (matches.size() > 0) {
 					if (matches.size() > 1) {
 						String matchStr = "";
@@ -100,4 +130,19 @@ public class GrubsWeatherCommand implements GrubsCommandHandler {
 		return false;
 	}
 
+	public void onWeatherChange(WeatherChangeEvent event) {
+		World world = event.getWorld();
+		
+		if (event.toWeatherState()) {
+			for (Player p : world.getPlayers()) {
+				p.sendMessage(ChatColor.GREEN + "[Weather] Rain is starting.");
+			}
+		}
+		else {
+			for (Player p : world.getPlayers()) {
+				p.sendMessage(ChatColor.GREEN + "[Weather] Rain is stopping.");
+			}
+		}
+	}
+	
 }
