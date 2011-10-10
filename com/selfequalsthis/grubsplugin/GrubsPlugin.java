@@ -9,27 +9,24 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.selfequalsthis.grubsplugin.commands.GrubsEjectCommand;
-import com.selfequalsthis.grubsplugin.commands.GrubsInfoCommand;
-import com.selfequalsthis.grubsplugin.commands.GrubsItemCommand;
 import com.selfequalsthis.grubsplugin.commands.GrubsLaserTagCommand;
-import com.selfequalsthis.grubsplugin.commands.GrubsObsidianBuildModeCommand;
+import com.selfequalsthis.grubsplugin.modules.GameFixesModule;
+import com.selfequalsthis.grubsplugin.modules.GameInfoModule;
+import com.selfequalsthis.grubsplugin.modules.GameTweaksModule;
+import com.selfequalsthis.grubsplugin.modules.InventoryModule;
 import com.selfequalsthis.grubsplugin.modules.TeleportModule;
 import com.selfequalsthis.grubsplugin.modules.WeatherControlModule;
 
 public class GrubsPlugin extends JavaPlugin implements CommandExecutor {
+	
 	private final Logger log = Logger.getLogger("Minecraft");
 	private ArrayList<GrubsModule> modules = new ArrayList<GrubsModule>();
-	/*
-	private final GrubsBlockListener blockListener = new GrubsBlockListener();
-	private final GrubsEntityListener entityListener = new GrubsEntityListener();
-	private final GrubsPlayerListener playerListener = new GrubsPlayerListener();
-	private final GrubsWeatherListener weatherListener = new GrubsWeatherListener();
-	*/
 
 	@Override
-	public void onDisable() {
-		GrubsItemCommand.disable();
+	public void onDisable() {		
+		for (GrubsModule gm : modules) {
+			gm.disable();
+		}
 		
 		log.info("GrubsPlugin is now disabled.");
 	}
@@ -40,11 +37,11 @@ public class GrubsPlugin extends JavaPlugin implements CommandExecutor {
 		
 		modules.add(new WeatherControlModule(this));
 		modules.add(new TeleportModule(this));
-		/*
-		modules.add(new KitModule(this));
+		modules.add(new InventoryModule(this));
 		modules.add(new GameInfoModule(this));
 		modules.add(new GameFixesModule(this));
 		modules.add(new GameTweaksModule(this));
+		/*
 		lasertag
 		*/
 		
@@ -60,8 +57,6 @@ public class GrubsPlugin extends JavaPlugin implements CommandExecutor {
 		pm.registerEvent(Event.Type.BLOCK_PLACE, blockListener, Priority.Normal, this);
 		pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Monitor, this);		
-		
-		GrubsItemCommand.enable(getServer());
 		*/
 		
 		// done!
@@ -80,22 +75,6 @@ public class GrubsPlugin extends JavaPlugin implements CommandExecutor {
 		Server server = getServer();
 		GrubsCommandHandler handler = null;
 		
-		if (cmdName.equalsIgnoreCase("obm")) {
-			handler = GrubsObsidianBuildModeCommand.getInstance();
-		}
-		if (cmdName.equalsIgnoreCase("eject")) {
-			handler = GrubsEjectCommand.getInstance();
-		}
-		if (cmdName.equalsIgnoreCase("dataval") || cmdName.equalsIgnoreCase("dataname") ||
-			cmdName.equalsIgnoreCase("gettime") ||
-			cmdName.equalsIgnoreCase("getcoords") || cmdName.equalsIgnoreCase("sendcoords")) {
-			handler = GrubsInfoCommand.getInstance();
-		}
-		if (cmdName.equalsIgnoreCase("kitset") || cmdName.equalsIgnoreCase("kitget") ||
-			cmdName.equalsIgnoreCase("kitdel") || cmdName.equalsIgnoreCase("kitlist") ||
-			cmdName.equalsIgnoreCase("clearinv")) {
-			handler = GrubsItemCommand.getInstance();
-		}
 		if (cmdName.equalsIgnoreCase("lasertag")) {
 			handler = GrubsLaserTagCommand.getInstance();
 		}

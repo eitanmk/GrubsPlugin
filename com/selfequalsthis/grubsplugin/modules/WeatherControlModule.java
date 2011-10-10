@@ -19,7 +19,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.selfequalsthis.grubsplugin.GrubsModule;
 
-public class WeatherControlModule extends WeatherListener implements GrubsModule, CommandExecutor {
+public class WeatherControlModule extends WeatherListener implements CommandExecutor, GrubsModule {
 
 	private final Logger log = Logger.getLogger("Minecraft");
 	private final String logPrefix = "[WeatherControlModule]: ";

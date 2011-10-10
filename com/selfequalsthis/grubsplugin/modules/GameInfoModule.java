@@ -1,53 +1,53 @@
-package com.selfequalsthis.grubsplugin.commands;
+package com.selfequalsthis.grubsplugin.modules;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Server;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
-import com.selfequalsthis.grubsplugin.GrubsCommandHandler;
+import com.selfequalsthis.grubsplugin.GrubsModule;
 
-public class GrubsInfoCommand implements GrubsCommandHandler {
+public class GameInfoModule implements CommandExecutor, GrubsModule {
 
-	private static GrubsInfoCommand instance = null;
-	private GrubsInfoCommand() { }
-	public static GrubsCommandHandler getInstance() {
-		if (instance == null) {
-			instance = new GrubsInfoCommand();
-		}
-
-		return instance;
+	private final Logger log = Logger.getLogger("Minecraft");
+	private final String logPrefix = "[GameInfoModule]: ";
+	private JavaPlugin pluginRef;
+	
+	public GameInfoModule(JavaPlugin plugin) {
+		this.pluginRef = plugin;
 	}
 	
-	private HashMap<String,Integer> matchMaterialName(String name) {
-		HashMap<String,Integer> results = new HashMap<String,Integer>();
-		
-		Material[] materialNames = Material.values();
-		for (Material m : materialNames) {
-			if (m.toString().indexOf(name.toUpperCase()) != -1) {
-				results.put(m.toString().toLowerCase(), m.getId());
-			}
-		}
-		
-		return results;
-	}
-	
-	private String matchMaterialId(int id) {
-		Material material = Material.getMaterial(id);
-		return material.toString().toLowerCase();
-	}
-	
-	private String getCoordsStrFromLocation(Location loc) {
-		return "x: " + (int)loc.getX() + ", z: " + (int)loc.getZ() + " Altitude: " + (int)(loc.getY() + 1);
+	@Override
+	public void enable() {
+		log.info(logPrefix + "Initializing command handlers.");
+		this.pluginRef.getCommand("dataval").setExecutor(this);
+		this.pluginRef.getCommand("dataname").setExecutor(this);
+		this.pluginRef.getCommand("gettime").setExecutor(this);
+		this.pluginRef.getCommand("getcoords").setExecutor(this);
+		this.pluginRef.getCommand("sendcoords").setExecutor(this);
 	}
 
 	@Override
-	public boolean processCommand(Server server, Player executingPlayer, String cmdName, String[] args) {
+	public void disable() {	}
 
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		
+		String cmdName = command.getName();
+		Player executingPlayer = (Player) sender;
+		
+		if (!executingPlayer.isOp()) {
+			return false;
+		}
+		
 		if (cmdName.equalsIgnoreCase("dataval")) {
 			if (args.length > 0) {
 				// lookup the text typed
@@ -100,7 +100,7 @@ public class GrubsInfoCommand implements GrubsCommandHandler {
 			if (args.length > 0) {
 				String argName = args[0];
 				// match players
-				List<Player> matches = server.matchPlayer(argName);
+				List<Player> matches = this.pluginRef.getServer().matchPlayer(argName);
 				if (matches.size() > 0) {
 					if (matches.size() > 1) {
 						String matchStr = "";
@@ -140,7 +140,7 @@ public class GrubsInfoCommand implements GrubsCommandHandler {
 			if (args.length > 0) {
 				String argName = args[0];
 				// match players
-				List<Player> matches = server.matchPlayer(argName);
+				List<Player> matches = this.pluginRef.getServer().matchPlayer(argName);
 				if (matches.size() > 0) {
 					if (matches.size() > 1) {
 						String matchStr = "";
@@ -174,6 +174,28 @@ public class GrubsInfoCommand implements GrubsCommandHandler {
 		}
 
 		return false;
+	}
+	
+	private HashMap<String,Integer> matchMaterialName(String name) {
+		HashMap<String,Integer> results = new HashMap<String,Integer>();
+		
+		Material[] materialNames = Material.values();
+		for (Material m : materialNames) {
+			if (m.toString().indexOf(name.toUpperCase()) != -1) {
+				results.put(m.toString().toLowerCase(), m.getId());
+			}
+		}
+		
+		return results;
+	}
+	
+	private String matchMaterialId(int id) {
+		Material material = Material.getMaterial(id);
+		return material.toString().toLowerCase();
+	}
+	
+	private String getCoordsStrFromLocation(Location loc) {
+		return "x: " + (int)loc.getX() + ", z: " + (int)loc.getZ() + " Altitude: " + (int)(loc.getY() + 1);
 	}
 
 }
