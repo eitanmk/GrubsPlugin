@@ -8,7 +8,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
-import com.selfequalsthis.grubsplugin.GrubsLaserTag;
+import com.selfequalsthis.grubsplugin.modules.lasertag.GrubsLaserTag;
 
 public class GrubsEntityListener extends EntityListener {
 

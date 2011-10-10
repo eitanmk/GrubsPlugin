@@ -1,31 +1,51 @@
-package com.selfequalsthis.grubsplugin.commands;
+package com.selfequalsthis.grubsplugin.modules.lasertag;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Server;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityListener;
+import org.bukkit.plugin.java.JavaPlugin;
 
-import com.selfequalsthis.grubsplugin.GrubsCommandHandler;
-import com.selfequalsthis.grubsplugin.GrubsLaserTag;
+import com.selfequalsthis.grubsplugin.GrubsModule;
 
-public class GrubsLaserTagCommand extends EntityListener implements GrubsCommandHandler {
+public class LaserTagModule implements CommandExecutor, GrubsModule {
 
-	private static GrubsLaserTagCommand instance = null;
-	private GrubsLaserTagCommand() { }
-	public static GrubsCommandHandler getInstance() {
-		if (instance == null) {
-			instance = new GrubsLaserTagCommand();
-		}
-
-		return instance;
+	private final Logger log = Logger.getLogger("Minecraft");
+	private final String logPrefix = "[LaserTagModule]: ";
+	private JavaPlugin pluginRef;
+	
+	public LaserTagModule(JavaPlugin plugin) {
+		this.pluginRef = plugin;
 	}
 	
 	@Override
-	public boolean processCommand(Server server, Player executingPlayer, String cmdName, String[] args) {
+	public void enable() {
+		log.info(logPrefix + "Initializing command handlers.");
+		this.pluginRef.getCommand("lasertag").setExecutor(this);
+	}
 
+	@Override
+	public void disable() {	}
+
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		
+		String cmdName = command.getName();
+		Player executingPlayer = (Player) sender;
+		
+		if (!executingPlayer.isOp()) {
+			return false;
+		}
+		
+		if (!cmdName.equalsIgnoreCase("lasertag")) {
+			return false;
+		}
+		
 		if (args.length == 0) {
 			executingPlayer.sendMessage(ChatColor.RED + "Not enough arguments.");
 			return true;
@@ -56,7 +76,7 @@ public class GrubsLaserTagCommand extends EntityListener implements GrubsCommand
 				ArrayList<Player> playersToAdd = new ArrayList<Player>(10);
 								
 				for (int i = 1, len = args.length; i < len; ++i) {
-					List<Player> matches = server.matchPlayer(args[i]);
+					List<Player> matches = this.pluginRef.getServer().matchPlayer(args[i]);
 					
 					if (matches.size() == 0) {
 						executingPlayer.sendMessage(ChatColor.RED + "No players matching '" + args[i] + "'.");

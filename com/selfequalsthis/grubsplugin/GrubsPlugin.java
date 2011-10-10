@@ -2,22 +2,17 @@ package com.selfequalsthis.grubsplugin;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
-import org.bukkit.Server;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.selfequalsthis.grubsplugin.commands.GrubsLaserTagCommand;
 import com.selfequalsthis.grubsplugin.modules.GameFixesModule;
 import com.selfequalsthis.grubsplugin.modules.GameInfoModule;
 import com.selfequalsthis.grubsplugin.modules.GameTweaksModule;
 import com.selfequalsthis.grubsplugin.modules.InventoryModule;
 import com.selfequalsthis.grubsplugin.modules.TeleportModule;
 import com.selfequalsthis.grubsplugin.modules.WeatherControlModule;
+import com.selfequalsthis.grubsplugin.modules.lasertag.LaserTagModule;
 
-public class GrubsPlugin extends JavaPlugin implements CommandExecutor {
+public class GrubsPlugin extends JavaPlugin {
 	
 	private final Logger log = Logger.getLogger("Minecraft");
 	private ArrayList<GrubsModule> modules = new ArrayList<GrubsModule>();
@@ -41,9 +36,7 @@ public class GrubsPlugin extends JavaPlugin implements CommandExecutor {
 		modules.add(new GameInfoModule(this));
 		modules.add(new GameFixesModule(this));
 		modules.add(new GameTweaksModule(this));
-		/*
-		lasertag
-		*/
+		modules.add(new LaserTagModule(this));
 		
 		for (GrubsModule gm : modules) {
 			gm.enable();
@@ -61,30 +54,6 @@ public class GrubsPlugin extends JavaPlugin implements CommandExecutor {
 		
 		// done!
 		log.info("GrubsPlugin is enabled.");
-	}
-	
-	@Override
-	public boolean onCommand(CommandSender sender, Command name, String label, String[] args) {
-		String cmdName = name.getName();
-		Player executingPlayer = (Player) sender;
-		
-		if (!executingPlayer.isOp()) {
-			return true;
-		}
-		
-		Server server = getServer();
-		GrubsCommandHandler handler = null;
-		
-		if (cmdName.equalsIgnoreCase("lasertag")) {
-			handler = GrubsLaserTagCommand.getInstance();
-		}
-		
-		if (handler != null) {
-			return handler.processCommand(server, executingPlayer, cmdName, args);
-		}
-		else {
-			return false;
-		}
 	}
 
 }

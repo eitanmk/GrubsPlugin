@@ -13,7 +13,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Rails;
 
-import com.selfequalsthis.grubsplugin.commands.GrubsObsidianBuildModeCommand;
+//import com.selfequalsthis.grubsplugin.commands.GrubsObsidianBuildModeCommand;
 
 public class GrubsBlockListener extends BlockListener {
 	private final Logger log = Logger.getLogger("Minecraft");
@@ -53,7 +53,7 @@ public class GrubsBlockListener extends BlockListener {
 		}
 		
 		// obsidian is protected
-		if (event.getBlock().getType() == Material.OBSIDIAN) {
+		/*if (event.getBlock().getType() == Material.OBSIDIAN) {
 			// if not an op, don't let them even break it
 			if (!player.isOp()) {
 				event.setCancelled(true);
@@ -69,7 +69,7 @@ public class GrubsBlockListener extends BlockListener {
 					}
 				}
 			}
-		}
+		}*/
 	}
 	
 	

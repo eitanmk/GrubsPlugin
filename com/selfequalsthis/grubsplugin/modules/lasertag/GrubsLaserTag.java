@@ -1,4 +1,4 @@
-package com.selfequalsthis.grubsplugin;
+package com.selfequalsthis.grubsplugin.modules.lasertag;
 
 import java.util.ArrayList;
 import java.util.HashMap;
