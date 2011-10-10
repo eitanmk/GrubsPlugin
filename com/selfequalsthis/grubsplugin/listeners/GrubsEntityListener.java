@@ -1,10 +1,14 @@
 package com.selfequalsthis.grubsplugin.listeners;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+
+import com.selfequalsthis.grubsplugin.GrubsLaserTag;
 
 public class GrubsEntityListener extends EntityListener {
 
@@ -25,6 +29,22 @@ public class GrubsEntityListener extends EntityListener {
 			
 			if (event.getCause() == DamageCause.SUFFOCATION) {
 				event.setCancelled(true);
+			}
+			
+			
+			if (event.getCause() == DamageCause.PROJECTILE &&
+				GrubsLaserTag.getGameState() == GrubsLaserTag.GAME_STATES.IN_PROGRESS &&
+				GrubsLaserTag.isPlaying(source)) {
+				
+				EntityDamageByEntityEvent newEvent = (EntityDamageByEntityEvent)event;
+				Arrow projectile = (Arrow)newEvent.getDamager();
+				Player shooter = (Player)projectile.getShooter();
+				// can't shoot yourself
+				if (shooter.getDisplayName() != source.getDisplayName()) {
+					if (GrubsLaserTag.isPlaying(shooter)) {
+						GrubsLaserTag.updateScore(shooter, source);
+					}
+				}
 			}
 		}
 	}

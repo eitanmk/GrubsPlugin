@@ -14,6 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.selfequalsthis.grubsplugin.commands.GrubsEjectCommand;
 import com.selfequalsthis.grubsplugin.commands.GrubsInfoCommand;
 import com.selfequalsthis.grubsplugin.commands.GrubsItemCommand;
+import com.selfequalsthis.grubsplugin.commands.GrubsLaserTagCommand;
 import com.selfequalsthis.grubsplugin.commands.GrubsObsidianBuildModeCommand;
 import com.selfequalsthis.grubsplugin.commands.GrubsTeleportCommand;
 import com.selfequalsthis.grubsplugin.commands.GrubsWeatherCommand;
@@ -93,6 +94,9 @@ public class GrubsPlugin extends JavaPlugin implements CommandExecutor {
 			cmdName.equalsIgnoreCase("kitdel") || cmdName.equalsIgnoreCase("kitlist") ||
 			cmdName.equalsIgnoreCase("clearinv")) {
 			handler = GrubsItemCommand.getInstance();
+		}
+		if (cmdName.equalsIgnoreCase("lasertag")) {
+			handler = GrubsLaserTagCommand.getInstance();
 		}
 		
 		if (handler != null) {

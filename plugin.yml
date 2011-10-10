@@ -69,3 +69,6 @@ commands:
     clearinv:
         description: Empty your inventory.
         usage: /clearinv
+    lasertag:
+        description: Handle creating new laser tag games.
+        usage: /lasertag <create|players|time|elimination|start>
