@@ -2,41 +2,31 @@ package com.selfequalsthis.grubsplugin.modules;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Logger;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
 
-import com.selfequalsthis.grubsplugin.IGrubsModule;
+public class GameInfoModule extends AbstractGrubsModule {
 
-public class GameInfoModule implements CommandExecutor, IGrubsModule {
-
-	private final Logger log = Logger.getLogger("Minecraft");
-	private final String logPrefix = "[GameInfoModule]: ";
-	private JavaPlugin pluginRef;
-	
-	public GameInfoModule(JavaPlugin plugin) {
-		this.pluginRef = plugin;
+	public GameInfoModule() {
+		this.logPrefix = "[GameInfoModule]: ";
+		
+		this.commandNames.add("dataval");
+		this.commandNames.add("dataname");
+		this.commandNames.add("gettime");
+		this.commandNames.add("getcoords");
+		this.commandNames.add("sendcoords");
 	}
 	
 	@Override
-	public void enable() {
-		log.info(logPrefix + "Initializing command handlers.");
-		this.pluginRef.getCommand("dataval").setExecutor(this);
-		this.pluginRef.getCommand("dataname").setExecutor(this);
-		this.pluginRef.getCommand("gettime").setExecutor(this);
-		this.pluginRef.getCommand("getcoords").setExecutor(this);
-		this.pluginRef.getCommand("sendcoords").setExecutor(this);
+	public void enable(JavaPlugin plugin) {
+		super.enable(plugin);
 	}
-
-	@Override
-	public void disable() {	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

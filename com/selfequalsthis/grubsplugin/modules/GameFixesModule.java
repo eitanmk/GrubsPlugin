@@ -1,34 +1,24 @@
 package com.selfequalsthis.grubsplugin.modules;
 
-import java.util.logging.Logger;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
 
-import com.selfequalsthis.grubsplugin.IGrubsModule;
-
-public class GameFixesModule implements CommandExecutor, IGrubsModule {
-
-	private final Logger log = Logger.getLogger("Minecraft");
-	private final String logPrefix = "[GameFixesModule]: ";
-	private JavaPlugin pluginRef;
+public class GameFixesModule extends AbstractGrubsModule {
 	
-	public GameFixesModule(JavaPlugin plugin) {
-		this.pluginRef = plugin;
+	public GameFixesModule() {
+		this.logPrefix = "[GameFixesModule]: ";
+		
+		this.commandNames.add("eject");
 	}
 	
 	@Override
-	public void enable() {
-		log.info(logPrefix + "Initializing command handlers.");
-		this.pluginRef.getCommand("eject").setExecutor(this);
+	public void enable(JavaPlugin plugin) {
+		super.enable(plugin);
 	}
-
-	@Override
-	public void disable() {	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

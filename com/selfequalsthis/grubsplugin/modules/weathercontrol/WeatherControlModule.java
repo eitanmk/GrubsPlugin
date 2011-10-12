@@ -1,13 +1,10 @@
 package com.selfequalsthis.grubsplugin.modules.weathercontrol;
 
 import java.util.List;
-import java.util.logging.Logger;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -15,36 +12,32 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.selfequalsthis.grubsplugin.IGrubsModule;
+import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
 
-public class WeatherControlModule implements CommandExecutor, IGrubsModule {
-
-	private final Logger log = Logger.getLogger("Minecraft");
-	private final String logPrefix = "[WeatherControlModule]: ";
-	private JavaPlugin pluginRef;
+public class WeatherControlModule extends AbstractGrubsModule {
 	
 	private WeatherControlWeatherListener weatherListener;
 	
-	public WeatherControlModule(JavaPlugin plugin) {
-		this.pluginRef = plugin;
+	public WeatherControlModule() {
+		this.logPrefix = "[WeatherControlModule]: ";
+		
+		this.commandNames.add("strike");
+		this.commandNames.add("zap");
+		this.commandNames.add("storm");
+		this.commandNames.add("thunder");	
+		
 		this.weatherListener = new WeatherControlWeatherListener();
 	}
 	
 	@Override
-	public void enable() {
-		log.info(logPrefix + "Initializing event listeners.");
+	public void enable(JavaPlugin plugin) {
+		super.enable(plugin);
+		
+		this.log.info(logPrefix + "Initializing event listeners.");
 		PluginManager pm = this.pluginRef.getServer().getPluginManager();
 		pm.registerEvent(Event.Type.WEATHER_CHANGE, this.weatherListener, Priority.Monitor, this.pluginRef);
-		
-		log.info(logPrefix + "Initializing command handlers.");
-		this.pluginRef.getCommand("strike").setExecutor(this);
-		this.pluginRef.getCommand("zap").setExecutor(this);
-		this.pluginRef.getCommand("storm").setExecutor(this);
-		this.pluginRef.getCommand("thunder").setExecutor(this);
-	}
 
-	@Override
-	public void disable() {	}
+	}
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

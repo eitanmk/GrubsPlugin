@@ -2,45 +2,36 @@ package com.selfequalsthis.grubsplugin.modules.lasertag;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
 
-import com.selfequalsthis.grubsplugin.IGrubsModule;
-
-public class LaserTagModule implements CommandExecutor, IGrubsModule {
-
-	private final Logger log = Logger.getLogger("Minecraft");
-	private final String logPrefix = "[LaserTagModule]: ";
-	private JavaPlugin pluginRef;
+public class LaserTagModule extends AbstractGrubsModule {
 	
 	private LaserTagEntityListener entityListener;
 	
-	public LaserTagModule(JavaPlugin plugin) {
-		this.pluginRef = plugin;
+	public LaserTagModule() {
+		this.logPrefix = "[WeatherControlModule]: ";
+		
+		this.commandNames.add("lasertag");
+		
 		this.entityListener = new LaserTagEntityListener();
 	}
 	
 	@Override
-	public void enable() {
-		log.info(logPrefix + "Initializing event listeners.");
+	public void enable(JavaPlugin plugin) {
+		super.enable(plugin);
+		
+		this.log.info(logPrefix + "Initializing event listeners.");
 		PluginManager pm = this.pluginRef.getServer().getPluginManager();
 		pm.registerEvent(Event.Type.ENTITY_DAMAGE, this.entityListener, Priority.Monitor, this.pluginRef);
-
-		log.info(logPrefix + "Initializing command handlers.");
-		this.pluginRef.getCommand("lasertag").setExecutor(this);
 	}
-
-	@Override
-	public void disable() {	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
