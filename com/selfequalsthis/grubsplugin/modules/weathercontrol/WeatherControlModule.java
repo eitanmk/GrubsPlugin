@@ -1,4 +1,4 @@
-package com.selfequalsthis.grubsplugin.modules;
+package com.selfequalsthis.grubsplugin.modules.weathercontrol;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -12,28 +12,29 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
-import org.bukkit.event.weather.WeatherChangeEvent;
-import org.bukkit.event.weather.WeatherListener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.selfequalsthis.grubsplugin.IGrubsModule;
 
-public class WeatherControlModule extends WeatherListener implements CommandExecutor, IGrubsModule {
+public class WeatherControlModule implements CommandExecutor, IGrubsModule {
 
 	private final Logger log = Logger.getLogger("Minecraft");
 	private final String logPrefix = "[WeatherControlModule]: ";
 	private JavaPlugin pluginRef;
 	
+	private WeatherControlWeatherListener weatherListener;
+	
 	public WeatherControlModule(JavaPlugin plugin) {
 		this.pluginRef = plugin;
+		this.weatherListener = new WeatherControlWeatherListener();
 	}
 	
 	@Override
 	public void enable() {
 		log.info(logPrefix + "Initializing event listeners.");
 		PluginManager pm = this.pluginRef.getServer().getPluginManager();
-		pm.registerEvent(Event.Type.WEATHER_CHANGE, this, Priority.Monitor, this.pluginRef);
+		pm.registerEvent(Event.Type.WEATHER_CHANGE, this.weatherListener, Priority.Monitor, this.pluginRef);
 		
 		log.info(logPrefix + "Initializing command handlers.");
 		this.pluginRef.getCommand("strike").setExecutor(this);
@@ -128,21 +129,6 @@ public class WeatherControlModule extends WeatherListener implements CommandExec
 		}
 		
 		return false;
-	}
-
-	public void onWeatherChange(WeatherChangeEvent event) {
-		World world = event.getWorld();
-		
-		if (event.toWeatherState()) {
-			for (Player p : world.getPlayers()) {
-				p.sendMessage(ChatColor.GREEN + "[Weather] Rain is starting.");
-			}
-		}
-		else {
-			for (Player p : world.getPlayers()) {
-				p.sendMessage(ChatColor.GREEN + "[Weather] Rain is stopping.");
-			}
-		}
 	}
 	
 }
