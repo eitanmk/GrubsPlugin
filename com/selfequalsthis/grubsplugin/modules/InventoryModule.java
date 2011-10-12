@@ -27,10 +27,10 @@ public class InventoryModule extends AbstractGrubsModule {
 		this.logPrefix = "[InventoryModule]: ";
 		
 		this.commandNames.add("kitget");
-		this.commandNames.add("kitget");
-		this.commandNames.add("kitget");
-		this.commandNames.add("kitget");
-		this.commandNames.add("kitget");
+		this.commandNames.add("kitset");
+		this.commandNames.add("kitlist");
+		this.commandNames.add("kitdel");
+		this.commandNames.add("clearinv");
 	}
 	
 	@Override

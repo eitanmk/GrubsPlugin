@@ -14,7 +14,7 @@ public abstract class AbstractGrubsModule implements CommandExecutor {
 	
 	protected JavaPlugin pluginRef = null;
 	protected String logPrefix = "";
-	protected ArrayList<String> commandNames = null;
+	protected ArrayList<String> commandNames = new ArrayList<String>();
 	
 	public void enable(JavaPlugin plugin) {
 		this.pluginRef = plugin;
@@ -30,9 +30,6 @@ public abstract class AbstractGrubsModule implements CommandExecutor {
 	
 	
 	protected void setupCommandExecutors() {
-		if (this.commandNames == null) {
-			return;
-		}
 		
 		if (this.commandNames.size() == 0) {
 			return;
