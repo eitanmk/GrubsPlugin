@@ -3,3 +3,6 @@
 
 #don't assume any eclipse classpath
 .classpath
+
+#ignore the eclipse project
+.project
