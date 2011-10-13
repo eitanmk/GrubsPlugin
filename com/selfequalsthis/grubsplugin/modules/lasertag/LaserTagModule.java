@@ -8,7 +8,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
 
@@ -16,21 +15,16 @@ public class LaserTagModule extends AbstractGrubsModule {
 	
 	private LaserTagEntityListener entityListener;
 	
-	public LaserTagModule() {
-		this.logPrefix = "[WeatherControlModule]: ";
-		
-		this.commandNames.add("lasertag");
-		
+	public LaserTagModule(JavaPlugin plugin) {
+		this.pluginRef = plugin;
+		this.logPrefix = "[LaserTagModule]: ";
 		this.entityListener = new LaserTagEntityListener();
 	}
 	
 	@Override
-	public void enable(JavaPlugin plugin) {
-		super.enable(plugin);
-		
-		this.log.info(logPrefix + "Initializing event listeners.");
-		PluginManager pm = this.pluginRef.getServer().getPluginManager();
-		pm.registerEvent(Event.Type.ENTITY_DAMAGE, this.entityListener, Priority.Monitor, this.pluginRef);
+	public void enable() {
+		this.registerCommand("lasertag");
+		this.registerEvent(Event.Type.ENTITY_DAMAGE, this.entityListener, Priority.Monitor);
 	}
 
 	@Override

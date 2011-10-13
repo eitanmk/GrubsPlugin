@@ -23,20 +23,19 @@ public class TeleportModule extends AbstractGrubsModule {
 	private File TeleportPresetFile = new File(teleportMainDirectory + File.separator + "presets.dat"); 
 	private Properties teleportProperties = new Properties();
 	
-	public TeleportModule() {
+	public TeleportModule(JavaPlugin plugin) {
+		this.pluginRef = plugin;
 		this.logPrefix = "[TeleportModule]: ";
-		
-		this.commandNames.add("goto");
-		this.commandNames.add("fetch");
-		this.commandNames.add("send");
-		this.commandNames.add("tpset");
-		this.commandNames.add("tpdel");
-		this.commandNames.add("tplist");
 	}
 	
 	@Override
-	public void enable(JavaPlugin plugin) {
-		super.enable(plugin);
+	public void enable() {		
+		this.registerCommand("goto");
+		this.registerCommand("fetch");
+		this.registerCommand("send");
+		this.registerCommand("tpset");
+		this.registerCommand("tpdel");
+		this.registerCommand("tplist");
 		
 		File mainDir = new File(teleportMainDirectory);
 		if (!mainDir.exists()) {

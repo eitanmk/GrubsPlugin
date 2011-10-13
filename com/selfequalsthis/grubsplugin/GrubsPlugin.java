@@ -30,16 +30,16 @@ public class GrubsPlugin extends JavaPlugin {
 	public void onEnable() {
 		log.info("[GrubsPlugin]: Initializing modules.");
 		
-		modules.add(new WeatherControlModule());
-		modules.add(new TeleportModule());
-		modules.add(new InventoryModule());
-		modules.add(new GameInfoModule());
-		modules.add(new GameFixesModule());
-		modules.add(new GameTweaksModule());
-		modules.add(new LaserTagModule());
+		modules.add(new WeatherControlModule(this));
+		modules.add(new TeleportModule(this));
+		modules.add(new InventoryModule(this));
+		modules.add(new GameInfoModule(this));
+		modules.add(new GameFixesModule(this));
+		modules.add(new GameTweaksModule(this));
+		modules.add(new LaserTagModule(this));
 		
 		for (AbstractGrubsModule gm : modules) {
-			gm.enable(this);
+			gm.enable();
 		}
 		
 		log.info("GrubsPlugin is enabled.");

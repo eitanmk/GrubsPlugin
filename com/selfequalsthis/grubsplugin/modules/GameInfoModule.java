@@ -13,19 +13,18 @@ import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
 
 public class GameInfoModule extends AbstractGrubsModule {
 
-	public GameInfoModule() {
+	public GameInfoModule(JavaPlugin plugin) {
+		this.pluginRef = plugin;
 		this.logPrefix = "[GameInfoModule]: ";
-		
-		this.commandNames.add("dataval");
-		this.commandNames.add("dataname");
-		this.commandNames.add("gettime");
-		this.commandNames.add("getcoords");
-		this.commandNames.add("sendcoords");
 	}
 	
 	@Override
-	public void enable(JavaPlugin plugin) {
-		super.enable(plugin);
+	public void enable() {
+		this.registerCommand("dataval");
+		this.registerCommand("dataname");
+		this.registerCommand("gettime");
+		this.registerCommand("getcoords");
+		this.registerCommand("sendcoords");
 	}
 
 	@Override

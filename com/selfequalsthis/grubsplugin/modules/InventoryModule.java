@@ -23,19 +23,18 @@ public class InventoryModule extends AbstractGrubsModule {
 	private File ItemKitPresetFile = new File(itemKitMainDirectory + File.separator + "presets.dat");
 	private Properties itemKitProperties = new Properties(); 
 	
-	public InventoryModule() {
+	public InventoryModule(JavaPlugin plugin) {
+		this.pluginRef = plugin;
 		this.logPrefix = "[InventoryModule]: ";
-		
-		this.commandNames.add("kitget");
-		this.commandNames.add("kitset");
-		this.commandNames.add("kitlist");
-		this.commandNames.add("kitdel");
-		this.commandNames.add("clearinv");
 	}
 	
 	@Override
-	public void enable(JavaPlugin plugin) {
-		super.enable(plugin);
+	public void enable() {		
+		this.registerCommand("kitget");
+		this.registerCommand("kitset");
+		this.registerCommand("kitlist");
+		this.registerCommand("kitdel");
+		this.registerCommand("clearinv");
 		
 		this.log.info(logPrefix + "Initializing Item Kit functionality.");
 		File mainDir = new File(itemKitMainDirectory);

@@ -9,15 +9,14 @@ import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
 
 public class GameFixesModule extends AbstractGrubsModule {
 	
-	public GameFixesModule() {
+	public GameFixesModule(JavaPlugin plugin) {
+		this.pluginRef = plugin;
 		this.logPrefix = "[GameFixesModule]: ";
-		
-		this.commandNames.add("eject");
 	}
 	
 	@Override
-	public void enable(JavaPlugin plugin) {
-		super.enable(plugin);
+	public void enable() {		
+		this.registerCommand("eject");
 	}
 
 	@Override
