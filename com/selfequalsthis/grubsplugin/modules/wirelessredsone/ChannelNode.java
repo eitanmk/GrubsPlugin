@@ -18,6 +18,7 @@ public class ChannelNode implements Serializable {
 	private boolean isWallSign = false;
 	private int direction = 0;
 	private boolean isPowered = false;
+	private boolean isInverted = false;
 	
 	public ChannelNode(Block block) {
 		Location blockLoc = block.getLocation();
@@ -61,6 +62,14 @@ public class ChannelNode implements Serializable {
 		return isPowered;
 	}
 	
+	public void setIsInverted(boolean isInverted) {
+		this.isInverted = isInverted;
+	}
+
+	public boolean isInverted() {
+		return isInverted;
+	}
+	
 	public boolean isAtLocation(Location loc) {
 		return (
 			this.world == loc.getWorld().getName()
@@ -68,6 +77,24 @@ public class ChannelNode implements Serializable {
 			&& this.y == loc.getBlockY()
 			&& this.z == loc.getBlockZ()
 		);
+	}
+	
+	public void handleChannelStartTransmitting(World world, String channelName) {
+		if (isInverted) {
+			this.toSign(world, channelName);
+		}
+		else {
+			this.toTorch(world);
+		}
+	}
+	
+	public void handleChannelEndTransmitting(World world, String channelName) {
+		if (isInverted) {
+			this.toTorch(world);
+		}
+		else {
+			this.toSign(world, channelName);
+		}
 	}
 	
 	public void toTorch(World world) {
@@ -117,7 +144,12 @@ public class ChannelNode implements Serializable {
 			
 			if (blockAtLoc.getState() instanceof Sign) {
 				Sign newSignRef = (Sign)blockAtLoc.getState();
-				newSignRef.setLine(0, GrubsWirelessRedstone.RECEIVER_TEXT);
+				if (isInverted) {
+					newSignRef.setLine(0, GrubsWirelessRedstone.RECEIVER_INVERTED_TEXT);
+				}
+				else {
+					newSignRef.setLine(0, GrubsWirelessRedstone.RECEIVER_TEXT);
+				}
 				newSignRef.setLine(1, channelName);
 				newSignRef.update(true);
 			}

@@ -27,13 +27,17 @@ public class Channel implements Serializable {
 		transmitters.add(node);
 	}
 	
-	public void addReceiver(Block block) {
+	public void addReceiver(Block block, boolean isInverted) {
 		ChannelNode node = new ChannelNode(block);
+		node.setIsInverted(isInverted);
 		receivers.add(node);
 		
 		if (isTransmitting()) {
 			// have to turn the new one on immediately
-			node.toTorch(block.getWorld());
+			node.handleChannelStartTransmitting(block.getLocation().getWorld(), this.name);
+		}
+		else {
+			node.handleChannelEndTransmitting(block.getLocation().getWorld(), this.name);
 		}
 	}
 	
@@ -88,7 +92,7 @@ public class Channel implements Serializable {
 		// only replace signs if we aren't already transmitting
 		if (!isTransmitting()) {
 			for (ChannelNode receiver : receivers) {
-				receiver.toTorch(block.getLocation().getWorld());
+				receiver.handleChannelStartTransmitting(block.getLocation().getWorld(), this.name);
 			}
 		}
 		
@@ -109,7 +113,7 @@ public class Channel implements Serializable {
 		// if that was the last transmitter off, replace the torches
 		if (!isTransmitting()) {
 			for (ChannelNode receiver : receivers) {
-				receiver.toSign(block.getLocation().getWorld(), this.name);
+				receiver.handleChannelEndTransmitting(block.getLocation().getWorld(), this.name);
 			}
 		}
 	}

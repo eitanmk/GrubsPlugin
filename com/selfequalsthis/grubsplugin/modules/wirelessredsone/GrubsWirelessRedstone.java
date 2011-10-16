@@ -9,8 +9,9 @@ import org.bukkit.block.Sign;
 public class GrubsWirelessRedstone {
 	protected final Logger log = Logger.getLogger("Minecraft");
 	
-	public static String TRANSMITTER_TEXT = "[t]";
-	public static String RECEIVER_TEXT = "[r]";
+	public static String TRANSMITTER_TEXT = "[WRt]";
+	public static String RECEIVER_TEXT = "[WRr]";
+	public static String RECEIVER_INVERTED_TEXT = "[WRri]";
 
 	private HashMap<String,Channel> channels = new HashMap<String,Channel>();
 		
@@ -19,7 +20,11 @@ public class GrubsWirelessRedstone {
 	}
 	
 	public boolean isReceiver(String text) {
-		return text.equalsIgnoreCase(RECEIVER_TEXT);
+		return (text.equalsIgnoreCase(RECEIVER_TEXT) || text.equalsIgnoreCase(RECEIVER_INVERTED_TEXT));
+	}
+	
+	public boolean isReceiverInverted(String text) {
+		return text.equalsIgnoreCase(RECEIVER_INVERTED_TEXT);
 	}
 	
 	public boolean hasValidChannel(String text) {
@@ -61,7 +66,7 @@ public class GrubsWirelessRedstone {
 		}
 		else if (isReceiver(lines[0])) {
 			log.info("Adding as receiver");
-			channelObj.addReceiver(block);
+			channelObj.addReceiver(block, isReceiverInverted(lines[0]));
 		}
 	}
 	

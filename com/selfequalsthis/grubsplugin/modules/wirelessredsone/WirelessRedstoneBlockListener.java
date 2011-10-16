@@ -2,6 +2,7 @@ package com.selfequalsthis.grubsplugin.modules.wirelessredsone;
 
 import java.util.logging.Logger;
 
+import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
@@ -26,9 +27,9 @@ public class WirelessRedstoneBlockListener extends BlockListener {
 				this.controllerRef.removeNode(signObj);
 			}
 		}
-			
-		// was the block destroyed a redstone torch?
+		else if (event.getBlock().getType() == Material.REDSTONE_TORCH_ON) {
 			// was that torch at a location of a receiver?
+		}
 	}
 	
 	public void onBlockRedstoneChange(BlockRedstoneEvent event) {
