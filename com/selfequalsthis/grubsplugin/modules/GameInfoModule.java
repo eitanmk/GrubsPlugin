@@ -2,7 +2,6 @@ package com.selfequalsthis.grubsplugin.modules;
 
 import java.util.HashMap;
 import java.util.List;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -10,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
+import com.selfequalsthis.grubsplugin.GrubsMessager;
 
 public class GameInfoModule extends AbstractGrubsModule {
 
@@ -43,16 +43,28 @@ public class GameInfoModule extends AbstractGrubsModule {
 				HashMap<String,Integer> matches = this.matchMaterialName(args[0]);
 				if (matches.size() > 0) {
 					for (String key : matches.keySet()) {
-						executingPlayer.sendMessage(ChatColor.GREEN + key + " = " + matches.get(key));
+						GrubsMessager.sendMessage(
+							executingPlayer, 
+							GrubsMessager.MessageLevel.INFO,
+							key + " = " + matches.get(key)
+						);
 					}
 				}
 				else {
-					executingPlayer.sendMessage(ChatColor.RED + "No matches for '" + args[0] + "'.");
+					GrubsMessager.sendMessage(
+						executingPlayer, 
+						GrubsMessager.MessageLevel.ERROR,
+						"No matches for '" + args[0] + "'."
+					);
 				}
 			}
 			else {
 				Material target = executingPlayer.getTargetBlock(null, 256).getType();
-				executingPlayer.sendMessage(ChatColor.GREEN + target.toString().toLowerCase() + " = " + target.getId());
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.INFO,
+					target.toString().toLowerCase() + " = " + target.getId()
+				);
 			}
 			return true;
 		}
@@ -63,24 +75,40 @@ public class GameInfoModule extends AbstractGrubsModule {
 					int val = Integer.parseInt(args[0]);
 					String res = matchMaterialId(val);
 					if (res != "") {
-						executingPlayer.sendMessage(ChatColor.GREEN + "" + val + " = " + res);
+						GrubsMessager.sendMessage(
+							executingPlayer, 
+							GrubsMessager.MessageLevel.INFO,
+							"" + val + " = " + res
+						);
 					}
 					else {
-						executingPlayer.sendMessage(ChatColor.RED + "No material for id: " + val + ".");
+						GrubsMessager.sendMessage(
+							executingPlayer, 
+							GrubsMessager.MessageLevel.ERROR,
+							"No material for id: " + val + "."
+						);
 					}
 				}
 				catch (NumberFormatException nex) { }
 			}
 			else {
 				Material target = executingPlayer.getTargetBlock(null, 256).getType();
-				executingPlayer.sendMessage(ChatColor.GREEN + "" + target.getId() + " = " + target.toString().toLowerCase());
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.INFO,
+					"" + target.getId() + " = " + target.toString().toLowerCase()
+				);
 			}
 			return true;
 		}
 
 
 		if (cmdName.equalsIgnoreCase("gettime")) {
-			executingPlayer.sendMessage(ChatColor.GOLD + "Current time is: " + executingPlayer.getWorld().getTime());
+			GrubsMessager.sendMessage(
+				executingPlayer, 
+				GrubsMessager.MessageLevel.INFO,
+				"Current time is: " + executingPlayer.getWorld().getTime()
+			);
 			return true;
 		}
 
@@ -96,29 +124,39 @@ public class GameInfoModule extends AbstractGrubsModule {
 						for (Player player : matches) {
 							matchStr = matchStr + player.getName() + " ";
 						}
-						executingPlayer.sendMessage(ChatColor.RED + "[Coords] Multiple matches: " + matchStr);
+						GrubsMessager.sendMessage(
+							executingPlayer, 
+							GrubsMessager.MessageLevel.INFO,
+							"Multiple matches: " + matchStr
+						);
 						return true;
 					}
 					else {
 						Player target = matches.get(0);
 						Location loc = target.getLocation();
-						executingPlayer.sendMessage(ChatColor.GOLD + 
-								target.getName() + ": " +
-								this.getCoordsStrFromLocation(loc)
+						GrubsMessager.sendMessage(
+							executingPlayer, 
+							GrubsMessager.MessageLevel.INFO,
+							target.getName() + ": " + this.getCoordsStrFromLocation(loc)
 						);
 						return true;
 					}
 				}
 				else {
-					executingPlayer.sendMessage(ChatColor.RED + "[Coords] No players matching '" + argName + "'.");
+					GrubsMessager.sendMessage(
+						executingPlayer, 
+						GrubsMessager.MessageLevel.ERROR,
+						"No players matching '" + argName + "'."
+					);
 					return true;
 				}
 			}
 			else {
 				Location loc = executingPlayer.getLocation();
-				executingPlayer.sendMessage(ChatColor.GOLD + 
-						executingPlayer.getName() + ": " +
-						this.getCoordsStrFromLocation(loc)
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.INFO,
+					executingPlayer.getName() + ": " + this.getCoordsStrFromLocation(loc)
 				);
 			}
 			 
@@ -136,27 +174,44 @@ public class GameInfoModule extends AbstractGrubsModule {
 						for (Player player : matches) {
 							matchStr = matchStr + player.getName() + " ";
 						}
-						executingPlayer.sendMessage(ChatColor.RED + "[Coords] Multiple matches: " + matchStr);
+						GrubsMessager.sendMessage(
+							executingPlayer, 
+							GrubsMessager.MessageLevel.INFO,
+							"Multiple matches: " + matchStr
+						);
 						return true;
 					}
 					else {
 						Player target = matches.get(0);
 						Location loc = executingPlayer.getLocation();
-						target.sendMessage(ChatColor.GOLD + 
-								executingPlayer.getName() + ": " +
-								this.getCoordsStrFromLocation(loc)
+						GrubsMessager.sendMessage(
+							target, 
+							GrubsMessager.MessageLevel.INFO,
+							executingPlayer.getName() + ": " + this.getCoordsStrFromLocation(loc)
 						);
-						executingPlayer.sendMessage(ChatColor.GOLD + "Coordinates sent to " + target.getName());
+						GrubsMessager.sendMessage(
+							executingPlayer, 
+							GrubsMessager.MessageLevel.INFO,
+							"Coordinates sent to " + target.getName()
+						);
 						return true;
 					}
 				}
 				else {
-					executingPlayer.sendMessage(ChatColor.RED + "[Coords] No players matching '" + argName + "'.");
+					GrubsMessager.sendMessage(
+						executingPlayer, 
+						GrubsMessager.MessageLevel.ERROR,
+						"No players matching '" + argName + "'."
+					);
 					return true;
 				}
 			}
 			else {
-				executingPlayer.sendMessage(ChatColor.RED + "[Coords] Mising command argument.");
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.ERROR,
+					"Missing command argument."
+				);
 			}
 			 
 			return true;

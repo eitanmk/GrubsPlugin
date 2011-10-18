@@ -1,11 +1,11 @@
 package com.selfequalsthis.grubsplugin.modules;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
+import com.selfequalsthis.grubsplugin.GrubsMessager;
 
 public class GameFixesModule extends AbstractGrubsModule {
 	
@@ -34,7 +34,7 @@ public class GameFixesModule extends AbstractGrubsModule {
 				executingPlayer.leaveVehicle();
 			}
 			else {
-				executingPlayer.sendMessage(ChatColor.RED + "You are not in a vehicle.");
+				GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "You are not in a vehicle.");
 			}
 			
 			return true;
