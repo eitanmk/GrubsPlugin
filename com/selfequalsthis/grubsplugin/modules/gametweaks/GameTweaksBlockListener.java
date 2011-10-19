@@ -10,13 +10,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class GameTweaksBlockListener extends BlockListener {
-	
-	private GameTweaksModule moduleRef;
-	
-	public GameTweaksBlockListener(GameTweaksModule module) {
-		moduleRef = module;
-	}
-
+		
 	public void onBlockPlace(BlockPlaceEvent event) {
 		ItemStack item = event.getItemInHand();
 		if (item.getMaxStackSize() > 1) {
@@ -25,13 +19,6 @@ public class GameTweaksBlockListener extends BlockListener {
 				playerItem.setAmount(item.getMaxStackSize());
 			}
 		}
-		
-		/*Block placedBlock = event.getBlock();
-		if (placedBlock.getType() == Material.RAILS) {
-			Rails railsObj = new Rails(placedBlock.getType(), placedBlock.getData());
-			log.info("" + railsObj.getDirection());
-			log.info("" + railsObj.isCurve());
-		}*/
 	}
 	
 	public void onBlockDamage(BlockDamageEvent event) {
@@ -55,16 +42,6 @@ public class GameTweaksBlockListener extends BlockListener {
 			if (!player.isOp()) {
 				event.setCancelled(true);
 				return;
-			}
-			else {
-				if (this.moduleRef.isObsidianModeEnabled()) {
-					ItemStack damageItem = event.getItemInHand();
-					
-					if (damageItem.getType() == Material.GOLD_PICKAXE) {
-						player.getInventory().getItemInHand().setDurability((short) 0);
-						event.setInstaBreak(true);
-					}
-				}
 			}
 		}
 	}

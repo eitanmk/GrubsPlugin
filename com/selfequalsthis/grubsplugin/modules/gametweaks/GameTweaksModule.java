@@ -1,6 +1,6 @@
 package com.selfequalsthis.grubsplugin.modules.gametweaks;
 
-import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -8,26 +8,25 @@ import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
+import com.selfequalsthis.grubsplugin.GrubsMessager;
 
 public class GameTweaksModule extends AbstractGrubsModule {
 	
 	private GameTweaksBlockListener blockListener;
 	private GameTweaksPlayerListener playerListener;
 	private GameTweaksEntityListener entityListener;
-	
-	private boolean obsidianBuildModeEnabled = false;
-	
+		
 	public GameTweaksModule(JavaPlugin plugin) {
 		this.pluginRef = plugin;
 		this.logPrefix = "[GameTweaksModule]: ";
-		this.blockListener = new GameTweaksBlockListener(this);
+		this.blockListener = new GameTweaksBlockListener();
 		this.playerListener = new GameTweaksPlayerListener();
 		this.entityListener = new GameTweaksEntityListener();
 	}
 	
 	@Override
 	public void enable() {		
-		this.registerCommand("obm");
+		this.registerCommand("buildmode");
 		this.registerEvent(Event.Type.BLOCK_BURN, this.blockListener, Priority.Monitor);
 		this.registerEvent(Event.Type.BLOCK_DAMAGE, this.blockListener, Priority.Monitor);
 		this.registerEvent(Event.Type.BLOCK_IGNITE, this.blockListener, Priority.Monitor);
@@ -46,30 +45,24 @@ public class GameTweaksModule extends AbstractGrubsModule {
 			return false;
 		}
 		
-		if (cmdName.equalsIgnoreCase("obm")) {
+		if (cmdName.equalsIgnoreCase("buildmode")) {
 			if (args.length > 0) {
-				if ( !args[0].equalsIgnoreCase("on") && !args[0].equalsIgnoreCase("off")) {
-					executingPlayer.sendMessage(ChatColor.RED + "[Obsidian] Invalid argument.");
-					return false;
+				if (args[0].equalsIgnoreCase("on")) {
+					executingPlayer.setGameMode(GameMode.CREATIVE);
+					GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.INFO, "Creative build mode enabled.");
 				}
 				else {
-					obsidianBuildModeEnabled = args[0].equalsIgnoreCase("on");
-					executingPlayer.sendMessage(ChatColor.GREEN + "[Obsidian] Build mode is " + args[0] + ".");
-					
-					return true;
+					executingPlayer.setGameMode(GameMode.SURVIVAL);
+					GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.INFO, "Build mode disabled.");
 				}
+				return true;
 			}
 			else {
-				executingPlayer.sendMessage(ChatColor.RED + "[Obsidian] Missing command argument.");
-				return false;
+				GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "Missing command argument.");
+				return true;
 			}
 		}
-		
+	
 		return false;
 	}
-	
-	public boolean isObsidianModeEnabled() {
-		return obsidianBuildModeEnabled;
-	}
-
 }

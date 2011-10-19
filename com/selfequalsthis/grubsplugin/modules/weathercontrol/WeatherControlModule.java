@@ -1,7 +1,6 @@
 package com.selfequalsthis.grubsplugin.modules.weathercontrol;
 
 import java.util.List;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -12,6 +11,7 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
+import com.selfequalsthis.grubsplugin.GrubsMessager;
 
 public class WeatherControlModule extends AbstractGrubsModule {
 	
@@ -53,7 +53,11 @@ public class WeatherControlModule extends AbstractGrubsModule {
 						for (Player player : matches) {
 							matchStr = matchStr + player.getName() + " ";
 						}
-						executingPlayer.sendMessage(ChatColor.RED + "[Weather] Multiple matches: " + matchStr);
+						GrubsMessager.sendMessage(
+							executingPlayer, 
+							GrubsMessager.MessageLevel.INFO,
+							"Multiple matches: " + matchStr
+						);
 						return false;
 					}
 					else {
@@ -72,7 +76,11 @@ public class WeatherControlModule extends AbstractGrubsModule {
 					}
 				}
 				else {
-					executingPlayer.sendMessage(ChatColor.RED + "[Weather] No players matching '" + args[0] + "'.");
+					GrubsMessager.sendMessage(
+						executingPlayer, 
+						GrubsMessager.MessageLevel.ERROR,
+						"No players matching '" + args[0] + "'."
+					);
 					return false;
 				}
 			}
@@ -93,12 +101,20 @@ public class WeatherControlModule extends AbstractGrubsModule {
 		}
 		else if (cmdName.equalsIgnoreCase("storm") || cmdName.equalsIgnoreCase("thunder")) {
 			if (args.length == 0) {
-				executingPlayer.sendMessage(ChatColor.RED + "[Weather] Argument missing.");
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.ERROR,
+					"Argument missing."
+				);
 				return false;
 			}
 			
 			if ( !args[0].equalsIgnoreCase("on") && !args[0].equalsIgnoreCase("off")) {
-				executingPlayer.sendMessage(ChatColor.RED + "[Weather] Invalid argument.");
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.ERROR,
+					"Invalid argument."
+				);
 				return false;
 			}
 

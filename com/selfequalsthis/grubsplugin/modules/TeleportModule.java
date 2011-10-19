@@ -8,13 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
+import com.selfequalsthis.grubsplugin.GrubsMessager;
 
 public class TeleportModule extends AbstractGrubsModule {
 
@@ -90,7 +90,11 @@ public class TeleportModule extends AbstractGrubsModule {
 						return true;
 					}
 					else {
-						executingPlayer.sendMessage(ChatColor.RED + "[Teleport] No previous location set.");
+						GrubsMessager.sendMessage(
+							executingPlayer, 
+							GrubsMessager.MessageLevel.ERROR,
+							"No previous location set."
+						);
 						return true;
 					}
 				}
@@ -108,7 +112,11 @@ public class TeleportModule extends AbstractGrubsModule {
 							for (Player player : matches) {
 								matchStr = matchStr + player.getName() + " ";
 							}
-							executingPlayer.sendMessage(ChatColor.RED + "[Teleport] Multiple matches: " + matchStr);
+							GrubsMessager.sendMessage(
+								executingPlayer, 
+								GrubsMessager.MessageLevel.INFO,
+								"Multiple matches: " + matchStr
+							);
 							return true;
 						}
 						else {
@@ -119,13 +127,21 @@ public class TeleportModule extends AbstractGrubsModule {
 						}
 					}
 					else {
-						executingPlayer.sendMessage(ChatColor.RED + "[Teleport] No presets or players matching '" + argName + "'.");
+						GrubsMessager.sendMessage(
+							executingPlayer, 
+							GrubsMessager.MessageLevel.ERROR,
+							"No presets or players matching '" + argName + "'."
+						);
 						return true;
 					}
 				}
 			}
 			else {
-				executingPlayer.sendMessage(ChatColor.RED + "[Teleport] Missing command argument.");
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.ERROR,
+					"Missing command argument."
+				);
 				return false;
 			}
 		}
@@ -138,7 +154,11 @@ public class TeleportModule extends AbstractGrubsModule {
 						for (Player player : matches) {
 							matchStr = matchStr + player.getName() + " ";
 						}
-						executingPlayer.sendMessage(ChatColor.RED + "[Teleport] Multiple matches: " + matchStr);
+						GrubsMessager.sendMessage(
+							executingPlayer, 
+							GrubsMessager.MessageLevel.INFO,
+							"Multiple matches: " + matchStr
+						);
 						return true;
 					}
 					else {
@@ -149,12 +169,20 @@ public class TeleportModule extends AbstractGrubsModule {
 					}
 				}
 				else {
-					executingPlayer.sendMessage(ChatColor.RED + "[Teleport] No players matching '" + args[0] + "'.");
+					GrubsMessager.sendMessage(
+						executingPlayer, 
+						GrubsMessager.MessageLevel.ERROR,
+						"No players matching '" + args[0] + "'."
+					);
 					return true;
 				}
 			}
 			else {
-				executingPlayer.sendMessage(ChatColor.RED + "[Teleport] Missing command argument.");
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.ERROR,
+					"Missing command argument."
+				);
 				return false;
 			}
 		}
@@ -167,7 +195,11 @@ public class TeleportModule extends AbstractGrubsModule {
 						for (Player player : targetMatches) {
 							matchStr = matchStr + player.getName() + " ";
 						}
-						executingPlayer.sendMessage(ChatColor.RED + "[Teleport] Multiple matches: " + matchStr);
+						GrubsMessager.sendMessage(
+							executingPlayer, 
+							GrubsMessager.MessageLevel.INFO,
+							"Multiple matches: " + matchStr
+						);
 						return true;
 					}
 					else {
@@ -186,7 +218,11 @@ public class TeleportModule extends AbstractGrubsModule {
 									for (Player player : destMatches) {
 										matchStr = matchStr + player.getName() + " ";
 									}
-									executingPlayer.sendMessage(ChatColor.RED + "[Teleport] Multiple matches: " + matchStr);
+									GrubsMessager.sendMessage(
+										executingPlayer, 
+										GrubsMessager.MessageLevel.INFO,
+										"Multiple matches: " + matchStr
+									);
 									return true;
 								}
 								else {
@@ -197,19 +233,31 @@ public class TeleportModule extends AbstractGrubsModule {
 								}
 							}
 							else {
-								executingPlayer.sendMessage(ChatColor.RED + "[Teleport] No players matching '" + args[1] + "'.");
+								GrubsMessager.sendMessage(
+									executingPlayer, 
+									GrubsMessager.MessageLevel.ERROR,
+									"No players matching '" + args[1] + "'."
+								);
 								return true;
 							}
 						}
 					}
 				}
 				else {
-					executingPlayer.sendMessage(ChatColor.RED + "[Teleport] No players matching '" + args[0] + "'.");
+					GrubsMessager.sendMessage(
+						executingPlayer, 
+						GrubsMessager.MessageLevel.ERROR,
+						"No players matching '" + args[0] + "'."
+					);
 					return true;
 				}
 			}
 			else {
-				executingPlayer.sendMessage(ChatColor.RED + "[Teleport] Missing command argument.");
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.ERROR,
+					"Missing command argument."
+				);
 				return false;
 			}
 		}
@@ -217,18 +265,30 @@ public class TeleportModule extends AbstractGrubsModule {
 			if (args.length > 0) {
 				String argName = args[0];
 				if (teleportPresets.containsKey(argName)) {
-					executingPlayer.sendMessage(ChatColor.RED + "[Teleport] Preset '" + argName + "' already exists.");
+					GrubsMessager.sendMessage(
+						executingPlayer, 
+						GrubsMessager.MessageLevel.ERROR,
+						"Preset '" + argName + "' already exists."
+					);
 					return true;
 				}
 				else {
 					teleportPresets.put(argName, executingPlayer.getLocation());
-					executingPlayer.sendMessage(ChatColor.GREEN + "[Teleport] Preset '" + argName + "' saved.");
+					GrubsMessager.sendMessage(
+						executingPlayer, 
+						GrubsMessager.MessageLevel.INFO,
+						"Preset '" + argName + "' saved."
+					);
 					saveTeleportPresets();
 					return true;
 				}
 			}
 			else {
-				executingPlayer.sendMessage(ChatColor.RED + "[Teleport] Missing command argument.");
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.ERROR,
+					"Missing command argument."
+				);
 				return false;
 			}
 		}
@@ -237,17 +297,29 @@ public class TeleportModule extends AbstractGrubsModule {
 				String argName = args[0];
 				if (teleportPresets.containsKey(argName)) {
 					teleportPresets.remove(argName);
-					executingPlayer.sendMessage(ChatColor.GREEN + "[Teleport] Preset '" + argName + "' deleted.");
+					GrubsMessager.sendMessage(
+						executingPlayer, 
+						GrubsMessager.MessageLevel.INFO,
+						"Preset '" + argName + "' deleted."
+					);
 					saveTeleportPresets();
 					return true;
 				}
 				else {
-					executingPlayer.sendMessage(ChatColor.RED + "[Teleport] Preset '" + argName + "' not found.");
+					GrubsMessager.sendMessage(
+						executingPlayer, 
+						GrubsMessager.MessageLevel.ERROR,
+						"Preset '" + argName + "' not found."
+					);
 					return true;
 				}
 			}
 			else {
-				executingPlayer.sendMessage(ChatColor.RED + "[Teleport] Missing command argument.");
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.ERROR,
+					"Missing command argument."
+				);
 				return false;
 			}
 		}
@@ -264,7 +336,11 @@ public class TeleportModule extends AbstractGrubsModule {
 					}
 					
 					if ( (msgIdentifier.length() + list.length() + 2 + s.length()) > 60) {
-						executingPlayer.sendMessage(ChatColor.GOLD + msgIdentifier + list);
+						GrubsMessager.sendMessage(
+							executingPlayer, 
+							GrubsMessager.MessageLevel.INFO,
+							msgIdentifier + list
+						);
 						list = "";
 						useSeparator = false;
 					}
@@ -280,10 +356,18 @@ public class TeleportModule extends AbstractGrubsModule {
 					list += s;	
 				}
 
-				executingPlayer.sendMessage(ChatColor.GOLD + msgIdentifier + list);
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.INFO,
+					msgIdentifier + list
+				);
 			}
 			else {
-				executingPlayer.sendMessage(ChatColor.RED + msgIdentifier + "No presets in list.");
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.ERROR,
+					msgIdentifier + "No presets in list."
+				);
 			}
 
 			return true;

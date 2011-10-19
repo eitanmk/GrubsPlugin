@@ -7,13 +7,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Set;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
+import com.selfequalsthis.grubsplugin.GrubsMessager;
 
 public class InventoryModule extends AbstractGrubsModule {
 	
@@ -79,19 +79,31 @@ public class InventoryModule extends AbstractGrubsModule {
 			if (args.length > 0) {
 				String argName = args[0];
 				if (itemKitPresets.containsKey(argName)) {
-					executingPlayer.sendMessage(ChatColor.RED + "[Items] Kit '" + argName + "' already exists.");
+					GrubsMessager.sendMessage(
+						executingPlayer, 
+						GrubsMessager.MessageLevel.ERROR,
+						"Kit '" + argName + "' already exists."
+					);
 					return true;
 				}
 				else {
 					itemKitPresets.put(argName, executingPlayer.getInventory().getContents());
 					itemKitArmorPresets.put(argName, executingPlayer.getInventory().getArmorContents());
-					executingPlayer.sendMessage(ChatColor.GREEN + "[Items] Kit '" + argName + "' saved.");
+					GrubsMessager.sendMessage(
+						executingPlayer, 
+						GrubsMessager.MessageLevel.INFO,
+						"Kit '" + argName + "' saved."
+					);
 					saveItemKits();
 					return true;
 				}
 			}
 			else {
-				executingPlayer.sendMessage(ChatColor.RED + "[Items] Missing command argument.");
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.ERROR,
+					"Missing command argument."
+				);
 				return false;
 			}
 		}
@@ -102,16 +114,28 @@ public class InventoryModule extends AbstractGrubsModule {
 					executingPlayer.getInventory().clear();
 					executingPlayer.getInventory().setContents(itemKitPresets.get(argName));
 					executingPlayer.getInventory().setArmorContents(itemKitArmorPresets.get(argName));
-					executingPlayer.sendMessage(ChatColor.GREEN + "[Items] Inventory updated.");
+					GrubsMessager.sendMessage(
+						executingPlayer, 
+						GrubsMessager.MessageLevel.INFO,
+						"Inventory updated."
+					);
 					return true;
 				}
 				else {
-					executingPlayer.sendMessage(ChatColor.RED + "[Items] No kit named '" + argName + "' found.");
+					GrubsMessager.sendMessage(
+						executingPlayer, 
+						GrubsMessager.MessageLevel.ERROR,
+						"No kit named '" + argName + "' found."
+					);
 					return true;
 				}
 			}
 			else {
-				executingPlayer.sendMessage(ChatColor.RED + "[Items] Missing command argument.");
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.ERROR,
+					"Missing command argument."
+				);
 				return false;
 			}
 		}
@@ -121,17 +145,29 @@ public class InventoryModule extends AbstractGrubsModule {
 				if (itemKitPresets.containsKey(argName)) {
 					itemKitPresets.remove(argName);
 					itemKitArmorPresets.remove(argName);
-					executingPlayer.sendMessage(ChatColor.GREEN + "[Items] Kit '" + argName + "' deleted.");
+					GrubsMessager.sendMessage(
+						executingPlayer, 
+						GrubsMessager.MessageLevel.INFO,
+						"Kit '" + argName + "' deleted."
+					);
 					saveItemKits();
 					return true;
 				}
 				else {
-					executingPlayer.sendMessage(ChatColor.RED + "[Items] No kit named '" + argName + "' found.");
+					GrubsMessager.sendMessage(
+						executingPlayer, 
+						GrubsMessager.MessageLevel.ERROR,
+						"No kit named '" + argName + "' found."
+					);
 					return true;
 				}
 			}
 			else {
-				executingPlayer.sendMessage(ChatColor.RED + "[Items] Missing command argument.");
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.ERROR,
+					"Missing command argument."
+				);
 				return false;
 			}
 		}
@@ -144,7 +180,11 @@ public class InventoryModule extends AbstractGrubsModule {
 			if (keys.size() > 0) {
 				for (String s : keys) {
 					if ( (msgIdentifier.length() + list.length() + 2 + s.length()) > 60) {
-						executingPlayer.sendMessage(ChatColor.GOLD + msgIdentifier + list);
+						GrubsMessager.sendMessage(
+							executingPlayer, 
+							GrubsMessager.MessageLevel.INFO,
+							msgIdentifier + list
+						);
 						list = "";
 						useSeparator = false;
 					}
@@ -160,17 +200,29 @@ public class InventoryModule extends AbstractGrubsModule {
 					list += s;	
 				}
 
-				executingPlayer.sendMessage(ChatColor.GOLD + msgIdentifier + list);
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.INFO,
+					msgIdentifier + list
+				);
 			}
 			else {
-				executingPlayer.sendMessage(ChatColor.RED + msgIdentifier + "No kits in list.");
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.ERROR,
+					msgIdentifier + "No kits in list."
+				);
 			}
 			return true;
 		}
 		else if (cmdName.equalsIgnoreCase("clearinv")) {
 			executingPlayer.getInventory().clear();
 			executingPlayer.getInventory().setArmorContents(new ItemStack[4]);
-			executingPlayer.sendMessage(ChatColor.GREEN + "[Items] Inventory cleared.");
+			GrubsMessager.sendMessage(
+				executingPlayer, 
+				GrubsMessager.MessageLevel.INFO,
+				"Inventory cleared."
+			);
 			return true;
 		}
 		

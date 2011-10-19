@@ -3,9 +3,9 @@ main: com.selfequalsthis.grubsplugin.GrubsPlugin
 version: 0.1 
 
 commands:
-    obm:
-        description: Obisidian Build Mode 
-        usage: /obm [on|off]
+    buildmode:
+        description: Build Mode 
+        usage: /buildmode [on|off]
     storm:
         description: Enable/Disable rain storms.
         usage: /storm [on|off]
