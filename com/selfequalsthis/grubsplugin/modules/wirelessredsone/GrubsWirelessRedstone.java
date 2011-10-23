@@ -1,5 +1,12 @@
 package com.selfequalsthis.grubsplugin.modules.wirelessredsone;
 
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -14,7 +21,39 @@ public class GrubsWirelessRedstone {
 	public static String RECEIVER_INVERTED_TEXT = "[WRri]";
 
 	private HashMap<String,Channel> channels = new HashMap<String,Channel>();
+	
+	private String redstoneMainDirectory = "plugins/WirelessRedstone";
+	private File RedstonePresetFile = new File(redstoneMainDirectory + File.separator + "channels.dat");
+	
+	public void init() {
+		File mainDir = new File(redstoneMainDirectory);
+		if (!mainDir.exists()) {
+			log.info("Wireless Redstone save directory doesn't exist. Creating.");
+			mainDir.mkdir();
+		}
 		
+		if(!RedstonePresetFile.exists()){
+			log.info("Wireless Redstone channel file doesn't exist. Creating.");
+			try {
+				RedstonePresetFile.createNewFile();
+			} 
+			catch (IOException ex) {
+				this.log.info("Error creating Wireless Redstone channel file!");
+				ex.printStackTrace();
+			}
+		}
+		
+		log.info("Loading Wireless Redstone channels.");
+		this.loadChannels();
+		log.info("Loaded " + channels.size() + " channels.");
+	}
+	
+	public void shutdown() {
+		log.info("Saving Wireless Redstone channels.");
+		this.saveChannels();
+		log.info("Saved " + channels.size() + " channels.");
+	}
+	
 	public boolean isTransmitter(String text) {
 		return text.equalsIgnoreCase(TRANSMITTER_TEXT);
 	}
@@ -68,6 +107,8 @@ public class GrubsWirelessRedstone {
 			log.info("Adding as receiver");
 			channelObj.addReceiver(block, isReceiverInverted(lines[0]));
 		}
+		
+		this.saveChannels();
 	}
 	
 	public void removeNode(Sign sign) {
@@ -89,6 +130,8 @@ public class GrubsWirelessRedstone {
 				log.info("Removing empty channel " + channelName);
 				channels.remove(channelName);
 			}
+			
+			this.saveChannels();
 		}
 	}
 	
@@ -101,6 +144,59 @@ public class GrubsWirelessRedstone {
 			else {
 				curChannel.handlePowerChangedOff(sign.getBlock());
 			}	
+		}
+	}
+	
+	public void loadChannels() {
+		FileInputStream fis = null;
+		ObjectInputStream in = null;
+		
+		try {
+			fis = new FileInputStream(RedstonePresetFile);
+			in = new ObjectInputStream(fis);
+			
+			Object obj = in.readObject();
+			while (obj != null) {
+				if (obj instanceof Channel) {
+					Channel loadedChannel = (Channel)obj;
+					this.channels.put(loadedChannel.getName(), loadedChannel);
+				}
+				obj = in.readObject();
+			}
+		}
+		catch (EOFException eof) {
+			log.info("End of file reached.");
+		}
+		catch (Exception ex) {
+			log.info("Error reading Wireless Redstone channels file!");
+			ex.printStackTrace();
+		}
+		finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public void saveChannels() {		
+		log.info("Writing Wireless Redstone save file.");
+		try {
+			FileOutputStream fos = new FileOutputStream(RedstonePresetFile);
+			ObjectOutputStream out = new ObjectOutputStream(fos);
+			
+			for (String name : channels.keySet()) {
+				out.writeObject(channels.get(name));
+			}
+			
+			out.close();
+		}
+		catch (Exception ex) {
+			log.info("Error writing Wireless Redstone channels file!");
+			ex.printStackTrace();
 		}
 	}
 }

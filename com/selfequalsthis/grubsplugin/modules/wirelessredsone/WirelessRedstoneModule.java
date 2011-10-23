@@ -10,17 +10,26 @@ public class WirelessRedstoneModule extends AbstractGrubsModule {
 	
 	private GrubsWirelessRedstone wrController;
 	private WirelessRedstoneBlockListener blockListener;
+	private WirelessRedstonePlayerListener playerListener;
 	
 	public WirelessRedstoneModule(JavaPlugin plugin) {
 		this.pluginRef = plugin;
 		this.logPrefix = "[WirelessRedstoneModule]: ";
 		this.wrController = new GrubsWirelessRedstone();
 		this.blockListener = new WirelessRedstoneBlockListener(this.wrController);
+		this.playerListener = new WirelessRedstonePlayerListener(this.wrController);
 	}
 	
 	public void enable() {
 		this.registerEvent(Event.Type.BLOCK_BREAK, this.blockListener, Priority.Monitor);
 		this.registerEvent(Event.Type.REDSTONE_CHANGE, this.blockListener, Priority.Monitor);
 		this.registerEvent(Event.Type.SIGN_CHANGE, this.blockListener, Priority.Monitor);
+		this.registerEvent(Event.Type.PLAYER_QUIT, this.playerListener, Priority.Monitor);
+		
+		this.wrController.init();
+	}
+	
+	public void disable() {
+		this.wrController.shutdown();
 	}
 }
