@@ -79,7 +79,7 @@ public class ChannelNode implements Serializable {
 		);
 	}
 	
-	public void handleChannelStartTransmitting(World world, String channelName) {
+	public void handleChannelStartTransmitting(World world, String channelName) throws ReceiverDestroyedException {
 		if (isInverted) {
 			this.toSign(world, channelName);
 		}
@@ -88,7 +88,7 @@ public class ChannelNode implements Serializable {
 		}
 	}
 	
-	public void handleChannelEndTransmitting(World world, String channelName) {
+	public void handleChannelEndTransmitting(World world, String channelName) throws ReceiverDestroyedException {
 		if (isInverted) {
 			this.toTorch(world);
 		}
@@ -97,7 +97,7 @@ public class ChannelNode implements Serializable {
 		}
 	}
 	
-	public void toTorch(World world) {
+	public void toTorch(World world) throws ReceiverDestroyedException {
 		if (this.world.equalsIgnoreCase(world.getName())) {
 			Location loc = new Location(world, this.x, this.y, this.z);
 			Block blockAtLoc = loc.getBlock();
@@ -123,13 +123,23 @@ public class ChannelNode implements Serializable {
 					blockAtLoc.setTypeIdAndData(Material.REDSTONE_TORCH_ON.getId(), (byte)0x1, true); 
 				}
 			}
+			else {
+				throw new ReceiverDestroyedException();
+			}
 		}
 	}
 	
-	public void toSign(World world, String channelName) {
+	public void toSign(World world, String channelName) throws ReceiverDestroyedException {
 		if (this.world.equalsIgnoreCase(world.getName())) {
 			Location loc = new Location(world, this.x, this.y, this.z);
 			Block blockAtLoc = loc.getBlock();
+			
+			Material blockMaterial = blockAtLoc.getType();
+			if (blockMaterial != Material.REDSTONE_TORCH_ON 
+					&& blockMaterial != Material.WALL_SIGN 
+					&& blockMaterial != Material.SIGN_POST) {
+				throw new ReceiverDestroyedException();
+			}
 			
 			// no idea why this is needed, but it is if you want two wall signs 
 			//  attached to two faces of the same block

@@ -2,14 +2,18 @@ package com.selfequalsthis.grubsplugin.modules.wirelessredsone;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 
 public class Channel implements Serializable {
 
 	private static final long serialVersionUID = -1413121016289041397L;
 
+	protected static final Logger log = Logger.getLogger("Minecraft");
+	
 	private String name;
 	private ArrayList<ChannelNode> transmitters = new ArrayList<ChannelNode>();
 	private ArrayList<ChannelNode> receivers = new ArrayList<ChannelNode>();
@@ -25,6 +29,13 @@ public class Channel implements Serializable {
 	public void addTransmitter(Block block) {
 		ChannelNode node = new ChannelNode(block);
 		transmitters.add(node);
+
+		if (transmitters.size() == 1 && !receivers.isEmpty()) {
+			// if we just added the first transmitter and there were receivers, 
+			//  put them back into their default state
+			log.info("First transmitters added to channel. Initializing receivers to default states.");
+			updateReceivers(block.getWorld(), isTransmitting());
+		}
 	}
 	
 	public void addReceiver(Block block, boolean isInverted) {
@@ -32,12 +43,19 @@ public class Channel implements Serializable {
 		node.setIsInverted(isInverted);
 		receivers.add(node);
 		
-		if (isTransmitting()) {
-			// have to turn the new one on immediately
-			node.handleChannelStartTransmitting(block.getLocation().getWorld(), this.name);
-		}
-		else {
-			node.handleChannelEndTransmitting(block.getLocation().getWorld(), this.name);
+		// might have to turn the new one on immediately
+		try {
+			if (!transmitters.isEmpty()) {
+				if (isTransmitting()) {
+					node.handleChannelStartTransmitting(block.getLocation().getWorld(), this.name);
+				}
+				else {
+					node.handleChannelEndTransmitting(block.getLocation().getWorld(), this.name);
+				}
+			}
+		} catch (ReceiverDestroyedException e) {
+			log.info("Receiver missing." + block.getLocation().getBlock().getType());
+			this.removeReceiverAt(block.getLocation());
 		}
 	}
 	
@@ -64,13 +82,20 @@ public class Channel implements Serializable {
 	public void removeTransmitterAt(Location loc) {
 		ChannelNode node = getTransmitterAt(loc);
 		if (node != null) {
+			log.info("Removing transmitter.");
 			transmitters.remove(node);
+			
+			if (transmitters.isEmpty() && !receivers.isEmpty()) {
+				log.info("No more transmitters on channel. Converting all receivers to signs.");
+				allReceiversToSigns(loc.getWorld());
+			}
 		}
 	}
 	
 	public void removeReceiverAt(Location loc) {
 		ChannelNode node = getReceiverAt(loc);
 		if (node != null) {
+			log.info("Removing receiver.");
 			receivers.remove(node);
 		}
 	}
@@ -87,13 +112,10 @@ public class Channel implements Serializable {
 		return (transmitters.size() == 0 && receivers.size() == 0);
 	}
 	
-	public void handlePowerChangedOn(Block block) {
-		
+	public void handlePowerChangedOn(Block block) {		
 		// only replace signs if we aren't already transmitting
-		if (!isTransmitting()) {
-			for (ChannelNode receiver : receivers) {
-				receiver.handleChannelStartTransmitting(block.getLocation().getWorld(), this.name);
-			}
+		if (!isTransmitting()) {			
+			updateReceivers(block.getWorld(), true);
 		}
 		
 		// update the transmitter power state
@@ -112,8 +134,49 @@ public class Channel implements Serializable {
 		
 		// if that was the last transmitter off, replace the torches
 		if (!isTransmitting()) {
-			for (ChannelNode receiver : receivers) {
-				receiver.handleChannelEndTransmitting(block.getLocation().getWorld(), this.name);
+			updateReceivers(block.getWorld(), false);
+		}
+	}
+	
+	private void updateReceivers(World world, boolean powerOn) {
+		ArrayList<Location> removeLocations = new ArrayList<Location>();
+		for (ChannelNode receiver : receivers) {
+			try {
+				if (powerOn) {
+					receiver.handleChannelStartTransmitting(world, this.name);
+				}
+				else {
+					receiver.handleChannelEndTransmitting(world, this.name);
+				}
+			} catch (ReceiverDestroyedException e) {
+				Location loc = new Location(world, receiver.getX(), receiver.getY(), receiver.getZ());
+				removeLocations.add(loc);
+			}
+		}
+		
+		if (removeLocations.size() > 0) {
+			for (Location loc : removeLocations) {
+				log.info("Missing receiver at "  + loc.getX() + "," + loc.getY() + "," + loc.getZ());
+				this.removeReceiverAt(loc);
+			}
+		}
+	}
+	
+	private void allReceiversToSigns(World world) {
+		ArrayList<Location> removeLocations = new ArrayList<Location>();
+		for (ChannelNode receiver : receivers) {
+			try {
+				receiver.toSign(world, this.name);
+			} catch (ReceiverDestroyedException e) {
+				Location loc = new Location(world, receiver.getX(), receiver.getY(), receiver.getZ());
+				removeLocations.add(loc);
+			}
+		}
+		
+		if (removeLocations.size() > 0) {
+			for (Location loc : removeLocations) {
+				log.info("Missing receiver at "  + loc.getX() + "," + loc.getY() + "," + loc.getZ());
+				this.removeReceiverAt(loc);
 			}
 		}
 	}
