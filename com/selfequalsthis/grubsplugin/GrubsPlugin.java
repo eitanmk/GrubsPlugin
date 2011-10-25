@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.selfequalsthis.grubsplugin.modules.GameFixesModule;
 import com.selfequalsthis.grubsplugin.modules.GameInfoModule;
 import com.selfequalsthis.grubsplugin.modules.InventoryModule;
 import com.selfequalsthis.grubsplugin.modules.TeleportModule;
+import com.selfequalsthis.grubsplugin.modules.gamefixes.GameFixesModule;
 import com.selfequalsthis.grubsplugin.modules.gametweaks.GameTweaksModule;
 import com.selfequalsthis.grubsplugin.modules.lasertag.LaserTagModule;
 import com.selfequalsthis.grubsplugin.modules.weathercontrol.WeatherControlModule;

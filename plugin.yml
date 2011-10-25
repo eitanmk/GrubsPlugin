@@ -39,6 +39,9 @@ commands:
     eject:
         description: Eject from a minecart.
         usage: /eject
+    getchunks:
+        description: Reload chunks from the server if some are missing.
+        usage: /getchunks
     dataval:
         description: Get the data value of a material.
         usage: /dataval <name>
