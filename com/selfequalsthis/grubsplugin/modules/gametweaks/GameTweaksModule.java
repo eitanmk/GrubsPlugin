@@ -30,7 +30,6 @@ public class GameTweaksModule extends AbstractGrubsModule {
 		this.registerEvent(Event.Type.BLOCK_BURN, this.blockListener, Priority.Monitor);
 		this.registerEvent(Event.Type.BLOCK_DAMAGE, this.blockListener, Priority.Monitor);
 		this.registerEvent(Event.Type.BLOCK_IGNITE, this.blockListener, Priority.Monitor);
-		this.registerEvent(Event.Type.BLOCK_PLACE, this.blockListener, Priority.Monitor);
 		this.registerEvent(Event.Type.ENTITY_DAMAGE, this.entityListener, Priority.Monitor);
 		this.registerEvent(Event.Type.PLAYER_JOIN, this.playerListener, Priority.Monitor);
 	}
