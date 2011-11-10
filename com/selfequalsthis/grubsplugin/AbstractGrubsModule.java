@@ -4,6 +4,7 @@ import java.util.logging.Logger;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.Listener;
@@ -25,7 +26,14 @@ public abstract class AbstractGrubsModule implements CommandExecutor {
 	
 	protected void registerCommand(String cmdName) {
 		this.log.info(this.logPrefix + "Registering command '" + cmdName + "'");
-		this.pluginRef.getCommand(cmdName).setExecutor(this);
+		PluginCommand commandObj = this.pluginRef.getCommand(cmdName);
+		
+		if (commandObj == null) {
+			log.info("Could not find command '" + cmdName + "' in plugin.yml");
+			return;
+		}
+		
+		commandObj.setExecutor(this);
 	}
 	
 	protected void registerEvent(Type type, Listener listener, Priority priority) {
