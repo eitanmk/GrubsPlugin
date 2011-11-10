@@ -15,7 +15,9 @@ public class WirelessRedstoneModule extends AbstractGrubsModule {
 	public WirelessRedstoneModule(JavaPlugin plugin) {
 		this.pluginRef = plugin;
 		this.logPrefix = "[WirelessRedstoneModule]: ";
-		this.wrController = new GrubsWirelessRedstone();
+		this.dataFileName = "wireless_redstone.dat";
+		
+		this.wrController = new GrubsWirelessRedstone(this);
 		this.blockListener = new WirelessRedstoneBlockListener(this.wrController);
 		this.playerListener = new WirelessRedstonePlayerListener(this.wrController);
 	}

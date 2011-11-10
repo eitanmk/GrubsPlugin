@@ -16,6 +16,8 @@ import org.bukkit.block.Sign;
 public class GrubsWirelessRedstone {
 	protected final Logger log = Logger.getLogger("Minecraft");
 	
+	private WirelessRedstoneModule moduleRef;
+	
 	public static String TRANSMITTER_TEXT = "[WRt]";
 	public static String RECEIVER_TEXT = "[WRr]";
 	public static String RECEIVER_INVERTED_TEXT = "[WRri]";
@@ -25,27 +27,33 @@ public class GrubsWirelessRedstone {
 	private String redstoneMainDirectory = "plugins/WirelessRedstone";
 	private File RedstonePresetFile = new File(redstoneMainDirectory + File.separator + "channels.dat");
 	
+	public GrubsWirelessRedstone(WirelessRedstoneModule module) {
+		this.moduleRef = module;
+	}
+	
 	public void init() {
-		File mainDir = new File(redstoneMainDirectory);
-		if (!mainDir.exists()) {
-			log.info("Wireless Redstone save directory doesn't exist. Creating.");
-			mainDir.mkdir();
-		}
 		
-		if(!RedstonePresetFile.exists()){
-			log.info("Wireless Redstone channel file doesn't exist. Creating.");
-			try {
-				RedstonePresetFile.createNewFile();
-			} 
-			catch (IOException ex) {
-				this.log.info("Error creating Wireless Redstone channel file!");
-				ex.printStackTrace();
+		File dataFile = this.moduleRef.getDataFile();
+		if (dataFile != null) {
+		
+			if (RedstonePresetFile.exists()) {
+				this.moduleRef.log("Old preset file exists. Moving to new location.");
+				boolean succeeded = RedstonePresetFile.renameTo(dataFile);
+				if (!succeeded) {
+					this.moduleRef.log("Failed to move preset file to new location!");
+					return;
+				}
 			}
+			else {
+				this.moduleRef.log("Can remove the old data file code. It's been migrated already.");
+			}
+
+			log.info("Loading Wireless Redstone channels.");
+			this.loadChannels();
+			log.info("Loaded " + channels.size() + " channels.");
 		}
 		
-		log.info("Loading Wireless Redstone channels.");
-		this.loadChannels();
-		log.info("Loaded " + channels.size() + " channels.");
+		
 	}
 	
 	public void shutdown() {
@@ -148,11 +156,17 @@ public class GrubsWirelessRedstone {
 	}
 	
 	public void loadChannels() {
+		File dataFile = this.moduleRef.getDataFile();
+		if (dataFile == null) {
+			this.moduleRef.log("Error with data file. Nothing can be loaded!");
+			return;
+		}
+		
 		FileInputStream fis = null;
 		ObjectInputStream in = null;
 		
 		try {
-			fis = new FileInputStream(RedstonePresetFile);
+			fis = new FileInputStream(dataFile);
 			in = new ObjectInputStream(fis);
 			
 			Object obj = in.readObject();
@@ -182,10 +196,16 @@ public class GrubsWirelessRedstone {
 		}
 	}
 	
-	public void saveChannels() {		
+	public void saveChannels() {
+		File dataFile = this.moduleRef.getDataFile();
+		if (dataFile == null) {
+			this.moduleRef.log("Error with data file. Nothing will be saved!");
+			return;
+		}
+		
 		log.info("Writing Wireless Redstone save file.");
 		try {
-			FileOutputStream fos = new FileOutputStream(RedstonePresetFile);
+			FileOutputStream fos = new FileOutputStream(dataFile);
 			ObjectOutputStream out = new ObjectOutputStream(fos);
 			
 			for (String name : channels.keySet()) {
