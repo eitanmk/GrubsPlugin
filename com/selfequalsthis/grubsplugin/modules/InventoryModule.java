@@ -192,7 +192,7 @@ public class InventoryModule extends AbstractGrubsModule {
 		Set<String> keys = itemKitPresets.keySet();
 
 		if (keys.size() > 0) {
-			GrubsUtilities.multilinePrint(executingPlayer, keys.toArray(new String[0]), msgIdentifier);
+			GrubsUtilities.multilinePrint(executingPlayer, msgIdentifier, keys.toArray(new String[0]));
 		}
 		else {
 			GrubsMessager.sendMessage(

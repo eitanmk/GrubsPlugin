@@ -18,7 +18,7 @@ public class GrubsUtilities {
 	    return sb.toString();
 	}
 	
-	public static void multilinePrint(Player target, String[] listItems, String prefix) {
+	public static void multilinePrint(Player target, String prefix, String[] listItems) {
 		boolean useSeparator = false;
 		String list = "";
 		for (String s : listItems) {
