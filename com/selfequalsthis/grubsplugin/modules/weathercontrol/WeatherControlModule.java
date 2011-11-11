@@ -12,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
 import com.selfequalsthis.grubsplugin.GrubsMessager;
+import com.selfequalsthis.grubsplugin.GrubsUtilities;
 
 public class WeatherControlModule extends AbstractGrubsModule {
 	
@@ -41,96 +42,148 @@ public class WeatherControlModule extends AbstractGrubsModule {
 		if (!executingPlayer.isOp()) {
 			return false;
 		}
+				
+		if (cmdName.equalsIgnoreCase("strike")) {
+			this.handleStrike(args, executingPlayer);
+		}
+		else if (cmdName.equalsIgnoreCase("zap")) {
+			this.handleZap(args, executingPlayer);
+		}
+		else if (cmdName.equalsIgnoreCase("storm")) {
+			this.handleStormToggle(args, executingPlayer);
+		}
+		else if (cmdName.equalsIgnoreCase("thunder")) {
+			this.handleThunderToggle(args, executingPlayer);
+		}
 		
-		if (cmdName.equalsIgnoreCase("strike") || cmdName.equalsIgnoreCase("zap")) {
-			if (args.length > 0) {
-				// there is a player as an arg
-				// find the player's object
-				List<Player> matches = this.pluginRef.getServer().matchPlayer(args[0]);
-				if (matches.size() > 0) {
-					if (matches.size() > 1) {
-						String matchStr = "";
-						for (Player player : matches) {
-							matchStr = matchStr + player.getName() + " ";
-						}
-						GrubsMessager.sendMessage(
-							executingPlayer, 
-							GrubsMessager.MessageLevel.INFO,
-							"Multiple matches: " + matchStr
-						);
-						return false;
+		this.log(executingPlayer.getDisplayName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
+		
+		return true;
+	}
+	
+	private void handleStrike(String[] args, Player executingPlayer) {
+		if (args.length > 0) {
+			// there is a player as an arg
+			// find the player's object
+			List<Player> matches = this.pluginRef.getServer().matchPlayer(args[0]);
+			if (matches.size() > 0) {
+				if (matches.size() > 1) {
+					String matchStr = "";
+					for (Player player : matches) {
+						matchStr = matchStr + player.getName() + " ";
 					}
-					else {
-						// unambiguous. get 'em!
-						Player target = matches.get(0);
-						Location playerLoc = target.getLocation();
-						World targetWorld = target.getWorld();
-						if (cmdName.equalsIgnoreCase("strike")) {
-							targetWorld.strikeLightningEffect(playerLoc);
-							return true;
-						}
-						else if (cmdName.equalsIgnoreCase("zap")) {
-							targetWorld.strikeLightning(playerLoc);
-							return true;
-						}
-					}
-				}
-				else {
 					GrubsMessager.sendMessage(
 						executingPlayer, 
-						GrubsMessager.MessageLevel.ERROR,
-						"No players matching '" + args[0] + "'."
+						GrubsMessager.MessageLevel.INFO,
+						"Multiple matches: " + matchStr
 					);
-					return false;
+				}
+				else {
+					// unambiguous. get 'em!
+					Player target = matches.get(0);
+					Location playerLoc = target.getLocation();
+					World targetWorld = target.getWorld();
+					targetWorld.strikeLightningEffect(playerLoc);
 				}
 			}
 			else {
-				// aim for cursor
-				Location target = executingPlayer.getTargetBlock(null, 256).getLocation();
-				World targetWorld = executingPlayer.getWorld();
-				if (cmdName.equalsIgnoreCase("strike")) {
-					targetWorld.strikeLightningEffect(target);
-					return true;
-				}
-				else if (cmdName.equalsIgnoreCase("zap")) {
-					targetWorld.strikeLightning(target);
-					return true;
-				}
-			}
-			
-		}
-		else if (cmdName.equalsIgnoreCase("storm") || cmdName.equalsIgnoreCase("thunder")) {
-			if (args.length == 0) {
 				GrubsMessager.sendMessage(
 					executingPlayer, 
 					GrubsMessager.MessageLevel.ERROR,
-					"Argument missing."
+					"No players matching '" + args[0] + "'."
 				);
-				return false;
-			}
-			
-			if ( !args[0].equalsIgnoreCase("on") && !args[0].equalsIgnoreCase("off")) {
-				GrubsMessager.sendMessage(
-					executingPlayer, 
-					GrubsMessager.MessageLevel.ERROR,
-					"Invalid argument."
-				);
-				return false;
-			}
-
-			boolean onFlag = args[0].equalsIgnoreCase("on");
-			World worldObj = executingPlayer.getWorld();
-			if (cmdName.equalsIgnoreCase("storm")) {
-				worldObj.setStorm(onFlag);
-				return true;
-			}
-			else if (cmdName.equalsIgnoreCase("thunder")) {
-				worldObj.setThundering(onFlag);
-				return true;
 			}
 		}
-		
-		return false;
+		else {
+			// aim for cursor
+			Location target = executingPlayer.getTargetBlock(null, 256).getLocation();
+			World targetWorld = executingPlayer.getWorld();
+			targetWorld.strikeLightningEffect(target);
+		}
 	}
 	
+	private void handleZap(String[] args, Player executingPlayer) {
+		if (args.length > 0) {
+			// there is a player as an arg
+			// find the player's object
+			List<Player> matches = this.pluginRef.getServer().matchPlayer(args[0]);
+			if (matches.size() > 0) {
+				if (matches.size() > 1) {
+					String matchStr = "";
+					for (Player player : matches) {
+						matchStr = matchStr + player.getName() + " ";
+					}
+					GrubsMessager.sendMessage(
+						executingPlayer, 
+						GrubsMessager.MessageLevel.INFO,
+						"Multiple matches: " + matchStr
+					);
+				}
+				else {
+					// unambiguous. get 'em!
+					Player target = matches.get(0);
+					Location playerLoc = target.getLocation();
+					World targetWorld = target.getWorld();
+					targetWorld.strikeLightning(playerLoc);
+				}
+			}
+			else {
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.ERROR,
+					"No players matching '" + args[0] + "'."
+				);
+			}
+		}
+		else {
+			// aim for cursor
+			Location target = executingPlayer.getTargetBlock(null, 256).getLocation();
+			World targetWorld = executingPlayer.getWorld();
+			targetWorld.strikeLightning(target);
+		}
+	}
+	
+	private void handleStormToggle(String[] args, Player executingPlayer) {
+		if (args.length == 0) {
+			GrubsMessager.sendMessage(
+				executingPlayer, 
+				GrubsMessager.MessageLevel.ERROR,
+				"Argument missing."
+			);
+		}
+		
+		if (!args[0].equalsIgnoreCase("on") && !args[0].equalsIgnoreCase("off")) {
+			GrubsMessager.sendMessage(
+				executingPlayer, 
+				GrubsMessager.MessageLevel.ERROR,
+				"Invalid argument."
+			);
+		}
+
+		boolean onFlag = args[0].equalsIgnoreCase("on");
+		World worldObj = executingPlayer.getWorld();
+		worldObj.setStorm(onFlag);
+	}
+	
+	private void handleThunderToggle(String[] args, Player executingPlayer) {
+		if (args.length == 0) {
+			GrubsMessager.sendMessage(
+				executingPlayer, 
+				GrubsMessager.MessageLevel.ERROR,
+				"Argument missing."
+			);
+		}
+		
+		if (!args[0].equalsIgnoreCase("on") && !args[0].equalsIgnoreCase("off")) {
+			GrubsMessager.sendMessage(
+				executingPlayer, 
+				GrubsMessager.MessageLevel.ERROR,
+				"Invalid argument."
+			);
+		}
+
+		boolean onFlag = args[0].equalsIgnoreCase("on");
+		World worldObj = executingPlayer.getWorld();
+		worldObj.setThundering(onFlag);
+	}
 }

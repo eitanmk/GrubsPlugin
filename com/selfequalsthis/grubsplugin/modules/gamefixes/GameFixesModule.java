@@ -10,6 +10,7 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
 import com.selfequalsthis.grubsplugin.GrubsMessager;
+import com.selfequalsthis.grubsplugin.GrubsUtilities;
 
 public class GameFixesModule extends AbstractGrubsModule {
 	
@@ -39,40 +40,47 @@ public class GameFixesModule extends AbstractGrubsModule {
 		}
 		
 		if (cmdName.equalsIgnoreCase("eject")) {
-			if (executingPlayer.isInsideVehicle()) {
-				executingPlayer.leaveVehicle();
-			}
-			else {
-				GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "You are not in a vehicle.");
-			}
-			
+			this.handleEject(executingPlayer);
 			return true;
 		}
-		
-		if (cmdName.equalsIgnoreCase("getchunks")) {
-			World world = executingPlayer.getWorld();
-			Chunk playerChunk = world.getChunkAt(executingPlayer.getLocation());
-
-			int playerChunkX = playerChunk.getX();
-			int playerChunkZ = playerChunk.getZ();
-
-			int startX = playerChunkX - 1;
-			int startZ = playerChunkZ - 1;
-			int endX  = playerChunkX + 1;
-			int endZ  = playerChunkZ + 1;
-
-			for (int x = startX; x <= endX; ++x) {
-			    for (int z = startZ; z <= endZ; ++z) {
-			        world.refreshChunk(x, z);
-			    }
-			}
-			
-			GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.INFO, "Chunks re-sent.");
-			
+		else if (cmdName.equalsIgnoreCase("getchunks")) {
+			this.handleGetChunks(executingPlayer);
 			return true;
 		}
-		
+
+		this.log(executingPlayer.getDisplayName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
+
 		return false;
+	}
+	
+	private void handleEject(Player executingPlayer) {
+		if (executingPlayer.isInsideVehicle()) {
+			executingPlayer.leaveVehicle();
+		}
+		else {
+			GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "You are not in a vehicle.");
+		}
+	}
+	
+	private void handleGetChunks(Player executingPlayer) {
+		World world = executingPlayer.getWorld();
+		Chunk playerChunk = world.getChunkAt(executingPlayer.getLocation());
+
+		int playerChunkX = playerChunk.getX();
+		int playerChunkZ = playerChunk.getZ();
+
+		int startX = playerChunkX - 1;
+		int startZ = playerChunkZ - 1;
+		int endX  = playerChunkX + 1;
+		int endZ  = playerChunkZ + 1;
+
+		for (int x = startX; x <= endX; ++x) {
+		    for (int z = startZ; z <= endZ; ++z) {
+		        world.refreshChunk(x, z);
+		    }
+		}
+		
+		GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.INFO, "Chunks re-sent.");
 	}
 
 }

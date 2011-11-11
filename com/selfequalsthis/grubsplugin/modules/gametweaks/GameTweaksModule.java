@@ -9,6 +9,7 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
 import com.selfequalsthis.grubsplugin.GrubsMessager;
+import com.selfequalsthis.grubsplugin.GrubsUtilities;
 
 public class GameTweaksModule extends AbstractGrubsModule {
 	
@@ -45,23 +46,27 @@ public class GameTweaksModule extends AbstractGrubsModule {
 		}
 		
 		if (cmdName.equalsIgnoreCase("buildmode")) {
-			if (args.length > 0) {
-				if (args[0].equalsIgnoreCase("on")) {
-					executingPlayer.setGameMode(GameMode.CREATIVE);
-					GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.INFO, "Creative build mode enabled.");
-				}
-				else {
-					executingPlayer.setGameMode(GameMode.SURVIVAL);
-					GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.INFO, "Build mode disabled.");
-				}
-				return true;
+			this.handleBuildModeToggle(args, executingPlayer);
+		}
+
+		this.log(executingPlayer.getDisplayName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
+		
+		return true;
+	}
+	
+	private void handleBuildModeToggle(String[] args, Player executingPlayer) {
+		if (args.length > 0) {
+			if (args[0].equalsIgnoreCase("on")) {
+				executingPlayer.setGameMode(GameMode.CREATIVE);
+				GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.INFO, "Creative build mode enabled.");
 			}
 			else {
-				GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "Missing command argument.");
-				return true;
+				executingPlayer.setGameMode(GameMode.SURVIVAL);
+				GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.INFO, "Build mode disabled.");
 			}
 		}
-	
-		return false;
+		else {
+			GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "Missing command argument.");
+		}
 	}
 }

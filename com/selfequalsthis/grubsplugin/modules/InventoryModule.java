@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
 import com.selfequalsthis.grubsplugin.GrubsMessager;
+import com.selfequalsthis.grubsplugin.GrubsUtilities;
 
 public class InventoryModule extends AbstractGrubsModule {
 	
@@ -75,159 +76,173 @@ public class InventoryModule extends AbstractGrubsModule {
 			return false;
 		}
 		
-		if (cmdName.equalsIgnoreCase("kitset")) {
-			if (args.length > 0) {
-				String argName = args[0];
-				if (itemKitPresets.containsKey(argName)) {
-					GrubsMessager.sendMessage(
-						executingPlayer, 
-						GrubsMessager.MessageLevel.ERROR,
-						"Kit '" + argName + "' already exists."
-					);
-					return true;
-				}
-				else {
-					itemKitPresets.put(argName, executingPlayer.getInventory().getContents());
-					itemKitArmorPresets.put(argName, executingPlayer.getInventory().getArmorContents());
-					GrubsMessager.sendMessage(
-						executingPlayer, 
-						GrubsMessager.MessageLevel.INFO,
-						"Kit '" + argName + "' saved."
-					);
-					saveItemKits();
-					return true;
-				}
-			}
-			else {
-				GrubsMessager.sendMessage(
-					executingPlayer, 
-					GrubsMessager.MessageLevel.ERROR,
-					"Missing command argument."
-				);
-				return false;
-			}
+		if (cmdName.equalsIgnoreCase("kitget")) {
+			this.handleKitGet(args, executingPlayer);
 		}
-		else if (cmdName.equalsIgnoreCase("kitget")) {
-			if (args.length > 0) {
-				String argName = args[0];
-				if (itemKitPresets.containsKey(argName)) {
-					executingPlayer.getInventory().clear();
-					executingPlayer.getInventory().setContents(itemKitPresets.get(argName));
-					executingPlayer.getInventory().setArmorContents(itemKitArmorPresets.get(argName));
-					GrubsMessager.sendMessage(
-						executingPlayer, 
-						GrubsMessager.MessageLevel.INFO,
-						"Inventory updated."
-					);
-					return true;
-				}
-				else {
-					GrubsMessager.sendMessage(
-						executingPlayer, 
-						GrubsMessager.MessageLevel.ERROR,
-						"No kit named '" + argName + "' found."
-					);
-					return true;
-				}
-			}
-			else {
-				GrubsMessager.sendMessage(
-					executingPlayer, 
-					GrubsMessager.MessageLevel.ERROR,
-					"Missing command argument."
-				);
-				return false;
-			}
+		else if (cmdName.equalsIgnoreCase("kitset")) {
+			this.handleKitSet(args, executingPlayer);
 		}
 		else if (cmdName.equalsIgnoreCase("kitdel")) {
-			if (args.length > 0) {
-				String argName = args[0];
-				if (itemKitPresets.containsKey(argName)) {
-					itemKitPresets.remove(argName);
-					itemKitArmorPresets.remove(argName);
-					GrubsMessager.sendMessage(
-						executingPlayer, 
-						GrubsMessager.MessageLevel.INFO,
-						"Kit '" + argName + "' deleted."
-					);
-					saveItemKits();
-					return true;
-				}
-				else {
-					GrubsMessager.sendMessage(
-						executingPlayer, 
-						GrubsMessager.MessageLevel.ERROR,
-						"No kit named '" + argName + "' found."
-					);
-					return true;
-				}
-			}
-			else {
-				GrubsMessager.sendMessage(
-					executingPlayer, 
-					GrubsMessager.MessageLevel.ERROR,
-					"Missing command argument."
-				);
-				return false;
-			}
+			this.handleKitDelete(args, executingPlayer);
 		}
 		else if (cmdName.equalsIgnoreCase("kitlist")) {
-			boolean useSeparator = false;
-			String msgIdentifier = "[Items] ";
-			String list = "";
-			Set<String> keys = itemKitPresets.keySet();
+			this.handleKitList(executingPlayer);
+		}
+		else if (cmdName.equalsIgnoreCase("clearinv")) {
+			this.handleClearInventory(executingPlayer);
+		}
 
-			if (keys.size() > 0) {
-				for (String s : keys) {
-					if ( (msgIdentifier.length() + list.length() + 2 + s.length()) > 60) {
-						GrubsMessager.sendMessage(
-							executingPlayer, 
-							GrubsMessager.MessageLevel.INFO,
-							msgIdentifier + list
-						);
-						list = "";
-						useSeparator = false;
-					}
-					
-					if (useSeparator) {
-						list += ", ";
-					}
-					else {
-						useSeparator = true;
-					}
-					
-					
-					list += s;	
-				}
+		this.log(executingPlayer.getDisplayName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
 
+		return true;
+	}
+	
+	private void handleKitGet(String[] args, Player executingPlayer) {
+		if (args.length > 0) {
+			String argName = args[0];
+			if (itemKitPresets.containsKey(argName)) {
+				executingPlayer.getInventory().clear();
+				executingPlayer.getInventory().setContents(itemKitPresets.get(argName));
+				executingPlayer.getInventory().setArmorContents(itemKitArmorPresets.get(argName));
 				GrubsMessager.sendMessage(
 					executingPlayer, 
 					GrubsMessager.MessageLevel.INFO,
-					msgIdentifier + list
+					"Inventory updated."
 				);
 			}
 			else {
 				GrubsMessager.sendMessage(
 					executingPlayer, 
 					GrubsMessager.MessageLevel.ERROR,
-					msgIdentifier + "No kits in list."
+					"No kit named '" + argName + "' found."
 				);
 			}
-			return true;
 		}
-		else if (cmdName.equalsIgnoreCase("clearinv")) {
-			executingPlayer.getInventory().clear();
-			executingPlayer.getInventory().setArmorContents(new ItemStack[4]);
+		else {
+			GrubsMessager.sendMessage(
+				executingPlayer, 
+				GrubsMessager.MessageLevel.ERROR,
+				"Missing command argument."
+			);
+		}
+	}
+	
+	private void handleKitSet(String[] args, Player executingPlayer) {
+		if (args.length > 0) {
+			String argName = args[0];
+			if (itemKitPresets.containsKey(argName)) {
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.ERROR,
+					"Kit '" + argName + "' already exists."
+				);
+			}
+			else {
+				itemKitPresets.put(argName, executingPlayer.getInventory().getContents());
+				itemKitArmorPresets.put(argName, executingPlayer.getInventory().getArmorContents());
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.INFO,
+					"Kit '" + argName + "' saved."
+				);
+				saveItemKits();
+			}
+		}
+		else {
+			GrubsMessager.sendMessage(
+				executingPlayer, 
+				GrubsMessager.MessageLevel.ERROR,
+				"Missing command argument."
+			);
+		}
+	}
+	
+	private void handleKitDelete(String[] args, Player executingPlayer) {
+		if (args.length > 0) {
+			String argName = args[0];
+			if (itemKitPresets.containsKey(argName)) {
+				itemKitPresets.remove(argName);
+				itemKitArmorPresets.remove(argName);
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.INFO,
+					"Kit '" + argName + "' deleted."
+				);
+				saveItemKits();
+			}
+			else {
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.ERROR,
+					"No kit named '" + argName + "' found."
+				);
+			}
+		}
+		else {
+			GrubsMessager.sendMessage(
+				executingPlayer, 
+				GrubsMessager.MessageLevel.ERROR,
+				"Missing command argument."
+			);
+		}
+	}
+	
+	private void handleKitList(Player executingPlayer) {
+		boolean useSeparator = false;
+		String msgIdentifier = "[Items] ";
+		String list = "";
+		Set<String> keys = itemKitPresets.keySet();
+
+		if (keys.size() > 0) {
+			for (String s : keys) {
+				if ( (msgIdentifier.length() + list.length() + 2 + s.length()) > 60) {
+					GrubsMessager.sendMessage(
+						executingPlayer, 
+						GrubsMessager.MessageLevel.INFO,
+						msgIdentifier + list
+					);
+					list = "";
+					useSeparator = false;
+				}
+				
+				if (useSeparator) {
+					list += ", ";
+				}
+				else {
+					useSeparator = true;
+				}
+				
+				
+				list += s;	
+			}
+
 			GrubsMessager.sendMessage(
 				executingPlayer, 
 				GrubsMessager.MessageLevel.INFO,
-				"Inventory cleared."
+				msgIdentifier + list
 			);
-			return true;
 		}
-		
-		return false;
+		else {
+			GrubsMessager.sendMessage(
+				executingPlayer, 
+				GrubsMessager.MessageLevel.ERROR,
+				msgIdentifier + "No kits in list."
+			);
+		}
 	}
+	
+	private void handleClearInventory(Player executingPlayer) {
+		executingPlayer.getInventory().clear();
+		executingPlayer.getInventory().setArmorContents(new ItemStack[4]);
+		GrubsMessager.sendMessage(
+			executingPlayer, 
+			GrubsMessager.MessageLevel.INFO,
+			"Inventory cleared."
+		);
+	}
+	
+	
+	
 
 	private void loadItemKits() {
 		File dataFile = this.getDataFile();

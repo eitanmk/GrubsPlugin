@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
 import com.selfequalsthis.grubsplugin.GrubsMessager;
+import com.selfequalsthis.grubsplugin.GrubsUtilities;
 
 public class TeleportModule extends AbstractGrubsModule {
 
@@ -78,78 +79,57 @@ public class TeleportModule extends AbstractGrubsModule {
 		}
 		
 		if (cmdName.equalsIgnoreCase("goto")) {
-			if (args.length > 0) {
-				String argName = args[0];
-
-				// check presets
-				if (argName.equalsIgnoreCase("last")) {
-					if (getLastLocation(executingPlayer) != null) {
-						// copy the object, b/c we don't want to overwrite the reference
-						Location playerLastLocation = getLastLocation(executingPlayer).clone();
-						// save the current location
-						saveLastLocation(executingPlayer);
-						executingPlayer.teleport(playerLastLocation);
-						return true;
-					}
-					else {
-						GrubsMessager.sendMessage(
-							executingPlayer, 
-							GrubsMessager.MessageLevel.ERROR,
-							"No previous location set."
-						);
-						return true;
-					}
-				}
-				else if (teleportPresets.containsKey(argName)) {
-					saveLastLocation(executingPlayer);
-					executingPlayer.teleport(teleportPresets.get(argName));
-					return true;
-				}
-				else {
-					// match players
-					List<Player> matches = this.pluginRef.getServer().matchPlayer(argName);
-					if (matches.size() > 0) {
-						if (matches.size() > 1) {
-							String matchStr = "";
-							for (Player player : matches) {
-								matchStr = matchStr + player.getName() + " ";
-							}
-							GrubsMessager.sendMessage(
-								executingPlayer, 
-								GrubsMessager.MessageLevel.INFO,
-								"Multiple matches: " + matchStr
-							);
-							return true;
-						}
-						else {
-							Player target = matches.get(0);
-							saveLastLocation(executingPlayer);
-							executingPlayer.teleport(target.getLocation());
-							return true;
-						}
-					}
-					else {
-						GrubsMessager.sendMessage(
-							executingPlayer, 
-							GrubsMessager.MessageLevel.ERROR,
-							"No presets or players matching '" + argName + "'."
-						);
-						return true;
-					}
-				}
-			}
-			else {
-				GrubsMessager.sendMessage(
-					executingPlayer, 
-					GrubsMessager.MessageLevel.ERROR,
-					"Missing command argument."
-				);
-				return false;
-			}
+			this.handleGoto(args, executingPlayer);
 		}
 		else if (cmdName.equalsIgnoreCase("fetch")) {
-			if (args.length > 0) {
-				List<Player> matches = this.pluginRef.getServer().matchPlayer(args[0]);
+			this.handleFetch(args, executingPlayer);
+		}
+		else if (cmdName.equalsIgnoreCase("send")) {
+			this.handleSend(args, executingPlayer);
+		}
+		else if (cmdName.equalsIgnoreCase("tpset")) {
+			this.handleTeleportPointSet(args, executingPlayer);
+		}
+		else if (cmdName.equalsIgnoreCase("tpdel")) {
+			this.handleTeleportPointDelete(args, executingPlayer);
+		}
+		else if (cmdName.equalsIgnoreCase("tplist")) {
+			this.handleListTeleportPoints(executingPlayer);
+		}
+
+		this.log(executingPlayer.getDisplayName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
+
+		return true;
+	}
+	
+	private void handleGoto(String[] args, Player executingPlayer) {
+		if (args.length > 0) {
+			String argName = args[0];
+
+			// check presets
+			if (argName.equalsIgnoreCase("last")) {
+				if (getLastLocation(executingPlayer) != null) {
+					// copy the object, b/c we don't want to overwrite the reference
+					Location playerLastLocation = getLastLocation(executingPlayer).clone();
+					// save the current location
+					saveLastLocation(executingPlayer);
+					executingPlayer.teleport(playerLastLocation);
+				}
+				else {
+					GrubsMessager.sendMessage(
+						executingPlayer, 
+						GrubsMessager.MessageLevel.ERROR,
+						"No previous location set."
+					);
+				}
+			}
+			else if (teleportPresets.containsKey(argName)) {
+				saveLastLocation(executingPlayer);
+				executingPlayer.teleport(teleportPresets.get(argName));
+			}
+			else {
+				// match players
+				List<Player> matches = this.pluginRef.getServer().matchPlayer(argName);
 				if (matches.size() > 0) {
 					if (matches.size() > 1) {
 						String matchStr = "";
@@ -161,222 +141,247 @@ public class TeleportModule extends AbstractGrubsModule {
 							GrubsMessager.MessageLevel.INFO,
 							"Multiple matches: " + matchStr
 						);
-						return true;
 					}
 					else {
 						Player target = matches.get(0);
-						saveLastLocation(target);
-						target.teleport(executingPlayer.getLocation());
-						return true;
+						saveLastLocation(executingPlayer);
+						executingPlayer.teleport(target.getLocation());
 					}
 				}
 				else {
 					GrubsMessager.sendMessage(
 						executingPlayer, 
 						GrubsMessager.MessageLevel.ERROR,
-						"No players matching '" + args[0] + "'."
+						"No presets or players matching '" + argName + "'."
 					);
-					return true;
+				}
+			}
+		}
+		else {
+			GrubsMessager.sendMessage(
+				executingPlayer, 
+				GrubsMessager.MessageLevel.ERROR,
+				"Missing command argument."
+			);
+		}
+	}
+	
+	private void handleFetch(String[] args, Player executingPlayer) {
+		if (args.length > 0) {
+			List<Player> matches = this.pluginRef.getServer().matchPlayer(args[0]);
+			if (matches.size() > 0) {
+				if (matches.size() > 1) {
+					String matchStr = "";
+					for (Player player : matches) {
+						matchStr = matchStr + player.getName() + " ";
+					}
+					GrubsMessager.sendMessage(
+						executingPlayer, 
+						GrubsMessager.MessageLevel.INFO,
+						"Multiple matches: " + matchStr
+					);
+				}
+				else {
+					Player target = matches.get(0);
+					saveLastLocation(target);
+					target.teleport(executingPlayer.getLocation());
 				}
 			}
 			else {
 				GrubsMessager.sendMessage(
 					executingPlayer, 
 					GrubsMessager.MessageLevel.ERROR,
-					"Missing command argument."
+					"No players matching '" + args[0] + "'."
 				);
-				return false;
 			}
 		}
-		else if (cmdName.equalsIgnoreCase("send")) {
-			if (args.length == 2) {
-				List<Player> targetMatches = this.pluginRef.getServer().matchPlayer(args[0]);
-				if (targetMatches.size() > 0) {
-					if (targetMatches.size() > 1) {
-						String matchStr = "";
-						for (Player player : targetMatches) {
-							matchStr = matchStr + player.getName() + " ";
-						}
-						GrubsMessager.sendMessage(
-							executingPlayer, 
-							GrubsMessager.MessageLevel.INFO,
-							"Multiple matches: " + matchStr
-						);
-						return true;
+		else {
+			GrubsMessager.sendMessage(
+				executingPlayer, 
+				GrubsMessager.MessageLevel.ERROR,
+				"Missing command argument."
+			);
+		}
+	}
+	
+	private void handleSend(String[] args, Player executingPlayer) {
+		if (args.length == 2) {
+			List<Player> targetMatches = this.pluginRef.getServer().matchPlayer(args[0]);
+			if (targetMatches.size() > 0) {
+				if (targetMatches.size() > 1) {
+					String matchStr = "";
+					for (Player player : targetMatches) {
+						matchStr = matchStr + player.getName() + " ";
+					}
+					GrubsMessager.sendMessage(
+						executingPlayer, 
+						GrubsMessager.MessageLevel.INFO,
+						"Multiple matches: " + matchStr
+					);
+				}
+				else {
+					Player target = targetMatches.get(0);
+
+					if (teleportPresets.containsKey(args[1])) {
+						saveLastLocation(target);
+						target.teleport(teleportPresets.get(args[1]));
 					}
 					else {
-						Player target = targetMatches.get(0);
-
-						if (teleportPresets.containsKey(args[1])) {
-							saveLastLocation(target);
-							target.teleport(teleportPresets.get(args[1]));
-							return true;
-						}
-						else {
-							List<Player> destMatches = this.pluginRef.getServer().matchPlayer(args[1]);
-							if (destMatches.size() > 0) {
-								if (destMatches.size() > 1) {
-									String matchStr = "";
-									for (Player player : destMatches) {
-										matchStr = matchStr + player.getName() + " ";
-									}
-									GrubsMessager.sendMessage(
-										executingPlayer, 
-										GrubsMessager.MessageLevel.INFO,
-										"Multiple matches: " + matchStr
-									);
-									return true;
+						List<Player> destMatches = this.pluginRef.getServer().matchPlayer(args[1]);
+						if (destMatches.size() > 0) {
+							if (destMatches.size() > 1) {
+								String matchStr = "";
+								for (Player player : destMatches) {
+									matchStr = matchStr + player.getName() + " ";
 								}
-								else {
-									Player dest = destMatches.get(0);
-									saveLastLocation(target);
-									target.teleport(dest.getLocation());
-									return true;
-								}
-							}
-							else {
 								GrubsMessager.sendMessage(
 									executingPlayer, 
-									GrubsMessager.MessageLevel.ERROR,
-									"No players matching '" + args[1] + "'."
+									GrubsMessager.MessageLevel.INFO,
+									"Multiple matches: " + matchStr
 								);
-								return true;
 							}
+							else {
+								Player dest = destMatches.get(0);
+								saveLastLocation(target);
+								target.teleport(dest.getLocation());
+							}
+						}
+						else {
+							GrubsMessager.sendMessage(
+								executingPlayer, 
+								GrubsMessager.MessageLevel.ERROR,
+								"No players matching '" + args[1] + "'."
+							);
 						}
 					}
 				}
-				else {
-					GrubsMessager.sendMessage(
-						executingPlayer, 
-						GrubsMessager.MessageLevel.ERROR,
-						"No players matching '" + args[0] + "'."
-					);
-					return true;
-				}
 			}
 			else {
 				GrubsMessager.sendMessage(
 					executingPlayer, 
 					GrubsMessager.MessageLevel.ERROR,
-					"Missing command argument."
+					"No players matching '" + args[0] + "'."
 				);
-				return false;
 			}
 		}
-		else if (cmdName.equalsIgnoreCase("tpset")) {
-			if (args.length > 0) {
-				String argName = args[0];
-				if (teleportPresets.containsKey(argName)) {
-					GrubsMessager.sendMessage(
-						executingPlayer, 
-						GrubsMessager.MessageLevel.ERROR,
-						"Preset '" + argName + "' already exists."
-					);
-					return true;
-				}
-				else {
-					teleportPresets.put(argName, executingPlayer.getLocation());
-					GrubsMessager.sendMessage(
-						executingPlayer, 
-						GrubsMessager.MessageLevel.INFO,
-						"Preset '" + argName + "' saved."
-					);
-					saveTeleportPresets();
-					return true;
-				}
-			}
-			else {
+		else {
+			GrubsMessager.sendMessage(
+				executingPlayer, 
+				GrubsMessager.MessageLevel.ERROR,
+				"Missing command argument."
+			);
+		}
+	}
+	
+	private void handleTeleportPointSet(String[] args, Player executingPlayer) {
+		if (args.length > 0) {
+			String argName = args[0];
+			if (teleportPresets.containsKey(argName)) {
 				GrubsMessager.sendMessage(
 					executingPlayer, 
 					GrubsMessager.MessageLevel.ERROR,
-					"Missing command argument."
+					"Preset '" + argName + "' already exists."
 				);
-				return false;
-			}
-		}
-		else if (cmdName.equalsIgnoreCase("tpdel")) {
-			if (args.length > 0) {
-				String argName = args[0];
-				if (teleportPresets.containsKey(argName)) {
-					teleportPresets.remove(argName);
-					GrubsMessager.sendMessage(
-						executingPlayer, 
-						GrubsMessager.MessageLevel.INFO,
-						"Preset '" + argName + "' deleted."
-					);
-					saveTeleportPresets();
-					return true;
-				}
-				else {
-					GrubsMessager.sendMessage(
-						executingPlayer, 
-						GrubsMessager.MessageLevel.ERROR,
-						"Preset '" + argName + "' not found."
-					);
-					return true;
-				}
 			}
 			else {
-				GrubsMessager.sendMessage(
-					executingPlayer, 
-					GrubsMessager.MessageLevel.ERROR,
-					"Missing command argument."
-				);
-				return false;
-			}
-		}
-		else if (cmdName.equalsIgnoreCase("tplist")) {
-			boolean useSeparator = false;
-			String msgIdentifier = "[Teleport] ";
-			String list = "";
-			Set<String> keys = teleportPresets.keySet();
-
-			if (keys.size() > 0) {
-				for (String s : keys) {
-					if (s.indexOf("_last") != -1) {
-						continue;
-					}
-					
-					if ( (msgIdentifier.length() + list.length() + 2 + s.length()) > 60) {
-						GrubsMessager.sendMessage(
-							executingPlayer, 
-							GrubsMessager.MessageLevel.INFO,
-							msgIdentifier + list
-						);
-						list = "";
-						useSeparator = false;
-					}
-					
-					if (useSeparator) {
-						list += ", ";
-					}
-					else {
-						useSeparator = true;
-					}
-					
-					
-					list += s;	
-				}
-
+				teleportPresets.put(argName, executingPlayer.getLocation());
 				GrubsMessager.sendMessage(
 					executingPlayer, 
 					GrubsMessager.MessageLevel.INFO,
-					msgIdentifier + list
+					"Preset '" + argName + "' saved."
 				);
+				saveTeleportPresets();
+			}
+		}
+		else {
+			GrubsMessager.sendMessage(
+				executingPlayer, 
+				GrubsMessager.MessageLevel.ERROR,
+				"Missing command argument."
+			);
+		}
+	}
+	
+	private void handleTeleportPointDelete(String[] args, Player executingPlayer) {
+		if (args.length > 0) {
+			String argName = args[0];
+			if (teleportPresets.containsKey(argName)) {
+				teleportPresets.remove(argName);
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.INFO,
+					"Preset '" + argName + "' deleted."
+				);
+				saveTeleportPresets();
 			}
 			else {
 				GrubsMessager.sendMessage(
 					executingPlayer, 
 					GrubsMessager.MessageLevel.ERROR,
-					msgIdentifier + "No presets in list."
+					"Preset '" + argName + "' not found."
 				);
 			}
-
-			return true;
 		}
-		
-		return false;
+		else {
+			GrubsMessager.sendMessage(
+				executingPlayer, 
+				GrubsMessager.MessageLevel.ERROR,
+				"Missing command argument."
+			);
+		}
 	}
+	
+	private void handleListTeleportPoints(Player executingPlayer) {
+		boolean useSeparator = false;
+		String msgIdentifier = "[Teleport] ";
+		String list = "";
+		Set<String> keys = teleportPresets.keySet();
+
+		if (keys.size() > 0) {
+			for (String s : keys) {
+				if (s.indexOf("_last") != -1) {
+					continue;
+				}
+				
+				if ( (msgIdentifier.length() + list.length() + 2 + s.length()) > 60) {
+					GrubsMessager.sendMessage(
+						executingPlayer, 
+						GrubsMessager.MessageLevel.INFO,
+						msgIdentifier + list
+					);
+					list = "";
+					useSeparator = false;
+				}
+				
+				if (useSeparator) {
+					list += ", ";
+				}
+				else {
+					useSeparator = true;
+				}
+				
+				
+				list += s;	
+			}
+
+			GrubsMessager.sendMessage(
+				executingPlayer, 
+				GrubsMessager.MessageLevel.INFO,
+				msgIdentifier + list
+			);
+		}
+		else {
+			GrubsMessager.sendMessage(
+				executingPlayer, 
+				GrubsMessager.MessageLevel.ERROR,
+				msgIdentifier + "No presets in list."
+			);
+		}
+	}
+	
+	
+	
+	
 	
 	private void loadTeleportPresets() {
 		File dataFile = this.getDataFile();
