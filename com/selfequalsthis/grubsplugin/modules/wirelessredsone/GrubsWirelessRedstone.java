@@ -178,9 +178,7 @@ public class GrubsWirelessRedstone {
 				obj = in.readObject();
 			}
 		}
-		catch (EOFException eof) {
-			log.info("End of file reached.");
-		}
+		catch (EOFException eof) { }
 		catch (Exception ex) {
 			log.info("Error reading Wireless Redstone channels file!");
 			ex.printStackTrace();

@@ -188,39 +188,11 @@ public class InventoryModule extends AbstractGrubsModule {
 	}
 	
 	private void handleKitList(Player executingPlayer) {
-		boolean useSeparator = false;
 		String msgIdentifier = "[Items] ";
-		String list = "";
 		Set<String> keys = itemKitPresets.keySet();
 
 		if (keys.size() > 0) {
-			for (String s : keys) {
-				if ( (msgIdentifier.length() + list.length() + 2 + s.length()) > 60) {
-					GrubsMessager.sendMessage(
-						executingPlayer, 
-						GrubsMessager.MessageLevel.INFO,
-						msgIdentifier + list
-					);
-					list = "";
-					useSeparator = false;
-				}
-				
-				if (useSeparator) {
-					list += ", ";
-				}
-				else {
-					useSeparator = true;
-				}
-				
-				
-				list += s;	
-			}
-
-			GrubsMessager.sendMessage(
-				executingPlayer, 
-				GrubsMessager.MessageLevel.INFO,
-				msgIdentifier + list
-			);
+			GrubsUtilities.multilinePrint(executingPlayer, keys.toArray(new String[0]), msgIdentifier);
 		}
 		else {
 			GrubsMessager.sendMessage(

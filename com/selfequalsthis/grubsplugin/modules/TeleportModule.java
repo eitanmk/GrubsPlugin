@@ -332,43 +332,11 @@ public class TeleportModule extends AbstractGrubsModule {
 	}
 	
 	private void handleListTeleportPoints(Player executingPlayer) {
-		boolean useSeparator = false;
 		String msgIdentifier = "[Teleport] ";
-		String list = "";
 		Set<String> keys = teleportPresets.keySet();
 
 		if (keys.size() > 0) {
-			for (String s : keys) {
-				if (s.indexOf("_last") != -1) {
-					continue;
-				}
-				
-				if ( (msgIdentifier.length() + list.length() + 2 + s.length()) > 60) {
-					GrubsMessager.sendMessage(
-						executingPlayer, 
-						GrubsMessager.MessageLevel.INFO,
-						msgIdentifier + list
-					);
-					list = "";
-					useSeparator = false;
-				}
-				
-				if (useSeparator) {
-					list += ", ";
-				}
-				else {
-					useSeparator = true;
-				}
-				
-				
-				list += s;	
-			}
-
-			GrubsMessager.sendMessage(
-				executingPlayer, 
-				GrubsMessager.MessageLevel.INFO,
-				msgIdentifier + list
-			);
+			GrubsUtilities.multilinePrint(executingPlayer, keys.toArray(new String[0]), msgIdentifier);
 		}
 		else {
 			GrubsMessager.sendMessage(
