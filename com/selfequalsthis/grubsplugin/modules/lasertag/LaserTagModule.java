@@ -2,7 +2,8 @@ package com.selfequalsthis.grubsplugin.modules.lasertag;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.bukkit.ChatColor;
+
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -10,6 +11,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
+import com.selfequalsthis.grubsplugin.GrubsMessager;
 import com.selfequalsthis.grubsplugin.GrubsUtilities;
 
 public class LaserTagModule extends AbstractGrubsModule {
@@ -49,7 +51,7 @@ public class LaserTagModule extends AbstractGrubsModule {
 
 	private void handleLasertagCommand(String[] args, Player executingPlayer) {
 		if (args.length == 0) {
-			executingPlayer.sendMessage(ChatColor.RED + "Not enough arguments.");
+			GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "Not enough arguments.");
 		}
 		
 		String subcommand = args[0];
@@ -70,23 +72,31 @@ public class LaserTagModule extends AbstractGrubsModule {
 			this.handleSubCommandStart(executingPlayer);
 		}
 		else {
-			executingPlayer.sendMessage(ChatColor.RED + "Unknown subcommand.");
+			GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "Unknown subcommand.");
 		}
 	}
 	
 	private void handleSubCommandCreate(Player executingPlayer) {
 		if (GrubsLaserTag.getGameState() == GrubsLaserTag.GAME_STATES.UNINITIALIZED) {
 			GrubsLaserTag.createNewGame();
-			executingPlayer.sendMessage(ChatColor.GREEN + "New game ready for setup. Add players next.");
+			GrubsMessager.sendMessage(
+				executingPlayer,
+				GrubsMessager.MessageLevel.INFO,
+				"New game ready for setup. Add players next."
+			);
 		}
 		else {
-			executingPlayer.sendMessage(ChatColor.RED + "Can't create a new game right now.");
+			GrubsMessager.sendMessage(
+				executingPlayer, 
+				GrubsMessager.MessageLevel.ERROR, 
+				"Can't create a new game right now."
+			);
 		}
 	}
 	
 	private void handleSubCommandPlayers(String[] args, Player executingPlayer) {
 		if (args.length == 1) {
-			executingPlayer.sendMessage(ChatColor.RED + "Not enough arguments.");
+			GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "Not enough arguments.");
 		}
 		
 		if (GrubsLaserTag.getGameState() == GrubsLaserTag.GAME_STATES.ACCEPT_PLAYERS ||
@@ -95,13 +105,21 @@ public class LaserTagModule extends AbstractGrubsModule {
 			ArrayList<Player> playersToAdd = new ArrayList<Player>(10);
 							
 			for (int i = 1, len = args.length; i < len; ++i) {
-				List<Player> matches = this.pluginRef.getServer().matchPlayer(args[i]);
+				List<Player> matches = Bukkit.matchPlayer(args[i]);
 				
 				if (matches.size() == 0) {
-					executingPlayer.sendMessage(ChatColor.RED + "No players matching '" + args[i] + "'.");
+					GrubsMessager.sendMessage(
+						executingPlayer, 
+						GrubsMessager.MessageLevel.ERROR,
+						"No players matching '" + args[i] + "'."
+					);
 				}
 				else if (matches.size() == 1) {
-					executingPlayer.sendMessage(ChatColor.GREEN + "Added player " + matches.get(0).getDisplayName() + ".");
+					GrubsMessager.sendMessage(
+						executingPlayer,
+						GrubsMessager.MessageLevel.INFO,
+						"Added player " + matches.get(0).getDisplayName() + "."
+					);
 					playersToAdd.add(matches.get(0));
 				}
 				else {
@@ -113,44 +131,80 @@ public class LaserTagModule extends AbstractGrubsModule {
 							separator = ", ";
 						}
 					}
-					executingPlayer.sendMessage(ChatColor.YELLOW + "Matches for '" + args[i] + "': " + matchStr);
+					GrubsMessager.sendMessage(
+						executingPlayer, 
+						GrubsMessager.MessageLevel.INQUIRY, 
+						"Matches for '" + args[i] + "': " + matchStr
+					);
 				}
 			}
 			
 			if (playersToAdd.size() > 0) {
 				int added = GrubsLaserTag.setPlayers(playersToAdd.toArray(new Player[1]));
-				executingPlayer.sendMessage(ChatColor.GREEN + "Added " + added + " players.");
-				executingPlayer.sendMessage(ChatColor.GREEN + "You can add more players or set time next.");
+				GrubsMessager.sendMessage(
+					executingPlayer,
+					GrubsMessager.MessageLevel.INFO, 
+					"Added " + added + " players."
+				);
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.INFO, 
+					"You can add more players or set time next."
+				);
 			}
 		}
 		else {
-			executingPlayer.sendMessage(ChatColor.RED + "Current game not accepting players.");
+			GrubsMessager.sendMessage(
+				executingPlayer, 
+				GrubsMessager.MessageLevel.ERROR,
+				"Current game not accepting players."
+			);
 		}
 	}
 	
 	private void handleSubCommandTime(String[] args, Player executingPlayer) {
 		if (args.length == 1) {
-			executingPlayer.sendMessage(ChatColor.RED + "Not enough arguments.");
+			GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "Not enough arguments.");
 		}
 		
 		if (GrubsLaserTag.getGameState() == GrubsLaserTag.GAME_STATES.ACCEPT_TIME_LIMIT) {
 			int minutesToSet = Integer.parseInt(args[1]);
-			executingPlayer.sendMessage(ChatColor.GREEN + "Setting game length to " + minutesToSet + " minutes.");
+			GrubsMessager.sendMessage(
+				executingPlayer, 
+				GrubsMessager.MessageLevel.INFO, 
+				"Setting game length to " + minutesToSet + " minutes."
+			);
 			GrubsLaserTag.setGameLength(minutesToSet);
-			executingPlayer.sendMessage(ChatColor.GREEN + "Move to the restart point and set restart next.");
+			GrubsMessager.sendMessage(
+				executingPlayer, 
+				GrubsMessager.MessageLevel.INFO,
+				"Move to the restart point and set restart next."
+			);
 		}
 		else {
-			executingPlayer.sendMessage(ChatColor.RED + "Current game not accepting time limit.");
+			GrubsMessager.sendMessage(
+				executingPlayer, 
+				GrubsMessager.MessageLevel.ERROR, 
+				"Current game not accepting time limit."
+			);
 		}
 	}
 	
 	private void handleSubCommandRestartPoint(Player executingPlayer) {
 		if (GrubsLaserTag.getGameState() == GrubsLaserTag.GAME_STATES.ACCEPT_ELIMINATION_LOCATION) {
 			GrubsLaserTag.setEliminationLocation(executingPlayer.getLocation());
-			executingPlayer.sendMessage(ChatColor.GREEN + "Game setup complete. Ready to start.");
+			GrubsMessager.sendMessage(
+				executingPlayer, 
+				GrubsMessager.MessageLevel.INFO, 
+				"Game setup complete. Ready to start."
+			);
 		}
 		else {
-			executingPlayer.sendMessage(ChatColor.RED + "Current game not accepting an restart location.");
+			GrubsMessager.sendMessage(
+				executingPlayer, 
+				GrubsMessager.MessageLevel.ERROR,
+				"Current game not accepting an restart location."
+			);
 		}
 	}
 	
@@ -159,7 +213,7 @@ public class LaserTagModule extends AbstractGrubsModule {
 			GrubsLaserTag.start();
 		}
 		else {
-			executingPlayer.sendMessage(ChatColor.RED + "Can't start a new game.");
+			GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "Can't start a new game.");
 		}
 	}
 

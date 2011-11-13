@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -129,7 +131,7 @@ public class TeleportModule extends AbstractGrubsModule {
 			}
 			else {
 				// match players
-				List<Player> matches = this.pluginRef.getServer().matchPlayer(argName);
+				List<Player> matches = Bukkit.matchPlayer(argName);
 				if (matches.size() > 0) {
 					if (matches.size() > 1) {
 						String matchStr = "";
@@ -168,7 +170,7 @@ public class TeleportModule extends AbstractGrubsModule {
 	
 	private void handleFetch(String[] args, Player executingPlayer) {
 		if (args.length > 0) {
-			List<Player> matches = this.pluginRef.getServer().matchPlayer(args[0]);
+			List<Player> matches = Bukkit.matchPlayer(args[0]);
 			if (matches.size() > 0) {
 				if (matches.size() > 1) {
 					String matchStr = "";
@@ -206,7 +208,7 @@ public class TeleportModule extends AbstractGrubsModule {
 	
 	private void handleSend(String[] args, Player executingPlayer) {
 		if (args.length == 2) {
-			List<Player> targetMatches = this.pluginRef.getServer().matchPlayer(args[0]);
+			List<Player> targetMatches = Bukkit.matchPlayer(args[0]);
 			if (targetMatches.size() > 0) {
 				if (targetMatches.size() > 1) {
 					String matchStr = "";
@@ -227,7 +229,7 @@ public class TeleportModule extends AbstractGrubsModule {
 						target.teleport(teleportPresets.get(args[1]));
 					}
 					else {
-						List<Player> destMatches = this.pluginRef.getServer().matchPlayer(args[1]);
+						List<Player> destMatches = Bukkit.matchPlayer(args[1]);
 						if (destMatches.size() > 0) {
 							if (destMatches.size() > 1) {
 								String matchStr = "";
@@ -368,7 +370,7 @@ public class TeleportModule extends AbstractGrubsModule {
 				String rawValue = teleportProperties.getProperty(realKey);
 				
 				String[] parts = rawValue.split(",");
-				Location realLoc = new Location(this.pluginRef.getServer().getWorld(parts[0]),
+				Location realLoc = new Location(Bukkit.getWorld(parts[0]),
 												Double.parseDouble(parts[1]),
 												Double.parseDouble(parts[2]),
 												Double.parseDouble(parts[3]),

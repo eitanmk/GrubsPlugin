@@ -3,6 +3,8 @@ package com.selfequalsthis.grubsplugin;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
+
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -45,7 +47,7 @@ public abstract class AbstractGrubsModule implements CommandExecutor {
 	
 	protected void registerEvent(Type type, Listener listener, Priority priority) {
 		this.log("Listening to '" + type.toString() + "'");
-		this.pluginRef.getServer().getPluginManager().registerEvent(type, listener, priority, this.pluginRef);
+		Bukkit.getPluginManager().registerEvent(type, listener, priority, this.pluginRef);
 	}
 
 	public File getDataFile() {

@@ -5,9 +5,10 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+
+import com.selfequalsthis.grubsplugin.GrubsMessager;
 
 public class GrubsLaserTag {
 	
@@ -97,7 +98,7 @@ public class GrubsLaserTag {
 		synchronized(lockObj) {
 			for (Player p : playerList) {
 				String updateStr = "Score: " + gameScores.get(p.getDisplayName()) + ", " + leaderString;
-				p.sendMessage(updateStr);
+				GrubsMessager.sendMessage(p, GrubsMessager.MessageLevel.PLAIN, updateStr);
 			}
 		}
 	}
@@ -121,7 +122,7 @@ public class GrubsLaserTag {
 	
 	private static void completeGame() {
 		for (Player p : playerList) {
-			p.sendMessage("Game over.");
+			GrubsMessager.sendMessage(p, GrubsMessager.MessageLevel.MONITOR, "Game over.");
 			teleportToRestartPoint(p);
 		}
 		
@@ -171,14 +172,18 @@ public class GrubsLaserTag {
 			public void run() {
 				if (count > 0) {
 					for (Player p : GrubsLaserTag.playerList) {
-						p.sendMessage(ChatColor.DARK_PURPLE + "Game starting in " + count + " seconds.");
+						GrubsMessager.sendMessage(
+							p,
+							GrubsMessager.MessageLevel.MONITOR,
+							"Game starting in " + count + " seconds."
+						);
 					}
 					
 					count--;
 				}			
 				else {
 					for (Player p : GrubsLaserTag.playerList) {
-						p.sendMessage(ChatColor.DARK_PURPLE + "GO!");
+						GrubsMessager.sendMessage(p, GrubsMessager.MessageLevel.MONITOR, "GO!");
 					}
 					
 					this.cancel();
@@ -217,9 +222,9 @@ public class GrubsLaserTag {
 		
 		// print scores
 		for (Player p : playerList) {
-			p.sendMessage("Scores:");
+			GrubsMessager.sendMessage(p, GrubsMessager.MessageLevel.PLAIN, "Scores:");
 			for (int h = 0, num = highScoreList.size(); h < num; ++h) {
-				p.sendMessage("" + (h+1) + ". " + highScoreList.get(h));
+				GrubsMessager.sendMessage(p, GrubsMessager.MessageLevel.PLAIN, "" + (h+1) + ". " + highScoreList.get(h));
 			}
 		}
 	}

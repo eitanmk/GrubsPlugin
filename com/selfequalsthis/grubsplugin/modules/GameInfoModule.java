@@ -2,6 +2,8 @@ package com.selfequalsthis.grubsplugin.modules;
 
 import java.util.HashMap;
 import java.util.List;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -134,7 +136,7 @@ public class GameInfoModule extends AbstractGrubsModule {
 		if (args.length > 0) {
 			String argName = args[0];
 			// match players
-			List<Player> matches = this.pluginRef.getServer().matchPlayer(argName);
+			List<Player> matches = Bukkit.matchPlayer(argName);
 			if (matches.size() > 0) {
 				if (matches.size() > 1) {
 					String matchStr = "";
@@ -179,7 +181,7 @@ public class GameInfoModule extends AbstractGrubsModule {
 		if (args.length > 0) {
 			String argName = args[0];
 			// match players
-			List<Player> matches = this.pluginRef.getServer().matchPlayer(argName);
+			List<Player> matches = Bukkit.matchPlayer(argName);
 			if (matches.size() > 0) {
 				if (matches.size() > 1) {
 					String matchStr = "";

@@ -1,6 +1,8 @@
 package com.selfequalsthis.grubsplugin.modules.weathercontrol;
 
 import java.util.List;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -65,7 +67,7 @@ public class WeatherControlModule extends AbstractGrubsModule {
 		if (args.length > 0) {
 			// there is a player as an arg
 			// find the player's object
-			List<Player> matches = this.pluginRef.getServer().matchPlayer(args[0]);
+			List<Player> matches = Bukkit.matchPlayer(args[0]);
 			if (matches.size() > 0) {
 				if (matches.size() > 1) {
 					String matchStr = "";
@@ -106,7 +108,7 @@ public class WeatherControlModule extends AbstractGrubsModule {
 		if (args.length > 0) {
 			// there is a player as an arg
 			// find the player's object
-			List<Player> matches = this.pluginRef.getServer().matchPlayer(args[0]);
+			List<Player> matches = Bukkit.matchPlayer(args[0]);
 			if (matches.size() > 0) {
 				if (matches.size() > 1) {
 					String matchStr = "";

@@ -5,13 +5,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
 
+import com.selfequalsthis.grubsplugin.GrubsMessager;
+
 public class GameTweaksPlayerListener extends PlayerListener {
 
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player p = event.getPlayer();
 		World w = p.getWorld();
-		p.sendMessage("Welcome, " + p.getDisplayName() + "!");
-		p.sendMessage("Current game time is: " + w.getTime());
+		GrubsMessager.sendMessage(p, GrubsMessager.MessageLevel.PLAIN, "Welcome, " + p.getDisplayName() + "!");
+		GrubsMessager.sendMessage(p, GrubsMessager.MessageLevel.INFO, "Current game time is: " + w.getTime());
 		
 		if (w.getPlayers().size() > 0) {
 			String playerListStr = "";
@@ -27,10 +29,10 @@ public class GameTweaksPlayerListener extends PlayerListener {
 				playerListStr += player.getDisplayName();
 			}
 			
-			p.sendMessage("Currently playing: " + playerListStr);
+			GrubsMessager.sendMessage(p, GrubsMessager.MessageLevel.INQUIRY, "Currently playing: " + playerListStr);
 		}
 		else {
-			p.sendMessage("No other players currently here.");
+			GrubsMessager.sendMessage(p, GrubsMessager.MessageLevel.INQUIRY, "No other players currently here.");
 		}
 	}
 	
