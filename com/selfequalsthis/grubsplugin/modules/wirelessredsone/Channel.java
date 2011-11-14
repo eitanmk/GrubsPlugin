@@ -44,18 +44,13 @@ public class Channel implements Serializable {
 		receivers.add(node);
 		
 		// might have to turn the new one on immediately
-		try {
-			if (!transmitters.isEmpty()) {
-				if (isTransmitting()) {
-					node.handleChannelStartTransmitting(block.getLocation().getWorld(), this.name);
-				}
-				else {
-					node.handleChannelEndTransmitting(block.getLocation().getWorld(), this.name);
-				}
+		if (!transmitters.isEmpty()) {
+			if (isTransmitting()) {
+				node.handleChannelStartTransmitting(block.getLocation().getWorld(), this.name);
 			}
-		} catch (ReceiverDestroyedException e) {
-			log.info("Receiver missing." + block.getLocation().getBlock().getType());
-			this.removeReceiverAt(block.getLocation());
+			else {
+				node.handleChannelEndTransmitting(block.getLocation().getWorld(), this.name);
+			}
 		}
 	}
 	
@@ -70,12 +65,13 @@ public class Channel implements Serializable {
 	}
 	
 	public ChannelNode getReceiverAt(Location loc) {
+		//log.info("name: " + this.name + ", len: " + receivers.size());
 		for (ChannelNode node : receivers) {
 			if (node.isAtLocation(loc)) {
 				return node;
 			}
 		}
-		
+		//log.info("no receiver found");
 		return null;
 	}
 	
@@ -139,45 +135,48 @@ public class Channel implements Serializable {
 	}
 	
 	private void updateReceivers(World world, boolean powerOn) {
-		ArrayList<Location> removeLocations = new ArrayList<Location>();
 		for (ChannelNode receiver : receivers) {
-			try {
-				if (powerOn) {
-					receiver.handleChannelStartTransmitting(world, this.name);
-				}
-				else {
-					receiver.handleChannelEndTransmitting(world, this.name);
-				}
-			} catch (ReceiverDestroyedException e) {
-				Location loc = new Location(world, receiver.getX(), receiver.getY(), receiver.getZ());
-				removeLocations.add(loc);
+			if (powerOn) {
+				receiver.handleChannelStartTransmitting(world, this.name);
 			}
-		}
-		
-		if (removeLocations.size() > 0) {
-			for (Location loc : removeLocations) {
-				log.info("Missing receiver at "  + loc.getX() + "," + loc.getY() + "," + loc.getZ());
-				this.removeReceiverAt(loc);
+			else {
+				receiver.handleChannelEndTransmitting(world, this.name);
 			}
 		}
 	}
 	
 	private void allReceiversToSigns(World world) {
-		ArrayList<Location> removeLocations = new ArrayList<Location>();
 		for (ChannelNode receiver : receivers) {
-			try {
-				receiver.toSign(world, this.name);
-			} catch (ReceiverDestroyedException e) {
-				Location loc = new Location(world, receiver.getX(), receiver.getY(), receiver.getZ());
-				removeLocations.add(loc);
-			}
+			receiver.toSign(world, this.name);
+		}
+	}
+	
+	public boolean handlePhysicsChange(Block block) {
+		// does this location affect us?
+		//log.info("checking transmitters");
+		ChannelNode target = this.getTransmitterAt(block.getLocation());
+		if (target == null) {
+			//log.info("not a transmitter, checking receivers");
+			target = this.getReceiverAt(block.getLocation());
 		}
 		
-		if (removeLocations.size() > 0) {
-			for (Location loc : removeLocations) {
-				log.info("Missing receiver at "  + loc.getX() + "," + loc.getY() + "," + loc.getZ());
-				this.removeReceiverAt(loc);
+		if (target == null) {
+			//log.info("nothing on this channel (" + this.name + "), nothing to do.");
+			return false;
+		}
+		else {
+			//log.info("found a target on channel '" + this.name + "', testing for physics destruction");
+			boolean removeNode = target.physicsWillCauseDestruction(block);
+			if (removeNode) {
+				//log.info("node will be destroyed by physics. removing it");
+				this.removeTransmitterAt(block.getLocation());
+				this.removeReceiverAt(block.getLocation());
 			}
+			else {
+				//log.info("target won't be removed");
+			}
+			
+			return removeNode;
 		}
 	}
  }

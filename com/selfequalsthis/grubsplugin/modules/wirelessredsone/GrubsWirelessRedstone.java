@@ -98,7 +98,7 @@ public class GrubsWirelessRedstone {
 		String channelName = lines[1];
 		Channel channelObj = null;
 		if (channels.containsKey(channelName)) {
-			log.info("Found channel");
+			log.info("Found channel " + channelName);
 			channelObj = channels.get(channelName);
 		}
 		else {
@@ -215,6 +215,38 @@ public class GrubsWirelessRedstone {
 		catch (Exception ex) {
 			log.info("Error writing Wireless Redstone channels file!");
 			ex.printStackTrace();
+		}
+	}
+	
+	public void removeReceiverOnAnyChannel(Block block) {
+		for (Channel channel : channels.values()) {
+			//log.info("testing '" + channel.getName() + "' with location " + block.getLocation());
+			channel.removeReceiverAt(block.getLocation());
+		}
+		//log.info("done notifying channels");
+	}
+	
+	public void checkChannelsForPhysicsUpdates(Block block) {
+		//log.info("checking for physics");
+		boolean removedNode = false;
+		Channel affectedChannel = null;
+		
+		for (Channel channel : channels.values()) {
+			removedNode = channel.handlePhysicsChange(block);
+			if (removedNode) {
+				affectedChannel = channel;
+				break;
+			}
+		}
+		
+		if (removedNode) {
+			//log.info("node was removed");
+			if (affectedChannel.isEmpty()) {
+				String name = affectedChannel.getName();
+				log.info("physics removal cleared the channel. removing empty channel '" + name + "'");
+				channels.remove(name);
+			}
+			this.saveChannels();
 		}
 	}
 }

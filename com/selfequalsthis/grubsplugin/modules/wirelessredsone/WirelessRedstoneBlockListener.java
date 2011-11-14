@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
@@ -28,7 +29,7 @@ public class WirelessRedstoneBlockListener extends BlockListener {
 			}
 		}
 		else if (event.getBlock().getType() == Material.REDSTONE_TORCH_ON) {
-			// was that torch at a location of a receiver?
+			this.controllerRef.removeReceiverOnAnyChannel(event.getBlock());
 		}
 	}
 	
@@ -47,6 +48,12 @@ public class WirelessRedstoneBlockListener extends BlockListener {
 	public void onSignChange(SignChangeEvent event) {
 		if (this.controllerRef.isValidNode(event.getLines())) {
 			this.controllerRef.addNode(event.getBlock(), event.getLines());
+		}
+	}
+	
+	public void onBlockPhysics(BlockPhysicsEvent event) {	
+		if ((event.getBlock().getState() instanceof Sign) || event.getBlock().getType() == Material.REDSTONE_TORCH_ON) {
+			this.controllerRef.checkChannelsForPhysicsUpdates(event.getBlock());
 		}
 	}
 }

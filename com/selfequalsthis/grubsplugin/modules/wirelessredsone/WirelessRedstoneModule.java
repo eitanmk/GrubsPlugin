@@ -24,6 +24,7 @@ public class WirelessRedstoneModule extends AbstractGrubsModule {
 	
 	public void enable() {
 		this.registerEvent(Event.Type.BLOCK_BREAK, this.blockListener, Priority.Monitor);
+		this.registerEvent(Event.Type.BLOCK_PHYSICS, this.blockListener, Priority.Monitor);
 		this.registerEvent(Event.Type.REDSTONE_CHANGE, this.blockListener, Priority.Monitor);
 		this.registerEvent(Event.Type.SIGN_CHANGE, this.blockListener, Priority.Monitor);
 		this.registerEvent(Event.Type.PLAYER_QUIT, this.playerListener, Priority.Monitor);

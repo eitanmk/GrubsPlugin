@@ -1,6 +1,8 @@
 package com.selfequalsthis.grubsplugin.modules.wirelessredsone;
 
 import java.io.Serializable;
+import java.util.logging.Logger;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -10,6 +12,8 @@ import org.bukkit.block.Sign;
 public class ChannelNode implements Serializable {
 
 	private static final long serialVersionUID = -7889393871253577443L;
+	
+	protected static final Logger log = Logger.getLogger("Minecraft");
 	
 	private String world;
 	private int x;
@@ -70,16 +74,18 @@ public class ChannelNode implements Serializable {
 		return isInverted;
 	}
 	
-	public boolean isAtLocation(Location loc) {
+	public boolean isAtLocation(Location loc) {	
+		//log.info("event loc: " + loc.toString());
+		//log.info("node loc: " + this.world + ":" + this.x + ":" + this.y + ":" + this.z);
 		return (
-			this.world == loc.getWorld().getName()
+			this.world.equalsIgnoreCase(loc.getWorld().getName())
 			&& this.x == loc.getBlockX()
 			&& this.y == loc.getBlockY()
 			&& this.z == loc.getBlockZ()
 		);
 	}
 	
-	public void handleChannelStartTransmitting(World world, String channelName) throws ReceiverDestroyedException {
+	public void handleChannelStartTransmitting(World world, String channelName) {
 		if (isInverted) {
 			this.toSign(world, channelName);
 		}
@@ -88,7 +94,7 @@ public class ChannelNode implements Serializable {
 		}
 	}
 	
-	public void handleChannelEndTransmitting(World world, String channelName) throws ReceiverDestroyedException {
+	public void handleChannelEndTransmitting(World world, String channelName) {
 		if (isInverted) {
 			this.toTorch(world);
 		}
@@ -97,7 +103,7 @@ public class ChannelNode implements Serializable {
 		}
 	}
 	
-	public void toTorch(World world) throws ReceiverDestroyedException {
+	public void toTorch(World world) {
 		if (this.world.equalsIgnoreCase(world.getName())) {
 			Location loc = new Location(world, this.x, this.y, this.z);
 			Block blockAtLoc = loc.getBlock();
@@ -123,23 +129,13 @@ public class ChannelNode implements Serializable {
 					blockAtLoc.setTypeIdAndData(Material.REDSTONE_TORCH_ON.getId(), (byte)0x1, true); 
 				}
 			}
-			else {
-				throw new ReceiverDestroyedException();
-			}
 		}
 	}
 	
-	public void toSign(World world, String channelName) throws ReceiverDestroyedException {
+	public void toSign(World world, String channelName) {
 		if (this.world.equalsIgnoreCase(world.getName())) {
 			Location loc = new Location(world, this.x, this.y, this.z);
 			Block blockAtLoc = loc.getBlock();
-			
-			Material blockMaterial = blockAtLoc.getType();
-			if (blockMaterial != Material.REDSTONE_TORCH_ON 
-					&& blockMaterial != Material.WALL_SIGN 
-					&& blockMaterial != Material.SIGN_POST) {
-				throw new ReceiverDestroyedException();
-			}
 			
 			// no idea why this is needed, but it is if you want two wall signs 
 			//  attached to two faces of the same block
@@ -164,5 +160,80 @@ public class ChannelNode implements Serializable {
 				newSignRef.update(true);
 			}
 		}
+	}
+	
+	public boolean physicsWillCauseDestruction(Block block) {
+		boolean willBeDropped = false;
+		World world = block.getWorld();
+		
+		// pulled most of this logic from the MC jar
+		//  have to determine when this will be dropped naturally
+		if (block.getState() instanceof Sign) {
+			//log.info("is a sign");
+			if (!this.isWallSign) {
+				//log.info("sign post");
+				//log.info("" + (world.getBlockAt(this.x, this.y - 1, this.z).getType() == Material.AIR));
+				if (world.getBlockAt(this.x, this.y - 1, this.z).getType() == Material.AIR) {
+					willBeDropped = true;
+				}
+			}
+			else {
+				//log.info("wall sign");
+				//log.info("type id: " + block.getData());
+				// net.minecraft.server.BlockSign:doPhysics()
+				if (block.getData() == 2) {
+					if (world.getBlockAt(this.x, this.y, this.z + 1).getType() == Material.AIR) {
+						willBeDropped = true;
+					}
+				}
+				else if (block.getData() == 3) {
+					if (world.getBlockAt(this.x, this.y, this.z - 1).getType() == Material.AIR) {
+						willBeDropped = true;
+					}
+				}
+				else if (block.getData() == 4) {
+					if (world.getBlockAt(this.x + 1, this.y, this.z).getType() == Material.AIR) {
+						willBeDropped = true;
+					}
+				}
+				else if (block.getData() == 5) {
+					if (world.getBlockAt(this.x - 1, this.y, this.z).getType() == Material.AIR) {
+						willBeDropped = true;
+					}
+				}
+			}
+		}
+		else if (block.getType() == Material.REDSTONE_TORCH_ON) {
+			//log.info("redstone torch");
+			//log.info("type id: " + block.getData());
+			// net.minecraft.server.BlockTorch:doPhysics()
+			if (block.getData() == 1) {
+				if (world.getBlockAt(this.x - 1, this.y, this.z).getType() == Material.AIR) {
+					willBeDropped = true;
+				}
+			}
+			else if (block.getData() == 2) {
+				if (world.getBlockAt(this.x + 1, this.y, this.z).getType() == Material.AIR) {
+					willBeDropped = true;
+				}
+			}
+			else if (block.getData() == 3) {
+				if (world.getBlockAt(this.x, this.y, this.z - 1).getType() == Material.AIR) {
+					willBeDropped = true;
+				}
+			}
+			else if (block.getData() == 4) {
+				if (world.getBlockAt(this.x, this.y, this.z + 1).getType() == Material.AIR) {
+					willBeDropped = true;
+				}
+			}
+			else if (block.getData() == 5) {
+				if (world.getBlockAt(this.x, this.y - 1, this.z).getType() == Material.AIR) {
+					willBeDropped = true;
+				}
+			}
+		}
+		
+		return willBeDropped;
 	}
 }
