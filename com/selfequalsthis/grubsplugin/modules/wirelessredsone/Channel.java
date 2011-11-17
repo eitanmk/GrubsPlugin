@@ -2,11 +2,14 @@ package com.selfequalsthis.grubsplugin.modules.wirelessredsone;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.logging.Logger;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 
 public class Channel implements Serializable {
 
@@ -178,5 +181,101 @@ public class Channel implements Serializable {
 			
 			return removeNode;
 		}
+	}
+	
+	public void cleanup(World world) {
+		ArrayList<Location> locations = new ArrayList<Location>();
+		
+		// for transmitters, ensure there is a sign at that location
+		Iterator<ChannelNode> transmitterIterator = transmitters.iterator();
+		while (transmitterIterator.hasNext()) {
+			ChannelNode transmitter = transmitterIterator.next();
+			Location loc = transmitter.getLocation();
+			if (locations.contains(loc)) {
+				log.info("Transmitter at previously inspected location. Deleting.");
+				log.info(transmitter.toString());
+				transmitterIterator.remove();
+			}
+			else {
+				locations.add(loc);
+				Block block = world.getBlockAt(loc);
+				if (block.getState() instanceof Sign) {
+					Sign sign = (Sign)block.getState();
+					if (!GrubsWirelessRedstone.isTransmitter(sign.getLine(0)) ) {
+						log.info("Found a sign. Isn't a transmitter. Deleting.");
+						log.info(transmitter.toString());
+						transmitterIterator.remove();
+					}
+					else if (!sign.getLine(1).equals(this.name)) {
+						log.info("Found a transmitter. Isn't on this channel. Deleting.");
+						log.info(transmitter.toString());
+						transmitterIterator.remove();
+					}
+				}
+				else {
+					log.info("No transmitter sign found for this location. Deleting.");
+					log.info(transmitter.toString());
+					transmitterIterator.remove();
+				}
+			}
+		}
+		
+		// for receivers
+		Iterator<ChannelNode> receiverIterator = receivers.iterator();
+		while (receiverIterator.hasNext()) {
+			ChannelNode receiver = receiverIterator.next();
+			Location loc = receiver.getLocation();
+			if (locations.contains(loc)) {
+				log.info("Receiver at previously inspected location. Deleting.");
+				log.info(receiver.toString());
+				receiverIterator.remove();
+			}
+			else {
+				locations.add(loc);
+				Block block = world.getBlockAt(loc);
+				if (block.getState() instanceof Sign) {
+					Sign sign = (Sign)block.getState();
+					if (!GrubsWirelessRedstone.isReceiver(sign.getLine(0)) ) {
+						log.info("Found a sign. Isn't a receiver. Deleting.");
+						log.info(receiver.toString());
+						receiverIterator.remove();
+					}
+					else if (!sign.getLine(1).equals(this.name)) {
+						log.info("Found a receiver. Isn't on this channel. Deleting.");
+						log.info(receiver.toString());
+						receiverIterator.remove();
+					}
+				}
+				else if (block.getType() == Material.REDSTONE_TORCH_ON) {
+					if (!this.isTransmitting() && !receiver.isInverted()) {
+						log.info("Location doesn't contain a receiver item. Deleting.");
+						log.info(receiver.toString());
+						receiverIterator.remove();
+					}
+				}
+				else {
+					log.info("No receiver sign found for this location. Deleting.");
+					log.info(receiver.toString());
+					receiverIterator.remove();
+				}
+			}
+		}
+	}
+	
+	public String toString() {
+		String retVal = "";
+		
+		retVal += "Channel name: " + this.name + "\n";
+		retVal += "# Transmitters: " + transmitters.size() + "\n";
+		retVal += "# Receivers: " + receivers.size() + "\n";
+		retVal += "Transmitters:\n";
+		for (ChannelNode transmitter : transmitters) {
+			retVal += transmitter.toString();
+		}
+		retVal += "Receivers:\n";
+		for (ChannelNode receiver : receivers) {
+			retVal += receiver.toString();
+		}
+		return retVal;
 	}
  }

@@ -8,8 +8,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.logging.Logger;
 
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
@@ -62,23 +64,23 @@ public class GrubsWirelessRedstone {
 		log.info("Saved " + channels.size() + " channels.");
 	}
 	
-	public boolean isTransmitter(String text) {
+	public static boolean isTransmitter(String text) {
 		return text.equalsIgnoreCase(TRANSMITTER_TEXT);
 	}
 	
-	public boolean isReceiver(String text) {
+	public static boolean isReceiver(String text) {
 		return (text.equalsIgnoreCase(RECEIVER_TEXT) || text.equalsIgnoreCase(RECEIVER_INVERTED_TEXT));
 	}
 	
-	public boolean isReceiverInverted(String text) {
+	public static boolean isReceiverInverted(String text) {
 		return text.equalsIgnoreCase(RECEIVER_INVERTED_TEXT);
 	}
 	
-	public boolean hasValidChannel(String text) {
+	public static boolean hasValidChannel(String text) {
 		return (text.length() > 0);
 	}
 	
-	public boolean isValidNode(String[] lines) {	
+	public static boolean isValidNode(String[] lines) {	
 		if (!hasValidChannel(lines[1])) {
 			return false;
 		}
@@ -248,5 +250,20 @@ public class GrubsWirelessRedstone {
 			}
 			this.saveChannels();
 		}
+	}
+	
+	public void cleanupChannels(World world) {
+		Iterator<Channel> channelIterator = channels.values().iterator();
+		while (channelIterator.hasNext()) {
+			Channel channel = channelIterator.next();
+			log.info(channel.toString());
+			channel.cleanup(world);
+			if (channel.isEmpty()) {
+				log.info("Deleting empty channel");
+				channelIterator.remove();
+			}
+		}
+		
+		this.saveChannels();
 	}
 }

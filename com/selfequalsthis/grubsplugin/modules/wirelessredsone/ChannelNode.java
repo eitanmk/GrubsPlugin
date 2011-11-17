@@ -3,6 +3,7 @@ package com.selfequalsthis.grubsplugin.modules.wirelessredsone;
 import java.io.Serializable;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -235,5 +236,13 @@ public class ChannelNode implements Serializable {
 		}
 		
 		return willBeDropped;
+	}
+	
+	public Location getLocation() {
+		return new Location(Bukkit.getWorld(this.world), this.x, this.y, this.z);
+	}
+	
+	public String toString() {
+		return "Location: " + this.x + ":" + this.y + ":" + this.z + (this.isInverted ? ", inverted" : "") + "\n";
 	}
 }

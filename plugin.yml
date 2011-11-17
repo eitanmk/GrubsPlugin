@@ -75,3 +75,6 @@ commands:
     lasertag:
         description: Handle creating new laser tag games.
         usage: /lasertag <create|players|time|elimination|start>
+    wrchannelclean:
+        description: Clean up issues with wireless redstone channesls.
+        usage: /wrchannelclean

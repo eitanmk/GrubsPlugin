@@ -24,7 +24,7 @@ public class WirelessRedstoneBlockListener extends BlockListener {
 	public void onBlockBreak(BlockBreakEvent event) {
 		if (event.getBlock().getState() instanceof Sign) {
 			Sign signObj = (Sign)event.getBlock().getState();			
-			if (this.controllerRef.isValidNode(signObj.getLines())) {
+			if (GrubsWirelessRedstone.isValidNode(signObj.getLines())) {
 				this.controllerRef.removeNode(signObj);
 			}
 		}
@@ -36,8 +36,8 @@ public class WirelessRedstoneBlockListener extends BlockListener {
 	public void onBlockRedstoneChange(BlockRedstoneEvent event) {
 		if (event.getBlock().getState() instanceof Sign) {
 			Sign signObj = (Sign)event.getBlock().getState();
-			if (this.controllerRef.isValidNode(signObj.getLines())) {
-				if (this.controllerRef.isTransmitter(signObj.getLine(0))) {
+			if (GrubsWirelessRedstone.isValidNode(signObj.getLines())) {
+				if (GrubsWirelessRedstone.isTransmitter(signObj.getLine(0))) {
 					boolean poweredOn = (event.getBlock().isBlockPowered() || event.getBlock().isBlockIndirectlyPowered());
 					this.controllerRef.powerChanged(signObj, poweredOn);
 				}
@@ -46,7 +46,7 @@ public class WirelessRedstoneBlockListener extends BlockListener {
 	}
 	
 	public void onSignChange(SignChangeEvent event) {
-		if (this.controllerRef.isValidNode(event.getLines())) {
+		if (GrubsWirelessRedstone.isValidNode(event.getLines())) {
 			this.controllerRef.addNode(event.getBlock(), event.getLines());
 		}
 	}
