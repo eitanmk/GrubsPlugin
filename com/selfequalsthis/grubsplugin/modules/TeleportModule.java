@@ -24,9 +24,6 @@ public class TeleportModule extends AbstractGrubsModule {
 	private HashMap<String,Location> teleportPresets = new HashMap<String,Location>();
 	private Properties teleportProperties = new Properties();
 
-	private String teleportMainDirectory = "plugins/TeleportPresets";
-	private File TeleportPresetFile = new File(teleportMainDirectory + File.separator + "presets.dat"); 
-	
 	public TeleportModule(JavaPlugin plugin) {
 		this.pluginRef = plugin;
 		this.logPrefix = "[TeleportModule]: ";
@@ -44,19 +41,6 @@ public class TeleportModule extends AbstractGrubsModule {
 		
 		File dataFile = this.getDataFile();
 		if (dataFile != null) {
-		
-			if (TeleportPresetFile.exists()){
-				this.log("Old preset file exists. Moving to new location.");
-				boolean succeeded = TeleportPresetFile.renameTo(dataFile);
-				if (!succeeded) {
-					this.log("Failed to move preset file to new location!");
-					return;
-				}
-			}
-			else {
-				this.log("Can remove the old data file code. It's been migrated already.");
-			}
-			
 			this.log("Loading Teleport presets.");
 			loadTeleportPresets();
 			this.log("Loaded " + teleportPresets.size() + " presets.");

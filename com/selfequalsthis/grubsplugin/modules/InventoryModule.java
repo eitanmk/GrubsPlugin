@@ -22,9 +22,6 @@ public class InventoryModule extends AbstractGrubsModule {
 	private HashMap<String,ItemStack[]> itemKitArmorPresets = new HashMap<String,ItemStack[]>();
 	private Properties itemKitProperties = new Properties(); 
 	
-	private String itemKitMainDirectory = "plugins/ItemKitPresets";
-	private File ItemKitPresetFile = new File(itemKitMainDirectory + File.separator + "presets.dat");
-	
 	public InventoryModule(JavaPlugin plugin) {
 		this.pluginRef = plugin;
 		this.logPrefix = "[InventoryModule]: ";
@@ -40,20 +37,7 @@ public class InventoryModule extends AbstractGrubsModule {
 		this.registerCommand("clearinv");
 		
 		File dataFile = this.getDataFile();
-		if (dataFile != null) {
-			
-			if (ItemKitPresetFile.exists()){
-				this.log("Old preset file exists. Moving to new location.");
-				boolean succeeded = ItemKitPresetFile.renameTo(dataFile);
-				if (!succeeded) {
-					this.log("Failed to move preset file to new location!");
-					return;
-				}
-			}
-			else {
-				this.log("Can remove the old data file code. It's been migrated already.");
-			}
-			
+		if (dataFile != null) {	
 			this.log("Loading Item Kit presets.");
 			loadItemKits();
 			this.log("Loaded " + itemKitPresets.size() + " presets.");
