@@ -26,9 +26,6 @@ public class GrubsWirelessRedstone {
 
 	private HashMap<String,Channel> channels = new HashMap<String,Channel>();
 	
-	private String redstoneMainDirectory = "plugins/WirelessRedstone";
-	private File RedstonePresetFile = new File(redstoneMainDirectory + File.separator + "channels.dat");
-	
 	public GrubsWirelessRedstone(WirelessRedstoneModule module) {
 		this.moduleRef = module;
 	}
@@ -37,31 +34,18 @@ public class GrubsWirelessRedstone {
 		
 		File dataFile = this.moduleRef.getDataFile();
 		if (dataFile != null) {
-		
-			if (RedstonePresetFile.exists()) {
-				this.moduleRef.log("Old preset file exists. Moving to new location.");
-				boolean succeeded = RedstonePresetFile.renameTo(dataFile);
-				if (!succeeded) {
-					this.moduleRef.log("Failed to move preset file to new location!");
-					return;
-				}
-			}
-			else {
-				this.moduleRef.log("Can remove the old data file code. It's been migrated already.");
-			}
-
-			log.info("Loading Wireless Redstone channels.");
+			this.moduleRef.log("Loading Wireless Redstone channels.");
 			this.loadChannels();
-			log.info("Loaded " + channels.size() + " channels.");
+			this.moduleRef.log("Loaded " + channels.size() + " channels.");
 		}
 		
 		
 	}
 	
 	public void shutdown() {
-		log.info("Saving Wireless Redstone channels.");
+		this.moduleRef.log("Saving Wireless Redstone channels.");
 		this.saveChannels();
-		log.info("Saved " + channels.size() + " channels.");
+		this.moduleRef.log("Saved " + channels.size() + " channels.");
 	}
 	
 	public static boolean isTransmitter(String text) {
@@ -100,21 +84,21 @@ public class GrubsWirelessRedstone {
 		String channelName = lines[1];
 		Channel channelObj = null;
 		if (channels.containsKey(channelName)) {
-			log.info("Found channel " + channelName);
+			this.moduleRef.log("Found channel " + channelName);
 			channelObj = channels.get(channelName);
 		}
 		else {
-			log.info("Creating channel " + channelName);
+			this.moduleRef.log("Creating channel " + channelName);
 			channelObj = new Channel(channelName);
 			channels.put(channelName, channelObj);
 		}
 				
 		if (isTransmitter(lines[0])) {
-			log.info("Adding as transmitter");
+			this.moduleRef.log("Adding as transmitter");
 			channelObj.addTransmitter(block);
 		}
 		else if (isReceiver(lines[0])) {
-			log.info("Adding as receiver");
+			this.moduleRef.log("Adding as receiver");
 			channelObj.addReceiver(block, isReceiverInverted(lines[0]));
 		}
 		
@@ -128,16 +112,16 @@ public class GrubsWirelessRedstone {
 			Channel curChannel = channels.get(channelName);
 			
 			if (isTransmitter(sign.getLine(0))) {
-				log.info("Removing transmitter on channel " + channelName);
+				this.moduleRef.log("Removing transmitter on channel " + channelName);
 				curChannel.removeTransmitterAt(sign.getBlock().getLocation());
 			}
 			else if (isReceiver(sign.getLine(0))) {
-				log.info("Removing receiver on channel " + channelName);
+				this.moduleRef.log("Removing receiver on channel " + channelName);
 				curChannel.removeReceiverAt(sign.getBlock().getLocation());
 			}
 			
 			if (curChannel.isEmpty()) {
-				log.info("Removing empty channel " + channelName);
+				this.moduleRef.log("Removing empty channel " + channelName);
 				channels.remove(channelName);
 			}
 			
@@ -182,7 +166,7 @@ public class GrubsWirelessRedstone {
 		}
 		catch (EOFException eof) { }
 		catch (Exception ex) {
-			log.info("Error reading Wireless Redstone channels file!");
+			this.moduleRef.log("Error reading Wireless Redstone channels file!");
 			ex.printStackTrace();
 		}
 		finally {
@@ -203,7 +187,7 @@ public class GrubsWirelessRedstone {
 			return;
 		}
 		
-		log.info("Writing Wireless Redstone save file.");
+		this.moduleRef.log("Writing Wireless Redstone save file.");
 		try {
 			FileOutputStream fos = new FileOutputStream(dataFile);
 			ObjectOutputStream out = new ObjectOutputStream(fos);
@@ -215,21 +199,18 @@ public class GrubsWirelessRedstone {
 			out.close();
 		}
 		catch (Exception ex) {
-			log.info("Error writing Wireless Redstone channels file!");
+			this.moduleRef.log("Error writing Wireless Redstone channels file!");
 			ex.printStackTrace();
 		}
 	}
 	
 	public void removeReceiverOnAnyChannel(Block block) {
 		for (Channel channel : channels.values()) {
-			//log.info("testing '" + channel.getName() + "' with location " + block.getLocation());
 			channel.removeReceiverAt(block.getLocation());
 		}
-		//log.info("done notifying channels");
 	}
 	
 	public void checkChannelsForPhysicsUpdates(Block block) {
-		//log.info("checking for physics");
 		boolean removedNode = false;
 		Channel affectedChannel = null;
 		
@@ -242,10 +223,9 @@ public class GrubsWirelessRedstone {
 		}
 		
 		if (removedNode) {
-			//log.info("node was removed");
 			if (affectedChannel.isEmpty()) {
 				String name = affectedChannel.getName();
-				log.info("physics removal cleared the channel. removing empty channel '" + name + "'");
+				this.moduleRef.log("Physics removal cleared the channel. removing empty channel '" + name + "'");
 				channels.remove(name);
 			}
 			this.saveChannels();

@@ -80,6 +80,8 @@ public class TeleportModule extends AbstractGrubsModule {
 			return false;
 		}
 		
+		this.log(executingPlayer.getDisplayName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
+		
 		if (cmdName.equalsIgnoreCase("goto")) {
 			this.handleGoto(args, executingPlayer);
 		}
@@ -98,8 +100,6 @@ public class TeleportModule extends AbstractGrubsModule {
 		else if (cmdName.equalsIgnoreCase("tplist")) {
 			this.handleListTeleportPoints(executingPlayer);
 		}
-
-		this.log(executingPlayer.getDisplayName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
 
 		return true;
 	}

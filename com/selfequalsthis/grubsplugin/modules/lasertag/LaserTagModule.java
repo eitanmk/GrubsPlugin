@@ -40,12 +40,12 @@ public class LaserTagModule extends AbstractGrubsModule {
 			return false;
 		}
 		
+		this.log(executingPlayer.getDisplayName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
+		
 		if (cmdName.equalsIgnoreCase("lasertag")) {
 			this.handleLasertagCommand(args, executingPlayer);
 		}
-		
-		this.log(executingPlayer.getDisplayName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
-		
+				
 		return true;
 	}
 

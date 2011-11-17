@@ -76,6 +76,8 @@ public class InventoryModule extends AbstractGrubsModule {
 			return false;
 		}
 		
+		this.log(executingPlayer.getDisplayName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
+
 		if (cmdName.equalsIgnoreCase("kitget")) {
 			this.handleKitGet(args, executingPlayer);
 		}
@@ -91,8 +93,6 @@ public class InventoryModule extends AbstractGrubsModule {
 		else if (cmdName.equalsIgnoreCase("clearinv")) {
 			this.handleClearInventory(executingPlayer);
 		}
-
-		this.log(executingPlayer.getDisplayName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
 
 		return true;
 	}

@@ -40,6 +40,8 @@ public class GameInfoModule extends AbstractGrubsModule {
 			return false;
 		}
 		
+		this.log(executingPlayer.getDisplayName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
+
 		if (cmdName.equalsIgnoreCase("dataval")) {
 			this.handleGetDataValue(args, executingPlayer);
 		}
@@ -55,8 +57,6 @@ public class GameInfoModule extends AbstractGrubsModule {
 		else if (cmdName.equalsIgnoreCase("sendcoords")) {
 			this.handleSendCoordinates(args, executingPlayer);
 		}
-
-		this.log(executingPlayer.getDisplayName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
 
 		return true;
 	}

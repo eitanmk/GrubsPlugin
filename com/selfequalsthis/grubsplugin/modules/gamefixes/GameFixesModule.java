@@ -39,6 +39,8 @@ public class GameFixesModule extends AbstractGrubsModule {
 			return false;
 		}
 		
+		this.log(executingPlayer.getDisplayName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
+
 		if (cmdName.equalsIgnoreCase("eject")) {
 			this.handleEject(executingPlayer);
 			return true;
@@ -47,8 +49,6 @@ public class GameFixesModule extends AbstractGrubsModule {
 			this.handleGetChunks(executingPlayer);
 			return true;
 		}
-
-		this.log(executingPlayer.getDisplayName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
 
 		return false;
 	}

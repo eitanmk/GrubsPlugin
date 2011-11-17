@@ -45,11 +45,11 @@ public class GameTweaksModule extends AbstractGrubsModule {
 			return false;
 		}
 		
+		this.log(executingPlayer.getDisplayName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
+
 		if (cmdName.equalsIgnoreCase("buildmode")) {
 			this.handleBuildModeToggle(args, executingPlayer);
 		}
-
-		this.log(executingPlayer.getDisplayName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
 		
 		return true;
 	}

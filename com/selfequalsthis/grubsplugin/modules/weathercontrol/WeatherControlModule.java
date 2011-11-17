@@ -45,6 +45,8 @@ public class WeatherControlModule extends AbstractGrubsModule {
 			return false;
 		}
 				
+		this.log(executingPlayer.getDisplayName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
+
 		if (cmdName.equalsIgnoreCase("strike")) {
 			this.handleStrike(args, executingPlayer);
 		}
@@ -57,9 +59,7 @@ public class WeatherControlModule extends AbstractGrubsModule {
 		else if (cmdName.equalsIgnoreCase("thunder")) {
 			this.handleThunderToggle(args, executingPlayer);
 		}
-		
-		this.log(executingPlayer.getDisplayName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
-		
+				
 		return true;
 	}
 	

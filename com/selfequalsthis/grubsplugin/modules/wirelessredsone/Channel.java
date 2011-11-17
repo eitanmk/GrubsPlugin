@@ -36,7 +36,6 @@ public class Channel implements Serializable {
 		if (transmitters.size() == 1 && !receivers.isEmpty()) {
 			// if we just added the first transmitter and there were receivers, 
 			//  put them back into their default state
-			log.info("First transmitters added to channel. Initializing receivers to default states.");
 			updateReceivers(block.getWorld(), isTransmitting());
 		}
 	}
@@ -68,24 +67,20 @@ public class Channel implements Serializable {
 	}
 	
 	public ChannelNode getReceiverAt(Location loc) {
-		//log.info("name: " + this.name + ", len: " + receivers.size());
 		for (ChannelNode node : receivers) {
 			if (node.isAtLocation(loc)) {
 				return node;
 			}
 		}
-		//log.info("no receiver found");
 		return null;
 	}
 	
 	public void removeTransmitterAt(Location loc) {
 		ChannelNode node = getTransmitterAt(loc);
 		if (node != null) {
-			log.info("Removing transmitter.");
 			transmitters.remove(node);
 			
 			if (transmitters.isEmpty() && !receivers.isEmpty()) {
-				log.info("No more transmitters on channel. Converting all receivers to signs.");
 				allReceiversToSigns(loc.getWorld());
 			}
 		}
@@ -94,7 +89,6 @@ public class Channel implements Serializable {
 	public void removeReceiverAt(Location loc) {
 		ChannelNode node = getReceiverAt(loc);
 		if (node != null) {
-			log.info("Removing receiver.");
 			receivers.remove(node);
 		}
 	}
@@ -156,27 +150,19 @@ public class Channel implements Serializable {
 	
 	public boolean handlePhysicsChange(Block block) {
 		// does this location affect us?
-		//log.info("checking transmitters");
 		ChannelNode target = this.getTransmitterAt(block.getLocation());
 		if (target == null) {
-			//log.info("not a transmitter, checking receivers");
 			target = this.getReceiverAt(block.getLocation());
 		}
 		
 		if (target == null) {
-			//log.info("nothing on this channel (" + this.name + "), nothing to do.");
 			return false;
 		}
 		else {
-			//log.info("found a target on channel '" + this.name + "', testing for physics destruction");
 			boolean removeNode = target.physicsWillCauseDestruction(block);
 			if (removeNode) {
-				//log.info("node will be destroyed by physics. removing it");
 				this.removeTransmitterAt(block.getLocation());
 				this.removeReceiverAt(block.getLocation());
-			}
-			else {
-				//log.info("target won't be removed");
 			}
 			
 			return removeNode;

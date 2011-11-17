@@ -1,8 +1,6 @@
 package com.selfequalsthis.grubsplugin.modules.wirelessredsone;
 
 import java.io.Serializable;
-import java.util.logging.Logger;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -13,9 +11,7 @@ import org.bukkit.block.Sign;
 public class ChannelNode implements Serializable {
 
 	private static final long serialVersionUID = -7889393871253577443L;
-	
-	protected static final Logger log = Logger.getLogger("Minecraft");
-	
+		
 	private String world;
 	private int x;
 	private int y;
@@ -76,8 +72,6 @@ public class ChannelNode implements Serializable {
 	}
 	
 	public boolean isAtLocation(Location loc) {	
-		//log.info("event loc: " + loc.toString());
-		//log.info("node loc: " + this.world + ":" + this.x + ":" + this.y + ":" + this.z);
 		return (
 			this.world.equalsIgnoreCase(loc.getWorld().getName())
 			&& this.x == loc.getBlockX()
@@ -170,17 +164,12 @@ public class ChannelNode implements Serializable {
 		// pulled most of this logic from the MC jar
 		//  have to determine when this will be dropped naturally
 		if (block.getState() instanceof Sign) {
-			//log.info("is a sign");
 			if (!this.isWallSign) {
-				//log.info("sign post");
-				//log.info("" + (world.getBlockAt(this.x, this.y - 1, this.z).getType() == Material.AIR));
 				if (world.getBlockAt(this.x, this.y - 1, this.z).getType() == Material.AIR) {
 					willBeDropped = true;
 				}
 			}
 			else {
-				//log.info("wall sign");
-				//log.info("type id: " + block.getData());
 				// net.minecraft.server.BlockSign:doPhysics()
 				if (block.getData() == 2) {
 					if (world.getBlockAt(this.x, this.y, this.z + 1).getType() == Material.AIR) {
@@ -205,8 +194,6 @@ public class ChannelNode implements Serializable {
 			}
 		}
 		else if (block.getType() == Material.REDSTONE_TORCH_ON) {
-			//log.info("redstone torch");
-			//log.info("type id: " + block.getData());
 			// net.minecraft.server.BlockTorch:doPhysics()
 			if (block.getData() == 1) {
 				if (world.getBlockAt(this.x - 1, this.y, this.z).getType() == Material.AIR) {
