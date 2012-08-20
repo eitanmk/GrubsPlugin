@@ -26,11 +26,8 @@ public class WirelessRedstoneModule extends AbstractGrubsModule {
 	
 	public void enable() {
 		this.registerCommand("wrchannelclean");
-		this.registerEvent(this.blockListener);
-		this.registerEvent(this.blockListener);
-		this.registerEvent(this.blockListener);
-		this.registerEvent(this.blockListener);
-		this.registerEvent(this.playerListener);
+		this.registerEventHandlers(this.blockListener);
+		this.registerEventHandlers(this.playerListener);
 		
 		this.wrController.init();
 	}

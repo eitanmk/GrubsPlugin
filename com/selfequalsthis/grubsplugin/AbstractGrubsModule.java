@@ -43,7 +43,7 @@ public abstract class AbstractGrubsModule implements CommandExecutor {
 		commandObj.setExecutor(this);
 	}
 	
-	protected void registerEvent(Listener listener) {
+	protected void registerEventHandlers(Listener listener) {
 		Bukkit.getPluginManager().registerEvents(listener, this.pluginRef);
 	}
 

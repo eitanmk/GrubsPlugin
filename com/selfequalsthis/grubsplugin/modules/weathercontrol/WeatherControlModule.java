@@ -30,7 +30,7 @@ public class WeatherControlModule extends AbstractGrubsModule {
 		this.registerCommand("zap");
 		this.registerCommand("storm");
 		this.registerCommand("thunder");	
-		this.registerEvent(this.weatherListener);
+		this.registerEventHandlers(this.weatherListener);
 	}
 	
 	@Override

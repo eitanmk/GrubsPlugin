@@ -24,7 +24,7 @@ public class GameFixesModule extends AbstractGrubsModule {
 	public void enable() {		
 		this.registerCommand("eject");
 		this.registerCommand("getchunks");
-		this.registerEvent(playerListner);
+		this.registerEventHandlers(playerListner);
 	}
 
 	@Override

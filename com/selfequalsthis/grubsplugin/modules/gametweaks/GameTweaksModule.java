@@ -26,11 +26,9 @@ public class GameTweaksModule extends AbstractGrubsModule {
 	@Override
 	public void enable() {		
 		this.registerCommand("buildmode");
-		this.registerEvent(this.blockListener);
-		this.registerEvent(this.blockListener);
-		this.registerEvent(this.blockListener);
-		this.registerEvent(this.entityListener);
-		this.registerEvent(this.playerListener);
+		this.registerEventHandlers(this.blockListener);
+		this.registerEventHandlers(this.entityListener);
+		this.registerEventHandlers(this.playerListener);
 	}
 
 	@Override

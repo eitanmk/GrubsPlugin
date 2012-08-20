@@ -25,7 +25,7 @@ public class LaserTagModule extends AbstractGrubsModule {
 	@Override
 	public void enable() {
 		this.registerCommand("lasertag");
-		this.registerEvent(this.entityListener);
+		this.registerEventHandlers(this.entityListener);
 	}
 
 	@Override
