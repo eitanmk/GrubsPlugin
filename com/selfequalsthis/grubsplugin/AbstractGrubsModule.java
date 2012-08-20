@@ -2,6 +2,7 @@ package com.selfequalsthis.grubsplugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -9,6 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -44,6 +46,26 @@ public abstract class AbstractGrubsModule implements CommandExecutor {
 	}
 	
 	protected void registerEventHandlers(Listener listener) {
+		Method[] methods;
+		try {
+			methods = listener.getClass().getDeclaredMethods();
+		}
+		catch (NoClassDefFoundError e) {
+			this.log("Could not find listener class: " + listener.getClass());
+			return;
+		}
+		
+		for (int i = 0; i < methods.length; i++) {
+			Method method = methods[i];
+			EventHandler eh = method.getAnnotation(EventHandler.class);
+			if (eh == null) continue;
+			Class<?> checkClass = method.getParameterTypes()[0];
+			String eventClassName = checkClass.getName();
+			String eventType = eventClassName.substring(eventClassName.lastIndexOf(".") + 1);
+			String eventPriority = eh.priority().toString();
+			this.log("Listening to " + eventType + " (" + eventPriority + ")");
+		}
+		
 		Bukkit.getPluginManager().registerEvents(listener, this.pluginRef);
 	}
 
