@@ -1,12 +1,15 @@
 package com.selfequalsthis.grubsplugin.modules.weathercontrol;
 
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.weather.WeatherChangeEvent;
-import org.bukkit.event.weather.WeatherListener;
 
 import com.selfequalsthis.grubsplugin.GrubsMessager;
 
-public class WeatherControlWeatherListener extends WeatherListener {
+public class WeatherControlWeatherListener implements Listener {
 
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onWeatherChange(WeatherChangeEvent event) {
 		if (event.toWeatherState()) {
 			GrubsMessager.broadcast(GrubsMessager.MessageLevel.INFO, "[Weather] Rain is starting.");

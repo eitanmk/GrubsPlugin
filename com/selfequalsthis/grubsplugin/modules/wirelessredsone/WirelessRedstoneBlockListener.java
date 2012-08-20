@@ -4,13 +4,15 @@ import java.util.logging.Logger;
 
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
-public class WirelessRedstoneBlockListener extends BlockListener {
+public class WirelessRedstoneBlockListener implements Listener {
 	protected final Logger log = Logger.getLogger("Minecraft");
 	
 	private GrubsWirelessRedstone controllerRef;
@@ -20,7 +22,7 @@ public class WirelessRedstoneBlockListener extends BlockListener {
 	}
 	
 	
-
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockBreak(BlockBreakEvent event) {
 		if (event.getBlock().getState() instanceof Sign) {
 			Sign signObj = (Sign)event.getBlock().getState();			
@@ -33,6 +35,7 @@ public class WirelessRedstoneBlockListener extends BlockListener {
 		}
 	}
 	
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockRedstoneChange(BlockRedstoneEvent event) {
 		if (event.getBlock().getState() instanceof Sign) {
 			Sign signObj = (Sign)event.getBlock().getState();
@@ -45,12 +48,14 @@ public class WirelessRedstoneBlockListener extends BlockListener {
 		}
 	}
 	
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onSignChange(SignChangeEvent event) {
 		if (GrubsWirelessRedstone.isValidNode(event.getLines())) {
 			this.controllerRef.addNode(event.getBlock(), event.getLines());
 		}
 	}
 	
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockPhysics(BlockPhysicsEvent event) {	
 		if ((event.getBlock().getState() instanceof Sign) || event.getBlock().getType() == Material.REDSTONE_TORCH_ON) {
 			this.controllerRef.checkChannelsForPhysicsUpdates(event.getBlock());

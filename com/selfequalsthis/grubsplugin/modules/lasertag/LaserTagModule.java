@@ -7,8 +7,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
 import com.selfequalsthis.grubsplugin.GrubsMessager;
@@ -27,7 +25,7 @@ public class LaserTagModule extends AbstractGrubsModule {
 	@Override
 	public void enable() {
 		this.registerCommand("lasertag");
-		this.registerEvent(Event.Type.ENTITY_DAMAGE, this.entityListener, Priority.Monitor);
+		this.registerEvent(this.entityListener);
 	}
 
 	@Override

@@ -3,10 +3,12 @@ package com.selfequalsthis.grubsplugin.modules.wirelessredsone;
 import java.util.logging.Logger;
 
 import org.bukkit.World;
-import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class WirelessRedstonePlayerListener extends PlayerListener {
+public class WirelessRedstonePlayerListener implements Listener {
 	protected final Logger log = Logger.getLogger("Minecraft");
 
 	private GrubsWirelessRedstone controllerRef;
@@ -15,7 +17,7 @@ public class WirelessRedstonePlayerListener extends PlayerListener {
 		this.controllerRef = gwr;
 	}
 	
-	
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		World world = event.getPlayer().getWorld();
 		int numPlayers = world.getPlayers().size();

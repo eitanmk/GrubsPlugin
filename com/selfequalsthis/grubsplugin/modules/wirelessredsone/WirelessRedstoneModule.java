@@ -3,8 +3,6 @@ package com.selfequalsthis.grubsplugin.modules.wirelessredsone;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
@@ -28,11 +26,11 @@ public class WirelessRedstoneModule extends AbstractGrubsModule {
 	
 	public void enable() {
 		this.registerCommand("wrchannelclean");
-		this.registerEvent(Event.Type.BLOCK_BREAK, this.blockListener, Priority.Monitor);
-		this.registerEvent(Event.Type.BLOCK_PHYSICS, this.blockListener, Priority.Monitor);
-		this.registerEvent(Event.Type.REDSTONE_CHANGE, this.blockListener, Priority.Monitor);
-		this.registerEvent(Event.Type.SIGN_CHANGE, this.blockListener, Priority.Monitor);
-		this.registerEvent(Event.Type.PLAYER_QUIT, this.playerListener, Priority.Monitor);
+		this.registerEvent(this.blockListener);
+		this.registerEvent(this.blockListener);
+		this.registerEvent(this.blockListener);
+		this.registerEvent(this.blockListener);
+		this.registerEvent(this.playerListener);
 		
 		this.wrController.init();
 	}

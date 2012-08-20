@@ -8,8 +8,6 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
@@ -32,7 +30,7 @@ public class WeatherControlModule extends AbstractGrubsModule {
 		this.registerCommand("zap");
 		this.registerCommand("storm");
 		this.registerCommand("thunder");	
-		this.registerEvent(Event.Type.WEATHER_CHANGE, this.weatherListener, Priority.Monitor);
+		this.registerEvent(this.weatherListener);
 	}
 	
 	@Override

@@ -9,8 +9,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -45,9 +43,8 @@ public abstract class AbstractGrubsModule implements CommandExecutor {
 		commandObj.setExecutor(this);
 	}
 	
-	protected void registerEvent(Type type, Listener listener, Priority priority) {
-		this.log("Listening to '" + type.toString() + "'");
-		Bukkit.getPluginManager().registerEvent(type, listener, priority, this.pluginRef);
+	protected void registerEvent(Listener listener) {
+		Bukkit.getPluginManager().registerEvents(listener, this.pluginRef);
 	}
 
 	public File getDataFile() {

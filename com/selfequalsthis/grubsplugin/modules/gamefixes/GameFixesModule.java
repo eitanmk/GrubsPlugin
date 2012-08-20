@@ -5,8 +5,6 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
 import com.selfequalsthis.grubsplugin.GrubsMessager;
@@ -26,7 +24,7 @@ public class GameFixesModule extends AbstractGrubsModule {
 	public void enable() {		
 		this.registerCommand("eject");
 		this.registerCommand("getchunks");
-		this.registerEvent(Event.Type.PLAYER_TELEPORT, playerListner, Priority.Monitor);
+		this.registerEvent(playerListner);
 	}
 
 	@Override
