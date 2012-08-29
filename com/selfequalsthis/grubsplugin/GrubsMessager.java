@@ -2,10 +2,10 @@ package com.selfequalsthis.grubsplugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 
 public class GrubsMessager {
-
+	
 	public enum MessageLevel {
 		PLAIN,
 		MONITOR,
@@ -40,8 +40,8 @@ public class GrubsMessager {
 		return retColor;
 	}
 	
-	public static void sendMessage(Player player, MessageLevel level, String message) {
-		player.sendMessage(getColorForLevel(level) + message);
+	public static void sendMessage(CommandSender target, MessageLevel level, String message) {
+		target.sendMessage(getColorForLevel(level) + message);
 	}
 	
 	public static void broadcast(MessageLevel level, String message) {

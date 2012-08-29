@@ -34,41 +34,44 @@ public class GameInfoModule extends AbstractGrubsModule {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		
 		String cmdName = command.getName();
-		Player executingPlayer = (Player) sender;
 		
-		if (!executingPlayer.isOp()) {
-			return false;
+		if (sender instanceof Player) {
+			Player executingPlayer = (Player) sender;
+			
+			if (!executingPlayer.isOp()) {
+				return false;
+			}
+			
+			this.log(executingPlayer.getDisplayName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
 		}
 		
-		this.log(executingPlayer.getDisplayName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
-
 		if (cmdName.equalsIgnoreCase("dataval")) {
-			this.handleGetDataValue(args, executingPlayer);
+			this.handleGetDataValue(args, sender);
 		}
 		else if (cmdName.equalsIgnoreCase("dataname")) {
-			this.handleGetDataName(args, executingPlayer);
+			this.handleGetDataName(args, sender);
 		}
 		else if (cmdName.equalsIgnoreCase("gettime")) {
-			this.handleGetTime(executingPlayer);
+			this.handleGetTime(sender);
 		}
 		else if (cmdName.equalsIgnoreCase("getcoords")) {
-			this.handleGetCoordinates(args, executingPlayer);
+			this.handleGetCoordinates(args, sender);
 		}
 		else if (cmdName.equalsIgnoreCase("sendcoords")) {
-			this.handleSendCoordinates(args, executingPlayer);
+			this.handleSendCoordinates(args, sender);
 		}
 
 		return true;
 	}
 	
-	private void handleGetDataValue(String[] args, Player executingPlayer) {
+	private void handleGetDataValue(String[] args, CommandSender sender) {
 		if (args.length > 0) {
 			// lookup the text typed
 			HashMap<String,Integer> matches = this.matchMaterialName(args[0]);
 			if (matches.size() > 0) {
 				for (String key : matches.keySet()) {
 					GrubsMessager.sendMessage(
-						executingPlayer, 
+						sender, 
 						GrubsMessager.MessageLevel.INFO,
 						key + " = " + matches.get(key)
 					);
@@ -76,37 +79,40 @@ public class GameInfoModule extends AbstractGrubsModule {
 			}
 			else {
 				GrubsMessager.sendMessage(
-					executingPlayer, 
+					sender, 
 					GrubsMessager.MessageLevel.ERROR,
 					"No matches for '" + args[0] + "'."
 				);
 			}
 		}
 		else {
-			Material target = executingPlayer.getTargetBlock(null, 256).getType();
-			GrubsMessager.sendMessage(
-				executingPlayer, 
-				GrubsMessager.MessageLevel.INFO,
-				target.toString().toLowerCase() + " = " + target.getId()
-			);
+			if (sender instanceof Player) {
+				Player executingPlayer = (Player) sender;
+				Material target = executingPlayer.getTargetBlock(null, 256).getType();
+				GrubsMessager.sendMessage(
+					sender, 
+					GrubsMessager.MessageLevel.INFO,
+					target.toString().toLowerCase() + " = " + target.getId()
+				);
+			}
 		}
 	}
 	
-	private void handleGetDataName(String[] args, Player executingPlayer) {
+	private void handleGetDataName(String[] args, CommandSender sender) {
 		if (args.length > 0) {
 			try {
 				int val = Integer.parseInt(args[0]);
 				String res = matchMaterialId(val);
 				if (res != "") {
 					GrubsMessager.sendMessage(
-						executingPlayer, 
+						sender, 
 						GrubsMessager.MessageLevel.INFO,
 						"" + val + " = " + res
 					);
 				}
 				else {
 					GrubsMessager.sendMessage(
-						executingPlayer, 
+						sender, 
 						GrubsMessager.MessageLevel.ERROR,
 						"No material for id: " + val + "."
 					);
@@ -115,24 +121,37 @@ public class GameInfoModule extends AbstractGrubsModule {
 			catch (NumberFormatException nex) { }
 		}
 		else {
-			Material target = executingPlayer.getTargetBlock(null, 256).getType();
+			if (sender instanceof Player) {
+				Player executingPlayer = (Player) sender;
+				Material target = executingPlayer.getTargetBlock(null, 256).getType();
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.INFO,
+					"" + target.getId() + " = " + target.toString().toLowerCase()
+				);
+			}
+		}
+	}
+	
+	private void handleGetTime(CommandSender sender) {
+		if (sender instanceof Player) {
+			Player executingPlayer = (Player) sender;
 			GrubsMessager.sendMessage(
-				executingPlayer, 
+				sender, 
 				GrubsMessager.MessageLevel.INFO,
-				"" + target.getId() + " = " + target.toString().toLowerCase()
+				"Current time is: " + executingPlayer.getWorld().getTime()
+			);
+		}
+		else {
+			GrubsMessager.sendMessage(
+				sender, 
+				GrubsMessager.MessageLevel.INFO,
+				"Current time is: " + Bukkit.getServer().getWorlds().get(0).getTime()
 			);
 		}
 	}
 	
-	private void handleGetTime(Player executingPlayer) {
-		GrubsMessager.sendMessage(
-			executingPlayer, 
-			GrubsMessager.MessageLevel.INFO,
-			"Current time is: " + executingPlayer.getWorld().getTime()
-		);
-	}
-	
-	private void handleGetCoordinates(String[] args, Player executingPlayer) {
+	private void handleGetCoordinates(String[] args, CommandSender sender) {
 		if (args.length > 0) {
 			String argName = args[0];
 			// match players
@@ -144,7 +163,7 @@ public class GameInfoModule extends AbstractGrubsModule {
 						matchStr = matchStr + player.getName() + " ";
 					}
 					GrubsMessager.sendMessage(
-						executingPlayer, 
+						sender, 
 						GrubsMessager.MessageLevel.INFO,
 						"Multiple matches: " + matchStr
 					);
@@ -153,7 +172,7 @@ public class GameInfoModule extends AbstractGrubsModule {
 					Player target = matches.get(0);
 					Location loc = target.getLocation();
 					GrubsMessager.sendMessage(
-						executingPlayer, 
+						sender, 
 						GrubsMessager.MessageLevel.INFO,
 						target.getName() + ": " + this.getCoordsStrFromLocation(loc)
 					);
@@ -161,51 +180,64 @@ public class GameInfoModule extends AbstractGrubsModule {
 			}
 			else {
 				GrubsMessager.sendMessage(
-					executingPlayer, 
+					sender, 
 					GrubsMessager.MessageLevel.ERROR,
 					"No players matching '" + argName + "'."
 				);
 			}
 		}
 		else {
-			Location loc = executingPlayer.getLocation();
-			GrubsMessager.sendMessage(
-				executingPlayer, 
-				GrubsMessager.MessageLevel.INFO,
-				executingPlayer.getName() + ": " + this.getCoordsStrFromLocation(loc)
-			);
+			if (sender instanceof Player) {
+				Player executingPlayer = (Player) sender;
+				Location loc = executingPlayer.getLocation();
+				GrubsMessager.sendMessage(
+					executingPlayer, 
+					GrubsMessager.MessageLevel.INFO,
+					executingPlayer.getName() + ": " + this.getCoordsStrFromLocation(loc)
+				);
+			}
 		}
 	}
 	
-	private void handleSendCoordinates(String[] args, Player executingPlayer) {
-		if (args.length > 0) {
-			String argName = args[0];
-			// match players
-			List<Player> matches = Bukkit.matchPlayer(argName);
-			if (matches.size() > 0) {
-				if (matches.size() > 1) {
-					String matchStr = "";
-					for (Player player : matches) {
-						matchStr = matchStr + player.getName() + " ";
+	private void handleSendCoordinates(String[] args, CommandSender sender) {
+		if (sender instanceof Player) {
+			Player executingPlayer = (Player) sender;
+			if (args.length > 0) {
+				String argName = args[0];
+				// match players
+				List<Player> matches = Bukkit.matchPlayer(argName);
+				if (matches.size() > 0) {
+					if (matches.size() > 1) {
+						String matchStr = "";
+						for (Player player : matches) {
+							matchStr = matchStr + player.getName() + " ";
+						}
+						GrubsMessager.sendMessage(
+							executingPlayer, 
+							GrubsMessager.MessageLevel.INFO,
+							"Multiple matches: " + matchStr
+						);
 					}
-					GrubsMessager.sendMessage(
-						executingPlayer, 
-						GrubsMessager.MessageLevel.INFO,
-						"Multiple matches: " + matchStr
-					);
+					else {
+						Player target = matches.get(0);
+						Location loc = executingPlayer.getLocation();
+						GrubsMessager.sendMessage(
+							target, 
+							GrubsMessager.MessageLevel.INFO,
+							executingPlayer.getName() + ": " + this.getCoordsStrFromLocation(loc)
+						);
+						GrubsMessager.sendMessage(
+							executingPlayer, 
+							GrubsMessager.MessageLevel.INFO,
+							"Coordinates sent to " + target.getName()
+						);
+					}
 				}
 				else {
-					Player target = matches.get(0);
-					Location loc = executingPlayer.getLocation();
-					GrubsMessager.sendMessage(
-						target, 
-						GrubsMessager.MessageLevel.INFO,
-						executingPlayer.getName() + ": " + this.getCoordsStrFromLocation(loc)
-					);
 					GrubsMessager.sendMessage(
 						executingPlayer, 
-						GrubsMessager.MessageLevel.INFO,
-						"Coordinates sent to " + target.getName()
+						GrubsMessager.MessageLevel.ERROR,
+						"No players matching '" + argName + "'."
 					);
 				}
 			}
@@ -213,16 +245,9 @@ public class GameInfoModule extends AbstractGrubsModule {
 				GrubsMessager.sendMessage(
 					executingPlayer, 
 					GrubsMessager.MessageLevel.ERROR,
-					"No players matching '" + argName + "'."
+					"Missing command argument."
 				);
 			}
-		}
-		else {
-			GrubsMessager.sendMessage(
-				executingPlayer, 
-				GrubsMessager.MessageLevel.ERROR,
-				"Missing command argument."
-			);
 		}
 	}
 	
