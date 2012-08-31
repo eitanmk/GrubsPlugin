@@ -6,15 +6,12 @@ import java.lang.reflect.Method;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public abstract class AbstractGrubsModule implements CommandExecutor {
+public abstract class AbstractGrubsModule {
 	
 	protected final Logger logger = Logger.getLogger("Minecraft");
 	
@@ -25,24 +22,36 @@ public abstract class AbstractGrubsModule implements CommandExecutor {
 	public void enable() { }
 	public void disable() {	}
 	
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		return false;
-	}
-	
 	public void log(String msg) {
 		this.logger.info(this.logPrefix + msg);
 	}
 	
-	protected void registerCommand(String cmdName) {
-		PluginCommand commandObj = this.pluginRef.getCommand(cmdName);
-		
-		if (commandObj == null) {
-			this.log("Could not find command '" + cmdName + "' in plugin.yml");
+	protected void registerCommands(AbstractGrubsCommandHandler executor) {
+		Method[] methods;
+		try {
+			methods = executor.getClass().getDeclaredMethods();
+		}
+		catch (NoClassDefFoundError e) {
+			this.log("Could not find command executor class: " + executor.getClass());
 			return;
 		}
 		
-		this.log("Registering command '" + cmdName + "'");
-		commandObj.setExecutor(this);
+		for (int i = 0; i < methods.length; i++) {
+			Method method = methods[i];
+			GrubsCommandHandler eh = method.getAnnotation(GrubsCommandHandler.class);
+			if (eh == null) continue;
+			String command = eh.command();
+			
+			executor.handlers.put(command.toLowerCase(), method);	
+			
+			PluginCommand commandObj = this.pluginRef.getCommand(command);
+			if (commandObj == null) {
+				this.log("Could not find command '" + command + "' in plugin.yml");
+				return;
+			}
+			this.log("Registering command '" + command + "'");
+			commandObj.setExecutor(executor);
+		}
 	}
 	
 	protected void registerEventHandlers(Listener listener) {

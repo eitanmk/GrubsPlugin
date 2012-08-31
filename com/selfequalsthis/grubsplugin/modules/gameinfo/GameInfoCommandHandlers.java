@@ -1,4 +1,4 @@
-package com.selfequalsthis.grubsplugin.modules;
+package com.selfequalsthis.grubsplugin.modules.gameinfo;
 
 import java.util.HashMap;
 import java.util.List;
@@ -6,68 +6,31 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
+
+import com.selfequalsthis.grubsplugin.AbstractGrubsCommandHandler;
+import com.selfequalsthis.grubsplugin.GrubsCommandHandler;
+import com.selfequalsthis.grubsplugin.GrubsCommandInfo;
 import com.selfequalsthis.grubsplugin.GrubsMessager;
-import com.selfequalsthis.grubsplugin.GrubsUtilities;
 
-public class GameInfoModule extends AbstractGrubsModule {
+public class GameInfoCommandHandlers extends AbstractGrubsCommandHandler {
 
-	public GameInfoModule(JavaPlugin plugin) {
-		this.pluginRef = plugin;
-		this.logPrefix = "[GameInfoModule]: ";
+	private GameInfoModule gameInfoModule;
+	
+	public GameInfoCommandHandlers(GameInfoModule module) {
+		this.moduleRef = module;
+		this.gameInfoModule = module;
 	}
 	
-	@Override
-	public void enable() {
-		this.registerCommand("dataval");
-		this.registerCommand("dataname");
-		this.registerCommand("gettime");
-		this.registerCommand("getcoords");
-		this.registerCommand("sendcoords");
-	}
-
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	@GrubsCommandHandler(command = "dataval")
+	public void onDataValCommand(GrubsCommandInfo cmd) {
+		CommandSender sender = cmd.sender;
+		String[] args = cmd.args;
 		
-		String cmdName = command.getName();
-		
-		if (sender instanceof Player) {
-			Player executingPlayer = (Player) sender;
-			
-			if (!executingPlayer.isOp()) {
-				return false;
-			}
-			
-			this.log(executingPlayer.getDisplayName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
-		}
-		
-		if (cmdName.equalsIgnoreCase("dataval")) {
-			this.handleGetDataValue(args, sender);
-		}
-		else if (cmdName.equalsIgnoreCase("dataname")) {
-			this.handleGetDataName(args, sender);
-		}
-		else if (cmdName.equalsIgnoreCase("gettime")) {
-			this.handleGetTime(sender);
-		}
-		else if (cmdName.equalsIgnoreCase("getcoords")) {
-			this.handleGetCoordinates(args, sender);
-		}
-		else if (cmdName.equalsIgnoreCase("sendcoords")) {
-			this.handleSendCoordinates(args, sender);
-		}
-
-		return true;
-	}
-	
-	private void handleGetDataValue(String[] args, CommandSender sender) {
 		if (args.length > 0) {
 			// lookup the text typed
-			HashMap<String,Integer> matches = this.matchMaterialName(args[0]);
+			HashMap<String,Integer> matches = this.gameInfoModule.matchMaterialName(args[0]);
 			if (matches.size() > 0) {
 				for (String key : matches.keySet()) {
 					GrubsMessager.sendMessage(
@@ -97,12 +60,16 @@ public class GameInfoModule extends AbstractGrubsModule {
 			}
 		}
 	}
-	
-	private void handleGetDataName(String[] args, CommandSender sender) {
+
+	@GrubsCommandHandler(command = "dataname")
+	public void onDataNameCommand(GrubsCommandInfo cmd) {
+		CommandSender sender = cmd.sender;
+		String[] args = cmd.args;
+		
 		if (args.length > 0) {
 			try {
 				int val = Integer.parseInt(args[0]);
-				String res = matchMaterialId(val);
+				String res = this.gameInfoModule.matchMaterialId(val);
 				if (res != "") {
 					GrubsMessager.sendMessage(
 						sender, 
@@ -133,7 +100,10 @@ public class GameInfoModule extends AbstractGrubsModule {
 		}
 	}
 	
-	private void handleGetTime(CommandSender sender) {
+	@GrubsCommandHandler(command = "gettime")
+	public void onGetTimeCommand(GrubsCommandInfo cmd) {
+		CommandSender sender = cmd.sender;
+		
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
 			GrubsMessager.sendMessage(
@@ -151,7 +121,11 @@ public class GameInfoModule extends AbstractGrubsModule {
 		}
 	}
 	
-	private void handleGetCoordinates(String[] args, CommandSender sender) {
+	@GrubsCommandHandler(command = "getcoords")
+	public void onGetCoordsCommand(GrubsCommandInfo cmd) {
+		CommandSender sender = cmd.sender;
+		String[] args = cmd.args;
+		
 		if (args.length > 0) {
 			String argName = args[0];
 			// match players
@@ -174,7 +148,7 @@ public class GameInfoModule extends AbstractGrubsModule {
 					GrubsMessager.sendMessage(
 						sender, 
 						GrubsMessager.MessageLevel.INFO,
-						target.getName() + ": " + this.getCoordsStrFromLocation(loc)
+						target.getName() + ": " + this.gameInfoModule.getCoordsStrFromLocation(loc)
 					);
 				}
 			}
@@ -193,13 +167,17 @@ public class GameInfoModule extends AbstractGrubsModule {
 				GrubsMessager.sendMessage(
 					executingPlayer, 
 					GrubsMessager.MessageLevel.INFO,
-					executingPlayer.getName() + ": " + this.getCoordsStrFromLocation(loc)
+					executingPlayer.getName() + ": " + this.gameInfoModule.getCoordsStrFromLocation(loc)
 				);
 			}
 		}
 	}
 	
-	private void handleSendCoordinates(String[] args, CommandSender sender) {
+	@GrubsCommandHandler(command = "sendcoords")
+	public void onSendCoordsCommand(GrubsCommandInfo cmd) {
+		CommandSender sender = cmd.sender;
+		String[] args = cmd.args;
+		
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
 			if (args.length > 0) {
@@ -224,7 +202,8 @@ public class GameInfoModule extends AbstractGrubsModule {
 						GrubsMessager.sendMessage(
 							target, 
 							GrubsMessager.MessageLevel.INFO,
-							executingPlayer.getName() + ": " + this.getCoordsStrFromLocation(loc)
+							executingPlayer.getName() + ": " + 
+								this.gameInfoModule.getCoordsStrFromLocation(loc)
 						);
 						GrubsMessager.sendMessage(
 							executingPlayer, 
@@ -251,28 +230,4 @@ public class GameInfoModule extends AbstractGrubsModule {
 		}
 	}
 	
-	
-	
-	private HashMap<String,Integer> matchMaterialName(String name) {
-		HashMap<String,Integer> results = new HashMap<String,Integer>();
-		
-		Material[] materialNames = Material.values();
-		for (Material m : materialNames) {
-			if (m.toString().indexOf(name.toUpperCase()) != -1) {
-				results.put(m.toString().toLowerCase(), m.getId());
-			}
-		}
-		
-		return results;
-	}
-	
-	private String matchMaterialId(int id) {
-		Material material = Material.getMaterial(id);
-		return material.toString().toLowerCase();
-	}
-	
-	private String getCoordsStrFromLocation(Location loc) {
-		return "x: " + (int)loc.getX() + ", z: " + (int)loc.getZ() + " Altitude: " + (int)(loc.getY() + 1);
-	}
-
 }

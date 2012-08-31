@@ -7,7 +7,7 @@ import org.bukkit.event.weather.WeatherChangeEvent;
 
 import com.selfequalsthis.grubsplugin.GrubsMessager;
 
-public class WeatherControlWeatherListener implements Listener {
+public class WeatherControlEventListeners implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onWeatherChange(WeatherChangeEvent event) {
