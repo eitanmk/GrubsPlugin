@@ -1,5 +1,6 @@
 package com.selfequalsthis.grubsplugin.modules.teleport;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -35,25 +36,21 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 				String argName = args[0];
 
 				// check presets
-				if (argName.equalsIgnoreCase("last")) {
-					if (this.tpModule.getLastLocation(executingPlayer) != null) {
-						// copy the object, b/c we don't want to overwrite the reference
-						Location playerLastLocation = this.tpModule.getLastLocation(executingPlayer).clone();
-						// save the current location
-						this.tpModule.saveLastLocation(executingPlayer);
-						executingPlayer.teleport(playerLastLocation);
+				if (this.tpModule.playerSpecialLocations.containsKey(argName)) {
+					if (this.tpModule.getPlayerSpecialLocation(executingPlayer, argName) != null) {
+						Location targetLocation = this.tpModule.getPlayerSpecialLocation(executingPlayer, argName).clone();
+						this.tpModule.teleportPlayer(executingPlayer, targetLocation);
 					}
 					else {
 						GrubsMessager.sendMessage(
 							executingPlayer, 
 							GrubsMessager.MessageLevel.ERROR,
-							"No previous location set."
+							this.tpModule.playerSpecialLocations.get(argName)
 						);
 					}
 				}
 				else if (this.tpModule.teleportPresets.containsKey(argName)) {
-					this.tpModule.saveLastLocation(executingPlayer);
-					executingPlayer.teleport(this.tpModule.teleportPresets.get(argName));
+					this.tpModule.teleportPlayer(executingPlayer, this.tpModule.teleportPresets.get(argName));
 				}
 				else {
 					// match players
@@ -72,8 +69,15 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 						}
 						else {
 							Player target = matches.get(0);
-							this.tpModule.saveLastLocation(executingPlayer);
-							executingPlayer.teleport(target.getLocation());
+							if (target.isOnline()) {
+								this.tpModule.teleportPlayer(executingPlayer, target.getLocation());
+							}
+							else {
+								this.tpModule.teleportPlayer(
+									executingPlayer, 
+									this.tpModule.getPlayerSpecialLocation(target, "quit")
+								);
+							}
 						}
 					}
 					else {
@@ -119,8 +123,7 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 					}
 					else {
 						Player target = matches.get(0);
-						this.tpModule.saveLastLocation(target);
-						target.teleport(executingPlayer.getLocation());
+						this.tpModule.teleportPlayer(target, executingPlayer.getLocation());
 					}
 				}
 				else {
@@ -164,8 +167,7 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 					Player target = targetMatches.get(0);
 
 					if (this.tpModule.teleportPresets.containsKey(args[1])) {
-						this.tpModule.saveLastLocation(target);
-						target.teleport(this.tpModule.teleportPresets.get(args[1]));
+						this.tpModule.teleportPlayer(target, this.tpModule.teleportPresets.get(args[1]));
 					}
 					else {
 						List<Player> destMatches = Bukkit.matchPlayer(args[1]);
@@ -183,8 +185,7 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 							}
 							else {
 								Player dest = destMatches.get(0);
-								this.tpModule.saveLastLocation(target);
-								target.teleport(dest.getLocation());
+								this.tpModule.teleportPlayer(target, dest.getLocation());
 							}
 						}
 						else {
@@ -290,15 +291,59 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 		
 		String msgIdentifier = "[Teleport] ";
 		Set<String> keys = this.tpModule.teleportPresets.keySet();
+		ArrayList<String> origList = new ArrayList<String>(keys);
+		ArrayList<String> filteredList = new ArrayList<String>();
+		
+		for (int i = 0, len = origList.size(); i < len; ++i) {
+			String cur = origList.get(i);
+			if (cur.indexOf(TeleportModule.SEPARATOR) == -1) {
+				filteredList.add(cur);
+			}
+		}
 
-		if (keys.size() > 0) {
-			GrubsUtilities.multilinePrint(sender, msgIdentifier, keys.toArray(new String[0]));
+		if (filteredList.size() > 0) {
+			GrubsUtilities.multilinePrint(sender, msgIdentifier, filteredList.toArray(new String[0]));
 		}
 		else {
 			GrubsMessager.sendMessage(
 				sender, 
 				GrubsMessager.MessageLevel.ERROR,
 				msgIdentifier + "No presets in list."
+			);
+		}
+	}
+	
+	@GrubsCommandHandler(command = "tpinfo")
+	public void onTpInfoCommand(GrubsCommandInfo cmd) {
+		CommandSender sender = cmd.sender;
+		String[] args = cmd.args;
+		
+		if (args.length > 0) {
+			String argName = args[0];
+			if (this.tpModule.teleportPresets.containsKey(argName)) {
+				Location infoLoc = this.tpModule.teleportPresets.get(argName);
+				GrubsMessager.sendMessage(
+					sender, 
+					GrubsMessager.MessageLevel.INQUIRY,
+					argName + 
+						": x=" + Math.floor(infoLoc.getX()) + 
+						", z=" + Math.floor(infoLoc.getZ()) + 
+						", y=" + Math.floor(infoLoc.getY())
+				);
+			}
+			else {
+				GrubsMessager.sendMessage(
+					sender, 
+					GrubsMessager.MessageLevel.ERROR,
+					"Preset '" + argName + "' not found."
+				);
+			}
+		}
+		else {
+			GrubsMessager.sendMessage(
+				sender, 
+				GrubsMessager.MessageLevel.ERROR,
+				"Missing command argument."
 			);
 		}
 	}

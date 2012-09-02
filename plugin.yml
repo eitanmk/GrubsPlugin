@@ -36,6 +36,9 @@ commands:
     tplist:
         description: List all stored presets.
         usage: /tplist
+    tpinfo:
+        description: Get the coordinates of a saved location. 
+        usage: /tpinfo <preset name>
     eject:
         description: Eject from a minecart.
         usage: /eject

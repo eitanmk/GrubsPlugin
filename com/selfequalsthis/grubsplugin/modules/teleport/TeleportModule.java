@@ -10,26 +10,37 @@ import java.util.Properties;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
 
 public class TeleportModule extends AbstractGrubsModule {
+	
+	public final static String SEPARATOR = "|||";
 
+	public HashMap<String,String> playerSpecialLocations = new HashMap<String,String>();
 	public HashMap<String,Location> teleportPresets = new HashMap<String,Location>();
 	private Properties teleportProperties = new Properties();
 	
+	private TeleportEventListeners eventListeners;
 	private TeleportCommandHandlers commandHandlers;
 
 	public TeleportModule(JavaPlugin plugin) {
 		this.pluginRef = plugin;
 		this.logPrefix = "[TeleportModule]: ";
 		this.dataFileName = "teleports.dat";
+		this.eventListeners = new TeleportEventListeners(this);
 		this.commandHandlers = new TeleportCommandHandlers(this);
+		
+		this.playerSpecialLocations.put("last", "No previous location found.");
+		this.playerSpecialLocations.put("quit", "No previous quit location found.");
+		this.playerSpecialLocations.put("grave", "No previous death location found.");
 	}
 	
 	@Override
-	public void enable() {		
+	public void enable() {
 		this.registerCommands(this.commandHandlers);
+		this.registerEventHandlers(this.eventListeners);
 		
 		File dataFile = this.getDataFile();
 		if (dataFile != null) {
@@ -122,22 +133,33 @@ public class TeleportModule extends AbstractGrubsModule {
 			ex.printStackTrace();
 		}
 	}
-
-	private String getLastLocationKey(Player player) {
-		return player.getName() + "_last";
+	
+	private String getPlayerSpecialLocationKey(Player player, String type) {
+		if (this.playerSpecialLocations.containsKey(type)) {
+			return player.getName() + TeleportModule.SEPARATOR + type;
+		}
+		
+		this.logger.info("Invalid special location type: " + type);
+		return "";
 	}
 	
-	public void saveLastLocation(Player player) {
-		teleportPresets.put(getLastLocationKey(player), player.getLocation());
+	public void savePlayerSpecialLocation(Player player, String type) {
+		this.teleportPresets.put(this.getPlayerSpecialLocationKey(player, type), player.getLocation());
 	}
 	
-	public Location getLastLocation(Player player) {
-		String key = getLastLocationKey(player);
-		if (teleportPresets.containsKey(key)) {
-			return teleportPresets.get(key);
+	public Location getPlayerSpecialLocation(Player player, String type) {
+		String key = this.getPlayerSpecialLocationKey(player, type);
+		if (this.teleportPresets.containsKey(key)) {
+			return this.teleportPresets.get(key);
 		}
-		else {
-			return null;
-		}
+		
+		return null;
 	}
+	
+	public void teleportPlayer(Player player, Location location) {
+		// always save last location
+		this.savePlayerSpecialLocation(player, "last");
+		player.teleport(location, TeleportCause.PLUGIN);
+	}
+	
 }
