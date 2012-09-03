@@ -12,6 +12,7 @@ import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
 
 import com.selfequalsthis.grubsplugin.GrubsMessager;
 
@@ -48,8 +49,11 @@ public class GameTweaksEventListeners implements Listener {
 			Player source = (Player) event.getEntity();
 
 			if (event.getCause() == DamageCause.DROWNING) {
-				if (source.getInventory().getHelmet().getType() == Material.GOLD_HELMET) {
-					event.setCancelled(true);
+				ItemStack helmet = source.getInventory().getHelmet();
+				if (helmet != null) {
+					if (helmet.getType() == Material.GOLD_HELMET) {
+						event.setCancelled(true);
+					}
 				}
 			}
 			
