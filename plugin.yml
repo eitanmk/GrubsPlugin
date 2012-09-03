@@ -5,79 +5,82 @@ version: 0.1
 commands:
     buildmode:
         description: Build Mode 
-        usage: /buildmode [on|off]
+        usage: /<command> [on|off]
+    timelock:
+        description: Lock time to a specific timestamp.
+        usage: /<command> [off|on|day|night|<int 0:24000>
     storm:
         description: Enable/Disable rain storms.
-        usage: /storm [on|off]
+        usage: /<command> [on|off]
     thunder:
         description: Enable/Disable lightening and thunder.
-        usage: /thunder [on|off]
+        usage: /<command> [on|off]
     strike:
         description: Hit a player with lightening, but do no damage.
-        usage: /strike <player>
+        usage: /<command> <player>
     zap:
         description: Hit a player with lightening, doing damage.
-        usage: /zap <player>
+        usage: /<command> <player>
     goto:
         description: Teleport to a location or player. 
-        usage: /goto [<player>|<preset location>|last]
+        usage: /<command> [<player>|<preset location>|last|grave|quit]
     fetch:
         description: Teleport a player to user. 
-        usage: /fetch <player>
+        usage: /<command> <player>
     send:
         description: Teleport a player to a user or preset. 
-        usage: /fetch <player> [<player>|<preset name>]
+        usage: /<command> <player> [<player>|<preset name>]
     tpset:
         description: Store the current location as a preset. 
-        usage: /tpset <preset name> 
+        usage: /<command> <preset name> 
     tpdel:
         description: Remove a previously stored preset.
-        usage: /tpdel <preset name>
+        usage: /<command> <preset name>
     tplist:
         description: List all stored presets.
-        usage: /tplist
+        usage: /<command>
     tpinfo:
         description: Get the coordinates of a saved location. 
-        usage: /tpinfo <preset name>
+        usage: /<command> <preset name>
     eject:
         description: Eject from a minecart.
-        usage: /eject
+        usage: /<command>
     getchunks:
         description: Reload chunks from the server if some are missing.
-        usage: /getchunks
+        usage: /<command>
     dataval:
         description: Get the data value of a material.
-        usage: /dataval <name>
+        usage: /<command> <name>
     dataname:
         description: Get the data name of a material.
-        usage: /dataname <id>
+        usage: /<command> <id>
     gettime:
         description: Get the current game time.
-        usage: /gettime
+        usage: /<command>
     getcoords:
         description: Get the current coordinates.
-        usage: /getcoords <name>
+        usage: /<command> <player name>
     sendcoords:
         description: Send the current coordinates to another player.
-        usage: /sendcoords <name>
+        usage: /<command> <player name>
     kitset:
         description: Create a new item kit preset.
-        usage: /kitset <name>
+        usage: /<command> <preset name>
     kitget:
         description: Load a kit into your inventory.
-        usage: /kitget <name>
+        usage: /<command> <preset name>
     kitdel:
         description: Remove a stored item kit.
-        usage: /kitdel <name>
+        usage: /<command> <preset name>
     kitlist:
         description: List stored kit names.
-        usage: /kitlist
+        usage: /<command>
     clearinv:
         description: Empty your inventory.
-        usage: /clearinv
+        usage: /<command>
     lasertag:
         description: Handle creating new laser tag games.
-        usage: /lasertag <create|players|time|elimination|start>
+        usage: /<command> <create|players|time|restart|start>
     wrchannelclean:
         description: Clean up issues with wireless redstone channesls.
-        usage: /wrchannelclean
+        usage: /<command>
