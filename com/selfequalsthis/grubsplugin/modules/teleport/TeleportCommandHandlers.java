@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -54,11 +55,22 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 				}
 				else {
 					// match players
-					List<Player> matches = Bukkit.matchPlayer(argName);
+					OfflinePlayer[] offlinePlayers = Bukkit.getOfflinePlayers();
+					ArrayList<OfflinePlayer> matches = new ArrayList<OfflinePlayer>();
+					
+					String lowerArg = argName.toLowerCase();
+					
+					for (int i = 0, len = offlinePlayers.length; i < len; ++i) {
+						OfflinePlayer current = offlinePlayers[i];
+						if (current.getName().toLowerCase().startsWith(lowerArg)) {
+							matches.add(current);
+						}
+					}
+					
 					if (matches.size() > 0) {
 						if (matches.size() > 1) {
 							String matchStr = "";
-							for (Player player : matches) {
+							for (OfflinePlayer player : matches) {
 								matchStr = matchStr + player.getName() + " ";
 							}
 							GrubsMessager.sendMessage(
@@ -68,9 +80,10 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 							);
 						}
 						else {
-							Player target = matches.get(0);
+							OfflinePlayer target = matches.get(0);
 							if (target.isOnline()) {
-								this.tpModule.teleportPlayer(executingPlayer, target.getLocation());
+								Location tpLoc = Bukkit.getPlayerExact(target.getName()).getLocation();
+								this.tpModule.teleportPlayer(executingPlayer, tpLoc);
 							}
 							else {
 								this.tpModule.teleportPlayer(

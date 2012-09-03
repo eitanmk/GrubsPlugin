@@ -9,6 +9,7 @@ import java.util.Properties;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -134,9 +135,9 @@ public class TeleportModule extends AbstractGrubsModule {
 		}
 	}
 	
-	private String getPlayerSpecialLocationKey(Player player, String type) {
+	private String getPlayerSpecialLocationKey(String name, String type) {
 		if (this.playerSpecialLocations.containsKey(type)) {
-			return player.getName() + TeleportModule.SEPARATOR + type;
+			return name + TeleportModule.SEPARATOR + type;
 		}
 		
 		this.logger.info("Invalid special location type: " + type);
@@ -144,11 +145,11 @@ public class TeleportModule extends AbstractGrubsModule {
 	}
 	
 	public void savePlayerSpecialLocation(Player player, String type) {
-		this.teleportPresets.put(this.getPlayerSpecialLocationKey(player, type), player.getLocation());
+		this.teleportPresets.put(this.getPlayerSpecialLocationKey(player.getName(), type), player.getLocation());
 	}
 	
-	public Location getPlayerSpecialLocation(Player player, String type) {
-		String key = this.getPlayerSpecialLocationKey(player, type);
+	public Location getPlayerSpecialLocation(OfflinePlayer player, String type) {
+		String key = this.getPlayerSpecialLocationKey(player.getName(), type);
 		if (this.teleportPresets.containsKey(key)) {
 			return this.teleportPresets.get(key);
 		}
