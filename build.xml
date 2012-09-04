@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="GrubsPlugin" default="build" basedir=".">
-	<target name="build">
+<project name="GrubsPlugin" default="build.plugin" basedir=".">
+	<target name="build.plugin">
 		<jar destfile="GrubsPlugin.jar"
 			 basedir="."
 			 includes="plugin.yml,com/**/*.class">
+		</jar>
+	</target>
+	<target name="build.processor">
+		<jar destfile="GrubsAnnotationProcessor.jar" 
+		     basedir="."
+		     includes="**/GrubsAnnotationProcessor.class">
+			 
+			<service type="javax.annotation.processing.Processor" 
+			         provider="com.selfequalsthis.grubsplugin.annotations.GrubsAnnotationProcessor" />
 		</jar>
 	</target>
 </project>
