@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="GrubsPlugin" default="build" basedir=".">
 	<target name="build">
-		<jar destfile="GrubsPlugin.jar">
-			<fileset dir="." includes="plugin.yml,**/*.class"></fileset>
-			<exclude name="README,.classpath,build.xml,.gitignore,.project,.git"/>
+		<jar destfile="GrubsPlugin.jar"
+			 basedir="."
+			 includes="plugin.yml,com/**/*.class">
 		</jar>
 	</target>
 </project>
