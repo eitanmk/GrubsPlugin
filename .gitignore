@@ -6,3 +6,6 @@
 
 #ignore the eclipse project
 .project
+
+#ignore the built jar file
+GrubsPlugin.jar
