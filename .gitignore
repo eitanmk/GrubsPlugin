@@ -1,6 +1,12 @@
 #ignore eclipse class files
 bin/*
 
+#ignore the build dir
+build/*
+
+#ignore the artifacts
+artifacts/*
+
 #don't assume any eclipse classpath
 .classpath
 

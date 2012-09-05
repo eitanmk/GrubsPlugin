@@ -1,41 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="GrubsPlugin" default="build.all">
-	
+
 	<!-- Bukkit plugin values -->
 	<property name="plugin.name" value="${ant.project.name}" />
 	<property name="plugin.main" value="com.selfequalsthis.grubsplugin.GrubsPlugin" />
 	<property name="plugin.version" value="0.2" />
-	
+
+	<property name="src.dir" value="./src" />
+	<property name="lib.dir" value="./lib" />
 	<property name="class.dir" value="./bin" />
 	<property name="build.dir" value="./build" />
 	<property name="artifact.dir" value="./artifact" />
-	
+
 	<target name="clean">
 		<delete dir="${build.dir}" />
 		<delete dir="${artifact.dir}" />
 	</target>
-	
+
 	<target name="init">
 		<mkdir dir="${build.dir}" />
 		<mkdir dir="${artifact.dir}" />
 	</target>
-	
+
 	<target name="build.plugin">
 		<jar destfile="${artifact.dir}/GrubsPlugin.jar">
 			<fileset dir="${class.dir}" includes="**/*.class" />
 			<fileset dir="." includes="plugin.yml" />
 		</jar>
 	</target>
-	
+
+	<target name="build.plugin.manifest">
+		<javac includeAntRuntime="false"
+			   srcdir="${src.dir}"
+		       compiler="javac1.6">
+			<classpath>
+				<pathelement location="${lib.dir}/bukkit/bukkit-1.3.1-R2.0.jar" />
+				<pathelement location="${build.dir}/GrubsAnnotationProcessor.jar" />
+			</classpath>
+			<compilerarg line="-s ${build.dir}" />
+			<compilerarg line="-proc:only" />
+		</javac>
+	</target>
+
 	<target name="build.processor">
-		<jar destfile="GrubsAnnotationProcessor.jar" 
-		     basedir="."
-		     includes="**/GrubsAnnotationProcessor.class">
-			 
-			<service type="javax.annotation.processing.Processor" 
-			         provider="com.selfequalsthis.grubsplugin.annotations.GrubsAnnotationProcessor" />
+		<jar destfile="${build.dir}/GrubsAnnotationProcessor.jar" basedir="${class.dir}">
+			<fileset dir="${class.dir}">
+				<include name="**/GrubsAnnotationProcessor.class" />
+				<include name="**/GrubsCommandHandler.class" />
+			</fileset>
+			<service type="javax.annotation.processing.Processor" provider="com.selfequalsthis.grubsplugin.annotations.GrubsAnnotationProcessor" />
 		</jar>
 	</target>
-	
+
+	<target name="processor.test" depends="clean,init,build.processor,build.plugin.manifest" />
 	<target name="build.all" depends="clean,init,build.plugin" />
 </project>
