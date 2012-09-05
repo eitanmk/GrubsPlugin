@@ -22,8 +22,8 @@
 	
 	<target name="build.plugin">
 		<jar destfile="${artifact.dir}/GrubsPlugin.jar">
-			<include name="${class.dir}/**/*.class" />
-			<include name="plugin.yml" />
+			<fileset dir="${class.dir}" includes="**/*.class" />
+			<fileset dir="." includes="plugin.yml" />
 		</jar>
 	</target>
 	
