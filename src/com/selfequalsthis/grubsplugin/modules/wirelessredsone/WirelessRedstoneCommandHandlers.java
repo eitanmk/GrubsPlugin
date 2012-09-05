@@ -6,8 +6,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.selfequalsthis.grubsplugin.AbstractGrubsCommandHandler;
-import com.selfequalsthis.grubsplugin.GrubsCommandHandler;
 import com.selfequalsthis.grubsplugin.GrubsCommandInfo;
+import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
 
 public class WirelessRedstoneCommandHandlers extends AbstractGrubsCommandHandler {
 
@@ -18,7 +18,10 @@ public class WirelessRedstoneCommandHandlers extends AbstractGrubsCommandHandler
 		this.wrModule = module;
 	}
 	
-	@GrubsCommandHandler(command = "wrchannelclean")
+	@GrubsCommandHandler(
+		command = "wrchannelclean",
+		desc = "Utility to clean corrupted wireless redstone channels."
+	)
 	public void onChannelCleanCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		World worldObj = null;

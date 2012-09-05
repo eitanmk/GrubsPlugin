@@ -15,9 +15,8 @@ import javax.lang.model.element.TypeElement;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 
-import com.selfequalsthis.grubsplugin.GrubsCommandHandler;
 
-@SupportedAnnotationTypes(value= { "com.selfequalsthis.grubsplugin.*" })
+@SupportedAnnotationTypes(value= { "com.selfequalsthis.grubsplugin.annotations.*" })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 
 public class GrubsAnnotationProcessor extends AbstractProcessor {
@@ -29,6 +28,8 @@ public class GrubsAnnotationProcessor extends AbstractProcessor {
 			if (element.getKind() == ElementKind.METHOD) {
 				GrubsCommandHandler handler = element.getAnnotation(GrubsCommandHandler.class);
 				String command = handler.command();
+				String desc = handler.desc();
+				String usage = handler.usage();
 
 				Filer filer = this.processingEnv.getFiler();
 				try {
@@ -38,7 +39,8 @@ public class GrubsAnnotationProcessor extends AbstractProcessor {
 															  element);
 					fileObj.openWriter()
 						.append("    " + command + ":\n")
-						.append("        usage: /<command>\n")
+						.append("        description: " + desc + "\n")
+						.append("        usage: " + usage + "\n")
 						.close();
 				} catch (IOException e) { }
 			}

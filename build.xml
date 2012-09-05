@@ -22,13 +22,16 @@
 		<mkdir dir="${artifact.dir}" />
 	</target>
 
-	<target name="build.plugin">
-		<jar destfile="${artifact.dir}/GrubsPlugin.jar">
-			<fileset dir="${class.dir}" includes="**/*.class" />
-			<fileset dir="." includes="plugin.yml" />
+	<target name="build.processor">
+		<jar destfile="${build.dir}/GrubsAnnotationProcessor.jar" basedir="${class.dir}">
+			<fileset dir="${class.dir}">
+				<include name="**/GrubsAnnotationProcessor.class" />
+				<include name="**/GrubsCommandHandler.class" />
+			</fileset>
+			<service type="javax.annotation.processing.Processor" provider="com.selfequalsthis.grubsplugin.annotations.GrubsAnnotationProcessor" />
 		</jar>
 	</target>
-
+	
 	<target name="build.plugin.manifest">
 		<javac includeAntRuntime="false" srcdir="${src.dir}" compiler="javac1.6">
 			<classpath>
@@ -50,13 +53,10 @@
 		</concat>
 	</target>
 
-	<target name="build.processor">
-		<jar destfile="${build.dir}/GrubsAnnotationProcessor.jar" basedir="${class.dir}">
-			<fileset dir="${class.dir}">
-				<include name="**/GrubsAnnotationProcessor.class" />
-				<include name="**/GrubsCommandHandler.class" />
-			</fileset>
-			<service type="javax.annotation.processing.Processor" provider="com.selfequalsthis.grubsplugin.annotations.GrubsAnnotationProcessor" />
+	<target name="build.plugin">
+		<jar destfile="${artifact.dir}/GrubsPlugin.jar">
+			<fileset dir="${class.dir}" includes="**/*.class" />
+			<fileset dir="${build.dir}" includes="plugin.yml" />
 		</jar>
 	</target>
 

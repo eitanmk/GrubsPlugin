@@ -10,9 +10,9 @@ import org.bukkit.entity.Player;
 
 import com.selfequalsthis.grubsplugin.AbstractGrubsCommandHandler;
 import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
-import com.selfequalsthis.grubsplugin.GrubsCommandHandler;
 import com.selfequalsthis.grubsplugin.GrubsCommandInfo;
 import com.selfequalsthis.grubsplugin.GrubsMessager;
+import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
 
 public class WeatherControlCommandHandlers extends AbstractGrubsCommandHandler {
 
@@ -20,7 +20,11 @@ public class WeatherControlCommandHandlers extends AbstractGrubsCommandHandler {
 		this.moduleRef = module;
 	}
 	
-	@GrubsCommandHandler(command = "strike")
+	@GrubsCommandHandler(
+		command = "strike",
+		desc = "Hit targeted block or a player with lightening, but do no damage.",
+		usage = "/<command> [<player>]"
+	)
 	public void onStrikeCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
@@ -69,7 +73,11 @@ public class WeatherControlCommandHandlers extends AbstractGrubsCommandHandler {
 		}
 	}
 	
-	@GrubsCommandHandler(command = "zap") 
+	@GrubsCommandHandler(
+		command = "zap",
+		desc = "Hit targeted block or a player with lightening, doing damage.",
+		usage = "/<command> [<player>]"
+	) 
 	public void onZapCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
@@ -118,7 +126,11 @@ public class WeatherControlCommandHandlers extends AbstractGrubsCommandHandler {
 		}
 	}
 	
-	@GrubsCommandHandler(command = "storm")
+	@GrubsCommandHandler(
+		command = "storm",
+		desc = "Toggle rain storm.",
+		usage = "/<command> off|on"
+	)
 	public void onStormCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
@@ -153,7 +165,11 @@ public class WeatherControlCommandHandlers extends AbstractGrubsCommandHandler {
 		worldObj.setStorm(onFlag);
 	}
 	
-	@GrubsCommandHandler(command = "thunder")
+	@GrubsCommandHandler(
+		command = "thunder",
+		desc = "Toggle thundering.",
+		usage = "/<command> off|on"
+	)
 	public void onThunderCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;

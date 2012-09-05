@@ -7,10 +7,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.selfequalsthis.grubsplugin.AbstractGrubsCommandHandler;
-import com.selfequalsthis.grubsplugin.GrubsCommandHandler;
 import com.selfequalsthis.grubsplugin.GrubsCommandInfo;
 import com.selfequalsthis.grubsplugin.GrubsMessager;
 import com.selfequalsthis.grubsplugin.GrubsUtilities;
+import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
 
 public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 
@@ -21,7 +21,11 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 		this.inventoryModule = module;
 	}
 	
-	@GrubsCommandHandler(command = "kitget")
+	@GrubsCommandHandler(
+		command = "kitget",
+		desc = "Load a kit into your inventory.",
+		usage = "/<command> <preset name>"
+	)
 	public void onKitGetCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
@@ -63,7 +67,11 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 		}
 	}
 	
-	@GrubsCommandHandler(command = "kitset")
+	@GrubsCommandHandler(
+		command = "kitset",
+		desc = "Create a new item kit preset based on current inventory.",
+		usage = "/<command> <preset name>"
+	)
 	public void onKitSetCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
@@ -105,7 +113,10 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 		}
 	}
 	
-	@GrubsCommandHandler(command = "kitlist")
+	@GrubsCommandHandler(
+		command = "kitlist",
+		desc = "List all saved kit presets."
+	)
 	public void onKitListCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 
@@ -123,8 +134,12 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 			);
 		}
 	}
-	
-	@GrubsCommandHandler(command = "kitdel")
+
+	@GrubsCommandHandler(
+		command = "kitdel",
+		desc = "Delete a saved kit preset.",
+		usage = "/<command> <preset name>"
+	)
 	public void onKitDeleteCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
@@ -158,7 +173,10 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 		}
 	}
 	
-	@GrubsCommandHandler(command = "clearinv")
+	@GrubsCommandHandler(
+		command = "clearinv",
+		desc = "Empty out current inventory."
+	)
 	public void onClearInventoryCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		

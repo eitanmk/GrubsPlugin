@@ -10,9 +10,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.selfequalsthis.grubsplugin.AbstractGrubsCommandHandler;
-import com.selfequalsthis.grubsplugin.GrubsCommandHandler;
 import com.selfequalsthis.grubsplugin.GrubsCommandInfo;
 import com.selfequalsthis.grubsplugin.GrubsMessager;
+import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
 
 public class GameInfoCommandHandlers extends AbstractGrubsCommandHandler {
 
@@ -23,7 +23,11 @@ public class GameInfoCommandHandlers extends AbstractGrubsCommandHandler {
 		this.gameInfoModule = module;
 	}
 	
-	@GrubsCommandHandler(command = "dataval")
+	@GrubsCommandHandler(
+		command = "dataval",
+		desc = "Get the id value of the targeted block, or the id of the requested material name.",
+		usage = "/<command> [<name>]"
+	)
 	public void onDataValCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
@@ -61,7 +65,11 @@ public class GameInfoCommandHandlers extends AbstractGrubsCommandHandler {
 		}
 	}
 
-	@GrubsCommandHandler(command = "dataname")
+	@GrubsCommandHandler(
+		command = "dataname",
+		desc = "Get the name of the targeted block, or the name of requested material id.",
+		usage = "/<command> [<id>]"
+	)
 	public void onDataNameCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
@@ -100,7 +108,10 @@ public class GameInfoCommandHandlers extends AbstractGrubsCommandHandler {
 		}
 	}
 	
-	@GrubsCommandHandler(command = "gettime")
+	@GrubsCommandHandler(
+		command = "gettime",
+		desc = "Get the current game time."
+	)
 	public void onGetTimeCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		
@@ -121,7 +132,11 @@ public class GameInfoCommandHandlers extends AbstractGrubsCommandHandler {
 		}
 	}
 	
-	@GrubsCommandHandler(command = "getcoords")
+	@GrubsCommandHandler(
+		command = "getcoords",
+		desc = "Get own position, or provided player's position.",
+		usage = "/<command> [<player name>]"
+	)
 	public void onGetCoordsCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
@@ -173,7 +188,11 @@ public class GameInfoCommandHandlers extends AbstractGrubsCommandHandler {
 		}
 	}
 	
-	@GrubsCommandHandler(command = "sendcoords")
+	@GrubsCommandHandler(
+		command = "sendcoords",
+		desc = "Send current position to another player.",
+		usage = "/<command> <player name>"
+	)
 	public void onSendCoordsCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;

@@ -11,6 +11,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
+
 public abstract class AbstractGrubsModule {
 	
 	protected final Logger logger = Logger.getLogger("Minecraft");

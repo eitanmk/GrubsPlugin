@@ -11,10 +11,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.selfequalsthis.grubsplugin.AbstractGrubsCommandHandler;
-import com.selfequalsthis.grubsplugin.GrubsCommandHandler;
 import com.selfequalsthis.grubsplugin.GrubsCommandInfo;
 import com.selfequalsthis.grubsplugin.GrubsMessager;
 import com.selfequalsthis.grubsplugin.GrubsUtilities;
+import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
 
 public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 
@@ -25,7 +25,11 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 		this.tpModule = module;
 	}
 
-	@GrubsCommandHandler(command = "goto")
+	@GrubsCommandHandler(
+		command = "goto",
+		desc = "Teleport to the named preset location or player.",
+		usage = "/<command> <player>|<preset location>|last|grave|quit"
+	)
 	public void onGotoCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
@@ -112,7 +116,11 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 		}
 	}
 	
-	@GrubsCommandHandler(command = "fetch")
+	@GrubsCommandHandler(
+		command = "fetch",
+		desc = "Teleports a named player to the current position.",
+		usage = "/<command> <player>"
+	)
 	public void onFetchCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
@@ -157,7 +165,11 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 		}
 	}
 	
-	@GrubsCommandHandler(command = "send")
+	@GrubsCommandHandler(
+		command = "send",
+		desc = "Teleport named player to another user or a saved preset. ",
+		usage = "/<command> <player> <player>|<preset name>"
+	)
 	public void onSendCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
@@ -228,7 +240,11 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 		}
 	}
 	
-	@GrubsCommandHandler(command = "tpset")
+	@GrubsCommandHandler(
+		command = "tpset",
+		desc = "Create a new preset with the given name for the current position.",
+		usage = "/<command> <preset name>"
+	)
 	public void onTpSetCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
@@ -265,7 +281,11 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 		}
 	}
 	
-	@GrubsCommandHandler(command = "tpdel")
+	@GrubsCommandHandler(
+		command = "tpdel",
+		desc = "Delete a saved preset teleport location.",
+		usage = "/<command> <preset name>"
+	)
 	public void onTpDelCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
@@ -298,7 +318,10 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 		}
 	}
 	
-	@GrubsCommandHandler(command = "tplist")
+	@GrubsCommandHandler(
+		command = "tplist",
+		desc = "List saved teleport preset names."
+	)
 	public void onTpListCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		
@@ -326,7 +349,11 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 		}
 	}
 	
-	@GrubsCommandHandler(command = "tpinfo")
+	@GrubsCommandHandler(
+		command = "tpinfo",
+		desc = "Get the coordinates of a preset teleport location.",
+		usage = "/<command> <preset name>"
+	)
 	public void onTpInfoCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;

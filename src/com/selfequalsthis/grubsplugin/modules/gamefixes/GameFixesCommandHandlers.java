@@ -7,9 +7,9 @@ import org.bukkit.entity.Player;
 
 import com.selfequalsthis.grubsplugin.AbstractGrubsCommandHandler;
 import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
-import com.selfequalsthis.grubsplugin.GrubsCommandHandler;
 import com.selfequalsthis.grubsplugin.GrubsCommandInfo;
 import com.selfequalsthis.grubsplugin.GrubsMessager;
+import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
 
 public class GameFixesCommandHandlers extends AbstractGrubsCommandHandler {
 	
@@ -17,7 +17,10 @@ public class GameFixesCommandHandlers extends AbstractGrubsCommandHandler {
 		this.moduleRef = module;
 	}
 
-	@GrubsCommandHandler(command = "eject")
+	@GrubsCommandHandler(
+		command = "eject",
+		desc = "Eject from a vehicle."
+	)
 	public void onEjectCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		
@@ -33,7 +36,10 @@ public class GameFixesCommandHandlers extends AbstractGrubsCommandHandler {
 		}
 	}
 	
-	@GrubsCommandHandler(command = "getchunks")
+	@GrubsCommandHandler(
+		command = "getchunks",
+		desc = "Reload chunks from the server if some are missing."
+	)
 	public void onGetChunksCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		

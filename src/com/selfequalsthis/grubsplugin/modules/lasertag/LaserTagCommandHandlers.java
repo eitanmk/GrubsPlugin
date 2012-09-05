@@ -9,9 +9,9 @@ import org.bukkit.entity.Player;
 
 import com.selfequalsthis.grubsplugin.AbstractGrubsCommandHandler;
 import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
-import com.selfequalsthis.grubsplugin.GrubsCommandHandler;
 import com.selfequalsthis.grubsplugin.GrubsCommandInfo;
 import com.selfequalsthis.grubsplugin.GrubsMessager;
+import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
 
 public class LaserTagCommandHandlers extends AbstractGrubsCommandHandler {
 
@@ -19,7 +19,11 @@ public class LaserTagCommandHandlers extends AbstractGrubsCommandHandler {
 		this.moduleRef = module;
 	}
 	
-	@GrubsCommandHandler(command = "lasertag")
+	@GrubsCommandHandler(
+		command = "lasertag",
+		desc = "Used to setup new games of laser tag.",
+		usage = "/<command> create|players|time|restart|start"
+	)
 	public void onLasertagCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;

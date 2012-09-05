@@ -7,9 +7,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.selfequalsthis.grubsplugin.AbstractGrubsCommandHandler;
-import com.selfequalsthis.grubsplugin.GrubsCommandHandler;
 import com.selfequalsthis.grubsplugin.GrubsCommandInfo;
 import com.selfequalsthis.grubsplugin.GrubsMessager;
+import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
 
 public class GameTweaksCommandHandlers extends AbstractGrubsCommandHandler {
 	
@@ -20,7 +20,11 @@ public class GameTweaksCommandHandlers extends AbstractGrubsCommandHandler {
 		this.gtModule = module;
 	}
 	
-	@GrubsCommandHandler(command = "buildmode")
+	@GrubsCommandHandler(
+		command = "buildmode",
+		desc = "Toggle creative \"build\" mode.",
+		usage = "/<command> off|on"
+	)
 	public void onBuildModeCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
@@ -44,7 +48,11 @@ public class GameTweaksCommandHandlers extends AbstractGrubsCommandHandler {
 		}
 	}
 	
-	@GrubsCommandHandler(command = "timelock")
+	@GrubsCommandHandler(
+		command = "timelock",
+		desc = "Toggle freezing time to current value, or to the specified time value or preset.",
+		usage = "/<command> off|on|day|night|<0-24000>"
+	)
 	public void onTimeLockCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
