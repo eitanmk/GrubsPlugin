@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="GrubsPlugin" default="build.plugin" basedir=".">
+<project name="GrubsPlugin" default="build.all">
+	
+	<!-- Bukkit plugin values -->
+	<property name="plugin.name" value="${ant.project.name}" />
+	<property name="plugin.main" value="com.selfequalsthis.grubsplugin.GrubsPlugin" />
+	<property name="plugin.version" value="0.2" />
+	
+	<property name="class.dir" value="./bin" />
+	<property name="build.dir" value="./build" />
+	<property name="artifact.dir" value="./artifact" />
+	
+	<target name="clean">
+		<delete dir="${build.dir}" />
+		<delete dir="${artifact.dir}" />
+	</target>
+	
+	<target name="init">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${artifact.dir}" />
+	</target>
+	
 	<target name="build.plugin">
-		<jar destfile="GrubsPlugin.jar"
-			 basedir="."
-			 includes="plugin.yml,com/**/*.class">
+		<jar destfile="${artifact.dir}/GrubsPlugin.jar">
+			<include name="${class.dir}/**/*.class" />
+			<include name="plugin.yml" />
 		</jar>
 	</target>
+	
 	<target name="build.processor">
 		<jar destfile="GrubsAnnotationProcessor.jar" 
 		     basedir="."
@@ -15,4 +36,6 @@
 			         provider="com.selfequalsthis.grubsplugin.annotations.GrubsAnnotationProcessor" />
 		</jar>
 	</target>
+	
+	<target name="build.all" depends="clean,init,build.plugin" />
 </project>

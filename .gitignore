@@ -1,11 +1,8 @@
 #ignore eclipse class files
-*.class
+bin/*
 
 #don't assume any eclipse classpath
 .classpath
 
 #ignore the eclipse project
 .project
-
-#ignore the built jar file
-GrubsPlugin.jar
