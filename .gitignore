@@ -5,7 +5,7 @@ bin/*
 build/*
 
 #ignore the artifacts
-artifacts/*
+artifact/*
 
 #don't assume any eclipse classpath
 .classpath
