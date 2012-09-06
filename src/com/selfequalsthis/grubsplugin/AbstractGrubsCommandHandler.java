@@ -16,10 +16,6 @@ public abstract class AbstractGrubsCommandHandler implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		String cmdName = command.getName().toLowerCase();
 		
-		if (!sender.isOp()) {
-			return false;
-		}
-		
 		this.moduleRef.log(sender.getName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
 		
 		Method handler = this.handlers.get(cmdName);

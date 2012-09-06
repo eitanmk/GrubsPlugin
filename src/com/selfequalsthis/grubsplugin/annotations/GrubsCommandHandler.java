@@ -11,4 +11,5 @@ public @interface GrubsCommandHandler {
 	String command();
 	String desc() default "FIXME: no description set";
 	String usage() default "/<command>";
+	String permission() default "some.made.up.permission";
 }

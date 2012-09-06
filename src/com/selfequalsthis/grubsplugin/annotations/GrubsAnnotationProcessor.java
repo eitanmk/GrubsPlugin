@@ -30,6 +30,7 @@ public class GrubsAnnotationProcessor extends AbstractProcessor {
 				String command = handler.command();
 				String desc = handler.desc();
 				String usage = handler.usage();
+				String perm = handler.permission();
 
 				Filer filer = this.processingEnv.getFiler();
 				try {
@@ -41,6 +42,8 @@ public class GrubsAnnotationProcessor extends AbstractProcessor {
 						.append("    " + command + ":\n")
 						.append("        description: " + desc + "\n")
 						.append("        usage: " + usage + "\n")
+						.append("        permission: " + perm + "\n")
+						.append("        permission-message: \"\"\n")
 						.close();
 				} catch (IOException e) { }
 			}

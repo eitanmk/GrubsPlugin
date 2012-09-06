@@ -50,6 +50,11 @@
 				commands:
 			</header>
 			<fileset dir="${build.dir}/commands" includes="*.part" />
+			<footer trim="yes"><![CDATA[
+permissions:
+    some.made.up.permission:
+        default: false
+			]]></footer>
 		</concat>
 	</target>
 
