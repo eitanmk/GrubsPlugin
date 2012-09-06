@@ -33,7 +33,7 @@ public class GameTweaksModule extends AbstractGrubsModule {
 	public void lockTime(World world, long time) {
 		this.unlockTime();
 		world.setTime(time);
-		this.timeLockTaskId = Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(
+		this.timeLockTaskId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(
 			this.pluginRef,
 			new TimeLock(world, time),
 			10L,
