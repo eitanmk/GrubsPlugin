@@ -10,6 +10,7 @@ import com.selfequalsthis.grubsplugin.modules.gameinfo.GameInfoModule;
 import com.selfequalsthis.grubsplugin.modules.gametweaks.GameTweaksModule;
 import com.selfequalsthis.grubsplugin.modules.inventory.InventoryModule;
 import com.selfequalsthis.grubsplugin.modules.lasertag.LaserTagModule;
+import com.selfequalsthis.grubsplugin.modules.permissions.PermissionsModule;
 import com.selfequalsthis.grubsplugin.modules.teleport.TeleportModule;
 import com.selfequalsthis.grubsplugin.modules.weathercontrol.WeatherControlModule;
 import com.selfequalsthis.grubsplugin.modules.wirelessredsone.WirelessRedstoneModule;
@@ -42,6 +43,8 @@ public class GrubsPlugin extends JavaPlugin {
 		}
 		
 		log.info(logPrefix + "Initializing modules.");
+		
+		modules.add(new PermissionsModule(this));
 
 		modules.add(new GameInfoModule(this));
 		modules.add(new GameFixesModule(this));
