@@ -11,12 +11,13 @@ public class PermissionsModule extends AbstractGrubsModule {
 
 	private PermissionsCommandHandlers commandHandlers;
 	private HashMap<String,PermissionAttachment> playerAttachments = new HashMap<String,PermissionAttachment>();
+	private GroupManager groupManager = new GroupManager(this);
 	
 	public PermissionsModule(JavaPlugin plugin) {
 		this.pluginRef = plugin;
 		this.logPrefix = "[PermissionsModule]: ";
-		this.dataFileName = "itemkits.dat";
-		this.commandHandlers = new PermissionsCommandHandlers(this);
+		this.dataFileName = "permissions.dat";
+		this.commandHandlers = new PermissionsCommandHandlers(this, this.groupManager);
 	}
 	
 	@Override
