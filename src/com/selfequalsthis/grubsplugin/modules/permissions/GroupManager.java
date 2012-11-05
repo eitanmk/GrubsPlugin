@@ -2,6 +2,7 @@ package com.selfequalsthis.grubsplugin.modules.permissions;
 
 import java.io.FileInputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +67,10 @@ public class GroupManager {
 		}
 	}
 	
+	public Group getGroup(String name) {
+		return this.groups.get(name);
+	}
+	
 	public boolean hasGroup(String name) {
 		return this.groups.containsKey(name);
 	}
@@ -97,7 +102,7 @@ public class GroupManager {
 	public void addPlayerToGroup(String playerName, String groupName) {
 		if (this.hasGroup(groupName)) {
 			Group group = this.groups.get(groupName);
-			group.addPlayer(playerName);
+			group.addPlayer(playerName.toLowerCase());
 			
 			Player playerObj = Bukkit.getPlayer(playerName);
 			if (playerObj != null) {
@@ -112,7 +117,7 @@ public class GroupManager {
 	public void removePlayerFromGroup(String playerName, String groupName) {
 		if (this.hasGroup(groupName)) {
 			Group group = this.groups.get(groupName);
-			group.removePlayer(playerName);
+			group.removePlayer(playerName.toLowerCase());
 			
 			Player playerObj = Bukkit.getPlayer(playerName);
 			if (playerObj != null) {
@@ -154,6 +159,18 @@ public class GroupManager {
 				}
 			}
 		}
+	}
+	
+	public ArrayList<String> getGroupsForPlayer(String playerName) {
+		ArrayList<String> retList = new ArrayList<String>();
+		for (String groupName : this.groups.keySet()) {
+			Group curGroup = this.groups.get(groupName);
+			ArrayList<String> playersInGroup = curGroup.getPlayers();
+			if (playersInGroup.contains(playerName.toLowerCase())) {
+				retList.add(groupName);
+			}
+		}
+		return retList;
 	}
 
 	public String dumpSettings() {

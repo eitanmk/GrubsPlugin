@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.entity.Player;
@@ -15,6 +16,7 @@ import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
 public class PermissionsModule extends AbstractGrubsModule {
 
 	private PermissionsCommandHandlers commandHandlers;
+	private PermissionsEventListeners eventListeners;
 	private HashMap<String,PermissionAttachment> playerAttachments = new HashMap<String,PermissionAttachment>();
 	private GroupManager groupManager = new GroupManager(this);
 	
@@ -22,12 +24,14 @@ public class PermissionsModule extends AbstractGrubsModule {
 		this.pluginRef = plugin;
 		this.logPrefix = "[PermissionsModule]: ";
 		this.dataFileName = "permission_groups.yml";
+		this.eventListeners = new PermissionsEventListeners(this);
 		this.commandHandlers = new PermissionsCommandHandlers(this, this.groupManager);
 	}
 	
 	@Override
 	public void enable() {
 		this.registerCommands(this.commandHandlers);
+		this.registerEventHandlers(this.eventListeners);
 		this.loadPermissionGroups();
 	}
 	
@@ -82,5 +86,17 @@ public class PermissionsModule extends AbstractGrubsModule {
 		PermissionAttachment newAttachment = player.addAttachment(this.pluginRef);
 		this.playerAttachments.put(lowerName, newAttachment);
 		return newAttachment;
+	}
+
+	public void setupPlayerPermissions(Player p) {
+		// we know player is online since they just joined
+		this.logger.info(this.groupManager.getGroupsForPlayer(p.getDisplayName()).toString());
+		PermissionAttachment attachment = this.getAttachment(p);
+		ArrayList<String> playerGroups = this.groupManager.getGroupsForPlayer(p.getDisplayName());
+		for (String groupName : playerGroups) {
+			for (String permissionStr : this.groupManager.getGroup(groupName).getPermissions()) {
+				attachment.setPermission(permissionStr, true);
+			}
+		}
 	}
 }
