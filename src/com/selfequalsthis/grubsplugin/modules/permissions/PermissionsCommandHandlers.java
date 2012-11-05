@@ -14,10 +14,12 @@ import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
 
 public class PermissionsCommandHandlers extends AbstractGrubsCommandHandler {
 
+	private PermissionsModule permissionsModuleRef;
 	private GroupManager groupManager;
 	
 	public PermissionsCommandHandlers(PermissionsModule module, GroupManager groupManager) {
 		this.moduleRef = module;
+		this.permissionsModuleRef = module;
 		this.groupManager = groupManager;
 	}
 
@@ -80,6 +82,8 @@ public class PermissionsCommandHandlers extends AbstractGrubsCommandHandler {
 		else {
 			GrubsMessager.sendMessage(sender, GrubsMessager.MessageLevel.ERROR, "Unknown subcommand.");
 		}
+		
+		this.permissionsModuleRef.savePermissionGroups();
 	}
 	
 	private void handleGroupCreate(String[] args, CommandSender sender) {
