@@ -64,6 +64,11 @@ public class PermissionsModule extends AbstractGrubsModule {
 			return;
 		}
 		
+		if (this.groupManager.getGroupCount() == 0) {
+			this.log("No permissions data to save.");
+			return;
+		}
+		
 		this.log("Writing permission groups file.");
 		try {
 			FileOutputStream out = new FileOutputStream(dataFile);
