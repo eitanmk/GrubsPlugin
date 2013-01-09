@@ -49,6 +49,7 @@ public class PermissionsModule extends AbstractGrubsModule {
 				this.log("Loading permission groups.");
 				this.groupManager.loadYaml(in);
 				this.log("Loaded " + this.groupManager.getGroupCount() + " groups.");
+				in.close();
 			}
 			catch(IOException ex) {
 				this.log("Error reading permission groups file!");
@@ -64,16 +65,12 @@ public class PermissionsModule extends AbstractGrubsModule {
 			return;
 		}
 		
-		if (this.groupManager.getGroupCount() == 0) {
-			this.log("No permissions data to save.");
-			return;
-		}
-		
 		this.log("Writing permission groups file.");
 		try {
 			FileOutputStream out = new FileOutputStream(dataFile);
 			OutputStreamWriter writer = new OutputStreamWriter(out);
 			this.groupManager.dumpYaml(writer);
+			writer.close();
 		}
 		catch (IOException ex) {
 			this.log("Error writing permission groups file!");
