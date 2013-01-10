@@ -19,7 +19,8 @@ public class GameFixesCommandHandlers extends AbstractGrubsCommandHandler {
 
 	@GrubsCommandHandler(
 		command = "eject",
-		desc = "Eject from a vehicle."
+		desc = "Eject from a vehicle.",
+		defaultPermission = "true"
 	)
 	public void onEjectCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;

@@ -175,7 +175,8 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 	
 	@GrubsCommandHandler(
 		command = "clearinv",
-		desc = "Empty out current inventory."
+		desc = "Empty out current inventory.",
+		defaultPermission = "true"
 	)
 	public void onClearInventoryCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
