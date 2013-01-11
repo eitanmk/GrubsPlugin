@@ -36,6 +36,7 @@
 		<javac includeAntRuntime="false" srcdir="${src.dir}" compiler="javac1.6">
 			<classpath>
 				<pathelement location="${lib.dir}/bukkit/bukkit-1.4.6-R0.3.jar" />
+				<pathelement location="${lib.dir}/spout/spout-1.4.6-R0.2.jar" />
 				<pathelement location="${build.dir}/GrubsAnnotationProcessor.jar" />
 			</classpath>
 			<compilerarg line="-s ${build.dir}" />
@@ -46,6 +47,7 @@
 				name: ${plugin.name}
 				main: ${plugin.main}
 				version: ${plugin.version}
+				depend: [Spout]
 				
 				commands:
 			</header>
