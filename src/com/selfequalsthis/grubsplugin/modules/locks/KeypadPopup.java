@@ -1,33 +1,35 @@
 package com.selfequalsthis.grubsplugin.modules.locks;
 
-import java.util.logging.Logger;
-
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.getspout.spoutapi.event.screen.ButtonClickEvent;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericPopup;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class KeypadPopup implements Listener {
+public class KeypadPopup {
+		
 	private int keyWidth = 30;
 	private int keyHeight = 30;
 	private int keyGap = 10;
 	
-	protected final Logger logger = Logger.getLogger("Minecraft");
-	
+	private SpoutPlayer player;
+	private Inventory inventory;
+	private String combination;
+	private String guess;
+		
 	JavaPlugin pluginRef;
 	GenericPopup keypad;
 
-	public KeypadPopup(JavaPlugin plugin) {
+	public KeypadPopup(JavaPlugin plugin, SpoutPlayer player, Inventory inventory) {
 		this.pluginRef = plugin;
-		createKeypadPopup();
+		this.player = player;
+		this.inventory = inventory;
+		this.combination = "1256";
+		this.guess = "";
 	}
 	
-	private void createKeypadPopup() {
+	public void createKeypadPopup() {
 		int i;
 		this.keypad = new GenericPopup();
 		
@@ -52,20 +54,38 @@ public class KeypadPopup implements Listener {
 			}
 			
 			this.keypad.attachWidget(this.pluginRef, button);
-		}
+		}		
 	}
 	
-	public void showKeypadToPlayer(Player player) {
-		SpoutPlayer sPlayer = (SpoutPlayer) player;
-		sPlayer.getMainScreen().attachPopupScreen(this.keypad);
+	public void showKeypadToPlayer() {
+		this.player.getMainScreen().attachPopupScreen(this.keypad);
 	}
 	
-	@EventHandler
-	public void onButtonClick(ButtonClickEvent event) {
-		if (event.getScreen().getId() == this.keypad.getId()) {
-			logger.info(event.getPlayer().getName());
-			logger.info(event.getButton().getText());
-			logger.info(event.getScreen().getScreenType().toString());
+	public void addToGuess(String digit) {
+		this.guess += digit;
+	}
+	
+	public void resetGuess() {
+		this.guess = "";
+	}
+	
+	public boolean codeCorrect() {
+		if (this.combination.compareTo(this.guess) == 0) {
+			return true;
 		}
+		
+		if (this.guess.length() == 4) {
+			this.resetGuess();
+		}
+		
+		return false;
+	}
+
+	public void hideKeypad() {
+		this.player.getMainScreen().closePopup();
+	}
+
+	public void showInventory() {
+		this.player.openInventory(this.inventory);
 	}
 }
