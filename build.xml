@@ -42,12 +42,15 @@
 			<compilerarg line="-proc:only" />
 		</javac>
 		<concat destfile="${build.dir}/plugin.yml" fixlastline="yes">
-			<header trim="yes" trimleading="yes">
-				name: ${plugin.name}
-				main: ${plugin.main}
-				version: ${plugin.version}
-				
-				commands:
+			<header trim="yes" trimleading="no">
+name: ${plugin.name}
+main: ${plugin.main}
+version: ${plugin.version}
+
+commands:
+    gpmodule:
+        desc: Enable or disable GrubsPlugin modules.
+        usage: /&lt;command&gt; [list|enable|disable] &lt;name&gt;
 			</header>
 			<fileset dir="${build.dir}/commands" includes="*.part" />
 		</concat>
