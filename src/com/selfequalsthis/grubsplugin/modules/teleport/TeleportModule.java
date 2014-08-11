@@ -16,13 +16,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
 
 public class TeleportModule extends AbstractGrubsModule {
-	
+
 	public final static String SEPARATOR = "|||";
 
 	public HashMap<String,String> playerSpecialLocations = new HashMap<String,String>();
 	public HashMap<String,Location> teleportPresets = new HashMap<String,Location>();
 	private Properties teleportProperties = new Properties();
-	
+
 	private TeleportEventListeners eventListeners;
 	private TeleportCommandHandlers commandHandlers;
 
@@ -32,30 +32,33 @@ public class TeleportModule extends AbstractGrubsModule {
 		this.dataFileName = "teleports.dat";
 		this.eventListeners = new TeleportEventListeners(this);
 		this.commandHandlers = new TeleportCommandHandlers(this);
-		
+
 		this.playerSpecialLocations.put("last", "No previous location found.");
 		this.playerSpecialLocations.put("quit", "No previous quit location found.");
 		this.playerSpecialLocations.put("grave", "No previous death location found.");
 	}
-	
+
 	@Override
 	public void enable() {
 		this.registerCommands(this.commandHandlers);
 		this.registerEventHandlers(this.eventListeners);
-		
+
 		File dataFile = this.getDataFile();
 		if (dataFile != null) {
 			this.log("Loading Teleport presets.");
 			loadTeleportPresets();
 			this.log("Loaded " + teleportPresets.size() + " presets.");
 		}
-		
+
 	}
 
 	@Override
 	public void disable() {
 		this.log("Saving Teleport presets.");
 		saveTeleportPresets();
+
+		this.unregisterCommands(this.commandHandlers);
+		this.unregisterEventHandlers(this.eventListeners);
 	}
 
 	private void loadTeleportPresets() {
@@ -64,16 +67,16 @@ public class TeleportModule extends AbstractGrubsModule {
 			this.log("Error with data file. Nothing can be loaded!");
 			return;
 		}
-		
+
 		try {
 			FileInputStream in = new FileInputStream(dataFile);
 			teleportProperties.load(in);
 			in.close();
-			
+
 			for (Object key : teleportProperties.keySet()) {
 				String realKey = (String) key;
 				String rawValue = teleportProperties.getProperty(realKey);
-				
+
 				String[] parts = rawValue.split(",");
 				Location realLoc = new Location(Bukkit.getWorld(parts[0]),
 												Double.parseDouble(parts[1]),
@@ -81,29 +84,29 @@ public class TeleportModule extends AbstractGrubsModule {
 												Double.parseDouble(parts[3]),
 												Float.parseFloat(parts[4]),
 												Float.parseFloat(parts[5]));
-								
+
 				teleportPresets.put(realKey, realLoc);
 			}
 		}
 		catch (IOException ex) {
 			ex.printStackTrace();
-		}	
+		}
 	}
-	
+
 	public void saveTeleportPresets() {
 		File dataFile = this.getDataFile();
 		if (dataFile == null) {
 			this.log("Error with data file. Nothing will be saved!");
 			return;
 		}
-		
+
 		double locParts[] = new double[3];
 		float  viewParts[] = new float[2];
 		String settingStr = "";
-		
+
 		// empty the teleport properties file
 		teleportProperties.clear();
-		
+
 		for (String s : teleportPresets.keySet()) {
 			Location curLoc = teleportPresets.get(s);
 			locParts[0] = curLoc.getX();
@@ -111,17 +114,17 @@ public class TeleportModule extends AbstractGrubsModule {
 			locParts[2] = curLoc.getZ();
 			viewParts[0] = curLoc.getYaw();
 			viewParts[1] = curLoc.getPitch();
-			
+
 			settingStr = curLoc.getWorld().getName() +  "," +
 						 Double.toString(locParts[0]) + "," +
 						 Double.toString(locParts[1]) + "," +
 						 Double.toString(locParts[2]) + "," +
 						 Float.toString(viewParts[0]) + "," +
 						 Float.toString(viewParts[1]);
-			
+
 			teleportProperties.put(s, settingStr);
 		}
-		
+
 		this.log("Writing Teleport presets file.");
 		try {
 			FileOutputStream out = new FileOutputStream(dataFile);
@@ -134,33 +137,33 @@ public class TeleportModule extends AbstractGrubsModule {
 			ex.printStackTrace();
 		}
 	}
-	
+
 	private String getPlayerSpecialLocationKey(String name, String type) {
 		if (this.playerSpecialLocations.containsKey(type)) {
 			return name + TeleportModule.SEPARATOR + type;
 		}
-		
+
 		this.logger.info("Invalid special location type: " + type);
 		return "";
 	}
-	
+
 	public void savePlayerSpecialLocation(Player player, String type) {
 		this.teleportPresets.put(this.getPlayerSpecialLocationKey(player.getName(), type), player.getLocation());
 	}
-	
+
 	public Location getPlayerSpecialLocation(OfflinePlayer player, String type) {
 		String key = this.getPlayerSpecialLocationKey(player.getName(), type);
 		if (this.teleportPresets.containsKey(key)) {
 			return this.teleportPresets.get(key);
 		}
-		
+
 		return null;
 	}
-	
+
 	public void teleportPlayer(Player player, Location location) {
 		// always save last location
 		this.savePlayerSpecialLocation(player, "last");
 		player.teleport(location, TeleportCause.PLUGIN);
 	}
-	
+
 }

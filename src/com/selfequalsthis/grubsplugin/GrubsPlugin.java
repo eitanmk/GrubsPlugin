@@ -1,4 +1,4 @@
-package com.selfequalsthis.grubsplugin; 
+package com.selfequalsthis.grubsplugin;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,23 +45,6 @@ public class GrubsPlugin extends JavaPlugin implements CommandExecutor {
 	}
 
 	@Override
-	public void onDisable() {
-		log.info(logPrefix + "Disabling plugin.");
-
-		log.info(logPrefix + "Saving loaded modules list.");
-		saveActiveModules();
-
-		log.info(logPrefix + "Uninitializing modules.");
-		for (String moduleKey : this.activeModules.keySet()) {
-			AbstractGrubsModule gm = this.activeModules.get(moduleKey);
-			log.info(logPrefix + "Disabling module [" + moduleKey + "].");
-			gm.disable();
-		}
-
-		log.info(logPrefix + "Plugin is disabled.");
-	}
-
-	@Override
 	public void onEnable() {
 		log.info(logPrefix + "Enabling plugin.");
 
@@ -82,9 +65,28 @@ public class GrubsPlugin extends JavaPlugin implements CommandExecutor {
 			}
 		}
 
-		this.getCommand("gpmodule").setExecutor(this);
+		GrubsCommandManager cmdMgr = GrubsCommandManager.getInstance();
+		cmdMgr.registerCommand("gpmodule", this, "Change modules enabled state.",
+				"/<command> [list|enable|disable] <module-name>");
 
 		log.info(logPrefix + "Plugin is enabled.");
+	}
+
+	@Override
+	public void onDisable() {
+		log.info(logPrefix + "Disabling plugin.");
+
+		log.info(logPrefix + "Saving loaded modules list.");
+		saveActiveModules();
+
+		log.info(logPrefix + "Uninitializing modules.");
+		for (String moduleKey : this.activeModules.keySet()) {
+			AbstractGrubsModule gm = this.activeModules.get(moduleKey);
+			log.info(logPrefix + "Disabling module [" + moduleKey + "].");
+			gm.disable();
+		}
+
+		log.info(logPrefix + "Plugin is disabled.");
 	}
 
 	@Override
@@ -119,13 +121,13 @@ public class GrubsPlugin extends JavaPlugin implements CommandExecutor {
 
 			if (!this.allModules.containsKey(moduleName)) {
 				sender.sendMessage("Unknown module [" + moduleName + "].");
-				return false;
+				return true;
 			}
 
 			if (subCommand.equalsIgnoreCase("enable")) {
 				if (this.activeModules.containsKey(moduleName)) {
 					sender.sendMessage("Module [" + moduleName + "] already enabled.");
-					return false;
+					return true;
 				}
 
 				gm = this.allModules.get(moduleName);
@@ -136,7 +138,7 @@ public class GrubsPlugin extends JavaPlugin implements CommandExecutor {
 			else if (subCommand.equalsIgnoreCase("disable")) {
 				if (!this.activeModules.containsKey(moduleName)) {
 					sender.sendMessage("Module [" + moduleName + "] not enabled.");
-					return false;
+					return true;
 				}
 
 				gm = this.allModules.get(moduleName);

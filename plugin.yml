@@ -1,0 +1,3 @@
+name: GrubsPlugin
+main: com.selfequalsthis.grubsplugin.GrubsPlugin
+version: 0.2

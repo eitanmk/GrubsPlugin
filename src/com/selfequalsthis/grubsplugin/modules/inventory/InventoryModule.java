@@ -11,26 +11,26 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
 
 public class InventoryModule extends AbstractGrubsModule {
-	
+
 	public HashMap<String,ItemStack[]> itemKitPresets = new HashMap<String,ItemStack[]>();
 	public HashMap<String,ItemStack[]> itemKitArmorPresets = new HashMap<String,ItemStack[]>();
-	private Properties itemKitProperties = new Properties(); 
-	
+	private Properties itemKitProperties = new Properties();
+
 	private InventoryCommandHandlers commandHandlers;
-	
+
 	public InventoryModule(JavaPlugin plugin) {
 		this.pluginRef = plugin;
 		this.logPrefix = "[InventoryModule]: ";
 		this.dataFileName = "itemkits.dat";
 		this.commandHandlers = new InventoryCommandHandlers(this);
 	}
-	
+
 	@Override
-	public void enable() {		
+	public void enable() {
 		this.registerCommands(this.commandHandlers);
-		
+
 		File dataFile = this.getDataFile();
-		if (dataFile != null) {	
+		if (dataFile != null) {
 			this.log("Loading Item Kit presets.");
 			loadItemKits();
 			this.log("Loaded " + itemKitPresets.size() + " presets.");
@@ -41,6 +41,8 @@ public class InventoryModule extends AbstractGrubsModule {
 	public void disable() {
 		this.log("Saving Item Kit presets.");
 		saveItemKits();
+
+		this.unregisterCommands(this.commandHandlers);
 	}
 
 	private void loadItemKits() {
@@ -49,16 +51,16 @@ public class InventoryModule extends AbstractGrubsModule {
 			this.log("Error with data file. Nothing can be loaded!");
 			return;
 		}
-		
+
 		try {
 			FileInputStream in = new FileInputStream(dataFile);
 			itemKitProperties.load(in);
 			in.close();
-			
+
 			for (Object key : itemKitProperties.keySet()) {
 				String realKey = (String) key;
 				String rawValue = itemKitProperties.getProperty(realKey);
-				
+
 				ItemStack[] kitItems = new ItemStack[36];
 				ItemStack[] armorItems = new ItemStack[4];
 
@@ -69,29 +71,29 @@ public class InventoryModule extends AbstractGrubsModule {
 					String[] invParts = parts[0].split(",");
 					for (int i=0; i < invParts.length; ++i) {
 						String[] curInvTuple = invParts[i].split(":");
-						
+
 						// if spot was empty, it won't be listed
 						int index = Integer.parseInt(curInvTuple[0]);
 						int materialId = Integer.parseInt(curInvTuple[1]);
 						int amt = Integer.parseInt(curInvTuple[2]);
-						
+
 						kitItems[index] = new ItemStack(materialId, amt);
 					}
 				}
-				
-				if (parts[1].length() > 0) {					
+
+				if (parts[1].length() > 0) {
 					String[] armorParts = parts[1].split(",");
 					for (int i=0; i < armorParts.length; ++i) {
 						String[] curArmorTuple = armorParts[i].split(":");
-						
+
 						int index = Integer.parseInt(curArmorTuple[0]);
 						int materialId = Integer.parseInt(curArmorTuple[1]);
 						int amt = Integer.parseInt(curArmorTuple[2]);
-						
+
 						armorItems[index] = new ItemStack(materialId, amt);
 					}
 				}
-				
+
 				itemKitPresets.put(realKey, kitItems);
 				itemKitArmorPresets.put(realKey, armorItems);
 			}
@@ -100,67 +102,67 @@ public class InventoryModule extends AbstractGrubsModule {
 			ex.printStackTrace();
 		}
 	}
-	
+
 	public void saveItemKits() {
 		File dataFile = this.getDataFile();
 		if (dataFile == null) {
 			this.log("Error with data file. Nothing will be saved!");
 			return;
 		}
-		
+
 		String settingStr = "";
 		boolean useSeparator = false;
-				
+
 		itemKitProperties.clear();
-		
+
 		for (String s : itemKitPresets.keySet()) {
 			ItemStack[] curStackList = itemKitPresets.get(s);
-			
+
 			settingStr = "";
 			useSeparator = false;
-			
+
 			for (int i=0; i < curStackList.length; ++i) {
 				ItemStack curStackItem = curStackList[i];
 
 				if (curStackItem == null) {
 					continue;
 				}
-				
+
 				if (useSeparator) {
 					settingStr += ",";
 				}
 				else {
 					useSeparator = true;
 				}
-				
+
 				settingStr += "" + i + ":" + curStackItem.getTypeId() + ":" + curStackItem.getAmount();
 			}
-			
+
 			settingStr += "^";
 			useSeparator = false;
-			
+
 			ItemStack[] curArmorStackList = itemKitArmorPresets.get(s);
-			
+
 			for (int i=0; i < curArmorStackList.length; ++ i) {
 				ItemStack curArmorStackItem = curArmorStackList[i];
-				
+
 				if (curArmorStackItem == null) {
 					continue;
 				}
-				
+
 				if (useSeparator) {
 					settingStr += ",";
 				}
 				else {
 					useSeparator = true;
 				}
-				
+
 				settingStr += "" + i + ":" + curArmorStackItem.getTypeId() + ":" + curArmorStackItem.getAmount();
 			}
-			
+
 			itemKitProperties.put(s, settingStr);
 		}
-		
+
 		this.log("Writing Item Kit presets file.");
 		try {
 			FileOutputStream out = new FileOutputStream(dataFile);
