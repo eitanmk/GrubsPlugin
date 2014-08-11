@@ -79,11 +79,11 @@ public class TeleportModule extends AbstractGrubsModule {
 
 				String[] parts = rawValue.split(",");
 				Location realLoc = new Location(Bukkit.getWorld(parts[0]),
-												Double.parseDouble(parts[1]),
-												Double.parseDouble(parts[2]),
-												Double.parseDouble(parts[3]),
-												Float.parseFloat(parts[4]),
-												Float.parseFloat(parts[5]));
+						Double.parseDouble(parts[1]),
+						Double.parseDouble(parts[2]),
+						Double.parseDouble(parts[3]),
+						Float.parseFloat(parts[4]),
+						Float.parseFloat(parts[5]));
 
 				teleportPresets.put(realKey, realLoc);
 			}
@@ -116,11 +116,11 @@ public class TeleportModule extends AbstractGrubsModule {
 			viewParts[1] = curLoc.getPitch();
 
 			settingStr = curLoc.getWorld().getName() +  "," +
-						 Double.toString(locParts[0]) + "," +
-						 Double.toString(locParts[1]) + "," +
-						 Double.toString(locParts[2]) + "," +
-						 Float.toString(viewParts[0]) + "," +
-						 Float.toString(viewParts[1]);
+					Double.toString(locParts[0]) + "," +
+					Double.toString(locParts[1]) + "," +
+					Double.toString(locParts[2]) + "," +
+					Float.toString(viewParts[0]) + "," +
+					Float.toString(viewParts[1]);
 
 			teleportProperties.put(s, settingStr);
 		}

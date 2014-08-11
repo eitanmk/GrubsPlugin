@@ -13,23 +13,23 @@ public class GrubsCommand extends Command {
 	}
 
 	public void setExecutor(CommandExecutor exe){
-        this.executor = exe;
-    }
+		this.executor = exe;
+	}
 
 	@Override
 	public boolean execute(CommandSender sender, String commandLabel, String[] args) {
 		boolean success = false;
 
 		if (this.executor != null) {
-            success = this.executor.onCommand(sender, this, commandLabel, args);
-            if (!success && this.usageMessage.length() > 0) {
-            	for (String line : usageMessage.replace("<command>", commandLabel).split("\n")) {
-            		sender.sendMessage(line);
-            	}
-            }
-        }
+			success = this.executor.onCommand(sender, this, commandLabel, args);
+			if (!success && this.usageMessage.length() > 0) {
+				for (String line : usageMessage.replace("<command>", commandLabel).split("\n")) {
+					sender.sendMessage(line);
+				}
+			}
+		}
 
-        return false;
+		return false;
 	}
 
 }

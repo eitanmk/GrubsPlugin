@@ -18,5 +18,5 @@ public class WeatherControlEventListeners implements Listener {
 			GrubsMessager.broadcast(GrubsMessager.MessageLevel.INFO, "[Weather] Rain is stopping.");
 		}
 	}
-	
+
 }

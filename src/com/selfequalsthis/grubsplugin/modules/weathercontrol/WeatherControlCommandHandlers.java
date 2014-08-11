@@ -19,7 +19,7 @@ public class WeatherControlCommandHandlers extends AbstractGrubsCommandHandler {
 	public WeatherControlCommandHandlers(AbstractGrubsModule module) {
 		this.moduleRef = module;
 	}
-	
+
 	@GrubsCommandHandler(
 		command = "strike",
 		desc = "Hit targeted block or a player with lightening, but do no damage.",
@@ -28,7 +28,7 @@ public class WeatherControlCommandHandlers extends AbstractGrubsCommandHandler {
 	public void onStrikeCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
-		
+
 		if (args.length > 0) {
 			// there is a player as an arg
 			// find the player's object
@@ -40,7 +40,7 @@ public class WeatherControlCommandHandlers extends AbstractGrubsCommandHandler {
 						matchStr = matchStr + player.getName() + " ";
 					}
 					GrubsMessager.sendMessage(
-						sender, 
+						sender,
 						GrubsMessager.MessageLevel.INFO,
 						"Multiple matches: " + matchStr
 					);
@@ -55,7 +55,7 @@ public class WeatherControlCommandHandlers extends AbstractGrubsCommandHandler {
 			}
 			else {
 				GrubsMessager.sendMessage(
-					sender, 
+					sender,
 					GrubsMessager.MessageLevel.ERROR,
 					"No players matching '" + args[0] + "'."
 				);
@@ -65,23 +65,23 @@ public class WeatherControlCommandHandlers extends AbstractGrubsCommandHandler {
 			// aim for cursor
 			if (sender instanceof Player) {
 				Player executingPlayer = (Player) sender;
-				
+
 				Location target = executingPlayer.getTargetBlock(null, 256).getLocation();
 				World targetWorld = executingPlayer.getWorld();
 				targetWorld.strikeLightningEffect(target);
 			}
 		}
 	}
-	
+
 	@GrubsCommandHandler(
 		command = "zap",
 		desc = "Hit targeted block or a player with lightening, doing damage.",
 		usage = "/<command> [<player>]"
-	) 
+	)
 	public void onZapCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
-		
+
 		if (args.length > 0) {
 			// there is a player as an arg
 			// find the player's object
@@ -93,7 +93,7 @@ public class WeatherControlCommandHandlers extends AbstractGrubsCommandHandler {
 						matchStr = matchStr + player.getName() + " ";
 					}
 					GrubsMessager.sendMessage(
-						sender, 
+						sender,
 						GrubsMessager.MessageLevel.INFO,
 						"Multiple matches: " + matchStr
 					);
@@ -108,7 +108,7 @@ public class WeatherControlCommandHandlers extends AbstractGrubsCommandHandler {
 			}
 			else {
 				GrubsMessager.sendMessage(
-					sender, 
+					sender,
 					GrubsMessager.MessageLevel.ERROR,
 					"No players matching '" + args[0] + "'."
 				);
@@ -118,14 +118,14 @@ public class WeatherControlCommandHandlers extends AbstractGrubsCommandHandler {
 			// aim for cursor
 			if (sender instanceof Player) {
 				Player executingPlayer = (Player) sender;
-				
+
 				Location target = executingPlayer.getTargetBlock(null, 256).getLocation();
 				World targetWorld = executingPlayer.getWorld();
 				targetWorld.strikeLightning(target);
 			}
 		}
 	}
-	
+
 	@GrubsCommandHandler(
 		command = "storm",
 		desc = "Toggle rain storm.",
@@ -134,18 +134,18 @@ public class WeatherControlCommandHandlers extends AbstractGrubsCommandHandler {
 	public void onStormCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
-		
+
 		if (args.length == 0) {
 			GrubsMessager.sendMessage(
-				sender, 
+				sender,
 				GrubsMessager.MessageLevel.ERROR,
 				"Argument missing."
 			);
 		}
-		
+
 		if (!args[0].equalsIgnoreCase("on") && !args[0].equalsIgnoreCase("off")) {
 			GrubsMessager.sendMessage(
-				sender, 
+				sender,
 				GrubsMessager.MessageLevel.ERROR,
 				"Invalid argument."
 			);
@@ -153,7 +153,7 @@ public class WeatherControlCommandHandlers extends AbstractGrubsCommandHandler {
 
 		boolean onFlag = args[0].equalsIgnoreCase("on");
 		World worldObj = null;
-				
+
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
 			worldObj = executingPlayer.getWorld();
@@ -161,10 +161,10 @@ public class WeatherControlCommandHandlers extends AbstractGrubsCommandHandler {
 		else {
 			worldObj = Bukkit.getServer().getWorlds().get(0);
 		}
-		
+
 		worldObj.setStorm(onFlag);
 	}
-	
+
 	@GrubsCommandHandler(
 		command = "thunder",
 		desc = "Toggle thundering.",
@@ -173,18 +173,18 @@ public class WeatherControlCommandHandlers extends AbstractGrubsCommandHandler {
 	public void onThunderCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
-		
+
 		if (args.length == 0) {
 			GrubsMessager.sendMessage(
-				sender, 
+				sender,
 				GrubsMessager.MessageLevel.ERROR,
 				"Argument missing."
 			);
 		}
-		
+
 		if (!args[0].equalsIgnoreCase("on") && !args[0].equalsIgnoreCase("off")) {
 			GrubsMessager.sendMessage(
-				sender, 
+				sender,
 				GrubsMessager.MessageLevel.ERROR,
 				"Invalid argument."
 			);
@@ -192,7 +192,7 @@ public class WeatherControlCommandHandlers extends AbstractGrubsCommandHandler {
 
 		boolean onFlag = args[0].equalsIgnoreCase("on");
 		World worldObj = null;
-		
+
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
 			worldObj = executingPlayer.getWorld();

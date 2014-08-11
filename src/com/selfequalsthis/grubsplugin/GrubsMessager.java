@@ -5,7 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class GrubsMessager {
-	
+
 	public enum MessageLevel {
 		PLAIN,
 		MONITOR,
@@ -13,10 +13,10 @@ public class GrubsMessager {
 		INQUIRY,
 		ERROR
 	}
-	
+
 	private static ChatColor getColorForLevel(MessageLevel level) {
 		ChatColor retColor;
-		
+
 		switch (level) {
 		case PLAIN:
 			retColor = ChatColor.WHITE;
@@ -36,14 +36,14 @@ public class GrubsMessager {
 		default:
 			retColor = ChatColor.WHITE;
 		}
-		
+
 		return retColor;
 	}
-	
+
 	public static void sendMessage(CommandSender target, MessageLevel level, String message) {
 		target.sendMessage(getColorForLevel(level) + message);
 	}
-	
+
 	public static void broadcast(MessageLevel level, String message) {
 		Bukkit.broadcastMessage(getColorForLevel(level) + message);
 	}

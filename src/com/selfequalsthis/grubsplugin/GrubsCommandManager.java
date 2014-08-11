@@ -31,16 +31,16 @@ public class GrubsCommandManager {
 	@SuppressWarnings("unchecked")
 	public GrubsCommandManager() {
 		try{
-            Field map = SimplePluginManager.class.getDeclaredField("commandMap");
-            map.setAccessible(true);
-            this.commandMap = (CommandMap)map.get(Bukkit.getPluginManager());
+			Field map = SimplePluginManager.class.getDeclaredField("commandMap");
+			map.setAccessible(true);
+			this.commandMap = (CommandMap)map.get(Bukkit.getPluginManager());
 
-            Field known = SimpleCommandMap.class.getDeclaredField("knownCommands");
-            known.setAccessible(true);
-            this.knownCommands = (Map<String,Command>)known.get(this.commandMap);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+			Field known = SimpleCommandMap.class.getDeclaredField("knownCommands");
+			known.setAccessible(true);
+			this.knownCommands = (Map<String,Command>)known.get(this.commandMap);
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 
 	public void registerCommand(String name, CommandExecutor exec, String desc, String usage) {

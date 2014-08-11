@@ -12,14 +12,14 @@ import com.selfequalsthis.grubsplugin.GrubsMessager;
 import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
 
 public class GameTweaksCommandHandlers extends AbstractGrubsCommandHandler {
-	
+
 	private GameTweaksModule gtModule;
 
 	public GameTweaksCommandHandlers(GameTweaksModule module) {
 		this.moduleRef = module;
 		this.gtModule = module;
 	}
-	
+
 	@GrubsCommandHandler(
 		command = "buildmode",
 		desc = "Toggle creative \"build\" mode.",
@@ -28,10 +28,10 @@ public class GameTweaksCommandHandlers extends AbstractGrubsCommandHandler {
 	public void onBuildModeCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
-		
+
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
-			
+
 			if (args.length > 0) {
 				if (args[0].equalsIgnoreCase("on")) {
 					executingPlayer.setGameMode(GameMode.CREATIVE);
@@ -47,7 +47,7 @@ public class GameTweaksCommandHandlers extends AbstractGrubsCommandHandler {
 			}
 		}
 	}
-	
+
 	@GrubsCommandHandler(
 		command = "timelock",
 		desc = "Toggle freezing time to current value, or to the specified time value or preset.",
@@ -56,7 +56,7 @@ public class GameTweaksCommandHandlers extends AbstractGrubsCommandHandler {
 	public void onTimeLockCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
-		
+
 		if (args.length > 0) {
 			String argVal = args[0];
 			if (argVal.equalsIgnoreCase("off")) {
@@ -66,7 +66,7 @@ public class GameTweaksCommandHandlers extends AbstractGrubsCommandHandler {
 			else {
 				World world;
 				int timecode;
-				
+
 				if (sender instanceof Player) {
 					Player executingPlayer = (Player) sender;
 					world = executingPlayer.getWorld();
@@ -74,7 +74,7 @@ public class GameTweaksCommandHandlers extends AbstractGrubsCommandHandler {
 				else {
 					world = Bukkit.getServer().getWorlds().get(0);
 				}
-				
+
 				if (argVal.equalsIgnoreCase("on")) {
 					timecode = (int) world.getTime();
 				}
@@ -97,7 +97,7 @@ public class GameTweaksCommandHandlers extends AbstractGrubsCommandHandler {
 						return;
 					}
 				}
-				
+
 				this.gtModule.lockTime(world, timecode);
 				GrubsMessager.sendMessage(sender, GrubsMessager.MessageLevel.INFO, "Time locked at " + timecode);
 			}

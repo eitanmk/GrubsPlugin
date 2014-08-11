@@ -12,12 +12,12 @@ import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
 public class WirelessRedstoneCommandHandlers extends AbstractGrubsCommandHandler {
 
 	private WirelessRedstoneModule wrModule;
-	
+
 	public WirelessRedstoneCommandHandlers(WirelessRedstoneModule module) {
 		this.moduleRef = module;
 		this.wrModule = module;
 	}
-	
+
 	@GrubsCommandHandler(
 		command = "wrchannelclean",
 		desc = "Utility to clean corrupted wireless redstone channels."
@@ -25,7 +25,7 @@ public class WirelessRedstoneCommandHandlers extends AbstractGrubsCommandHandler
 	public void onChannelCleanCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		World worldObj = null;
-		
+
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
 			worldObj = executingPlayer.getWorld();
@@ -33,7 +33,7 @@ public class WirelessRedstoneCommandHandlers extends AbstractGrubsCommandHandler
 		else {
 			worldObj = Bukkit.getWorlds().get(0);
 		}
-		
+
 		this.wrModule.repairChannels(worldObj);
 	}
 }
