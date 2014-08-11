@@ -2,7 +2,8 @@ package com.selfequalsthis.grubsplugin.modules.wirelessredsone;
 
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
-import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
+
+import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 
 public class WirelessRedstoneModule extends AbstractGrubsModule {
 

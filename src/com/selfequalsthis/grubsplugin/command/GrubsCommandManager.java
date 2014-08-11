@@ -1,4 +1,4 @@
-package com.selfequalsthis.grubsplugin;
+package com.selfequalsthis.grubsplugin.command;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

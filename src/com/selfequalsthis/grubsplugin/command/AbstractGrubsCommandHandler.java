@@ -1,4 +1,4 @@
-package com.selfequalsthis.grubsplugin;
+package com.selfequalsthis.grubsplugin.command;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -6,6 +6,9 @@ import java.util.HashMap;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+
+import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
+import com.selfequalsthis.grubsplugin.utils.GrubsUtilities;
 
 public abstract class AbstractGrubsCommandHandler implements CommandExecutor {
 

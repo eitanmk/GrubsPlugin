@@ -8,7 +8,7 @@ import java.util.TimerTask;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import com.selfequalsthis.grubsplugin.GrubsMessager;
+import com.selfequalsthis.grubsplugin.utils.GrubsMessager;
 
 public class GrubsLaserTag {
 

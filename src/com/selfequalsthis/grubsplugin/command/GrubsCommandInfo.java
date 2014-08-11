@@ -1,4 +1,4 @@
-package com.selfequalsthis.grubsplugin;
+package com.selfequalsthis.grubsplugin.command;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

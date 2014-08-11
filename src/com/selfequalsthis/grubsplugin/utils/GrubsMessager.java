@@ -1,4 +1,4 @@
-package com.selfequalsthis.grubsplugin;
+package com.selfequalsthis.grubsplugin.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

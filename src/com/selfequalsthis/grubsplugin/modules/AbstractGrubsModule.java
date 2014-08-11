@@ -1,4 +1,4 @@
-package com.selfequalsthis.grubsplugin;
+package com.selfequalsthis.grubsplugin.modules;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +12,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandler;
+import com.selfequalsthis.grubsplugin.command.GrubsCommandManager;
 
 public abstract class AbstractGrubsModule {
 

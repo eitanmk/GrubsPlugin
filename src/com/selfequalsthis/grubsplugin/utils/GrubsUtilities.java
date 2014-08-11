@@ -1,6 +1,8 @@
-package com.selfequalsthis.grubsplugin;
+package com.selfequalsthis.grubsplugin.utils;
 
 import org.bukkit.command.CommandSender;
+
+import com.selfequalsthis.grubsplugin.utils.GrubsMessager.MessageLevel;
 
 public class GrubsUtilities {
 

@@ -6,11 +6,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.selfequalsthis.grubsplugin.AbstractGrubsCommandHandler;
-import com.selfequalsthis.grubsplugin.GrubsCommandInfo;
-import com.selfequalsthis.grubsplugin.GrubsMessager;
-import com.selfequalsthis.grubsplugin.GrubsUtilities;
 import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
+import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandler;
+import com.selfequalsthis.grubsplugin.command.GrubsCommandInfo;
+import com.selfequalsthis.grubsplugin.utils.GrubsMessager;
+import com.selfequalsthis.grubsplugin.utils.GrubsUtilities;
 
 public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 

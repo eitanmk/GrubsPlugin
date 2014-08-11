@@ -3,7 +3,8 @@ package com.selfequalsthis.grubsplugin.modules.gametweaks;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
-import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
+
+import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 
 public class GameTweaksModule extends AbstractGrubsModule {
 

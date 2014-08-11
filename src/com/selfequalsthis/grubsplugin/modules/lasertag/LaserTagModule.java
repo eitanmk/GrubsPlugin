@@ -1,7 +1,8 @@
 package com.selfequalsthis.grubsplugin.modules.lasertag;
 
 import org.bukkit.plugin.java.JavaPlugin;
-import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
+
+import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 
 public class LaserTagModule extends AbstractGrubsModule {
 

@@ -8,11 +8,11 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.selfequalsthis.grubsplugin.AbstractGrubsCommandHandler;
-import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
-import com.selfequalsthis.grubsplugin.GrubsCommandInfo;
-import com.selfequalsthis.grubsplugin.GrubsMessager;
 import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
+import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandler;
+import com.selfequalsthis.grubsplugin.command.GrubsCommandInfo;
+import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
+import com.selfequalsthis.grubsplugin.utils.GrubsMessager;
 
 public class WeatherControlCommandHandlers extends AbstractGrubsCommandHandler {
 
