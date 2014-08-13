@@ -107,10 +107,12 @@ public class GrubsDefendShed {
 	}
 
 	public static void showTimeUpdate() {
-		for (Player p : playerList) {
-			GrubsMessager.sendMessage(p, GrubsMessager.MessageLevel.MONITOR, "" + gameMinutesRemaining + " minutes remaining.");
+		if (gameMinutesRemaining > 0) {
+			for (Player p : playerList) {
+				GrubsMessager.sendMessage(p, GrubsMessager.MessageLevel.MONITOR, "" + gameMinutesRemaining + " minutes remaining.");
+			}
+			gameMinutesRemaining--;
 		}
-		gameMinutesRemaining--;
 	}
 
 	public static void respawnPlayer(Player p) {
@@ -167,7 +169,7 @@ public class GrubsDefendShed {
 	private static void startGameTimers() {
 		currentState = GAME_STATES.IN_PROGRESS;
 		gameTimer.schedule(gameDurationTask, (gameLengthMinutes * 60 * 1000));
-		gameTimer.schedule(timeUpdateTask, 60000); // every minute
+		gameTimer.schedule(timeUpdateTask, 0, 60000); // every minute
 	}
 
 	private static void resetGameVariables() {

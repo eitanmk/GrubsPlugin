@@ -69,7 +69,8 @@ public class DefendShedEventListeners implements Listener {
 			Block target = event.getClickedBlock();
 			Action action = event.getAction();
 
-			if (action == Action.RIGHT_CLICK_BLOCK && GrubsDefendShed.isTargetButton(target)) {
+			if (action == Action.RIGHT_CLICK_BLOCK && GrubsDefendShed.isTargetButton(target) &&
+				!GrubsDefendShed.isItPlayer(source)) {
 				GrubsDefendShed.playersWin();
 			}
 		}

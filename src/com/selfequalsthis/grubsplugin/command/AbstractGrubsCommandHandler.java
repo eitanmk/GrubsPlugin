@@ -33,7 +33,6 @@ public abstract class AbstractGrubsCommandHandler implements CommandExecutor {
 			}
 			catch (Exception e) {
 				this.moduleRef.log("Unable to execute command handler for '" + cmdName + "'");
-				e.printStackTrace();
 			}
 		}
 

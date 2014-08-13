@@ -164,7 +164,7 @@ public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 			GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "Not enough arguments.");
 		}
 
-		String playerName = args[0];
+		String playerName = args[1];
 
 		if (GrubsDefendShed.getGameState() == GrubsDefendShed.GAME_STATES.ACCEPT_IT_PLAYER) {
 			List<Player> matches = Bukkit.matchPlayer(playerName);
