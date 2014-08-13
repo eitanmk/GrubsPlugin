@@ -24,18 +24,18 @@ public class LaserTagEventListeners implements Listener {
 
 				EntityDamageByEntityEvent newEvent = (EntityDamageByEntityEvent)event;
 				Entity damager = newEvent.getDamager();
-				
+
 				// first, make sure it was a projectile that did the damaging
 				if (damager instanceof Projectile) {
 					Projectile projectile = (Projectile)damager;
 					Player shooter = (Player)projectile.getShooter();
-					
+
 					// can't shoot yourself
 					if (shooter.getDisplayName() != source.getDisplayName()) {
 						if (GrubsLaserTag.isPlaying(shooter)) {
 							GrubsLaserTag.updateScore(shooter, source);
 						}
-					}	
+					}
 				}
 			}
 		}

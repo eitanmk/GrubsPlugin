@@ -6,21 +6,21 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.selfequalsthis.grubsplugin.AbstractGrubsCommandHandler;
-import com.selfequalsthis.grubsplugin.GrubsCommandInfo;
-import com.selfequalsthis.grubsplugin.GrubsMessager;
-import com.selfequalsthis.grubsplugin.GrubsUtilities;
 import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
+import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandler;
+import com.selfequalsthis.grubsplugin.command.GrubsCommandInfo;
+import com.selfequalsthis.grubsplugin.utils.GrubsMessager;
+import com.selfequalsthis.grubsplugin.utils.GrubsUtilities;
 
 public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 
 	private InventoryModule inventoryModule;
-	
+
 	public InventoryCommandHandlers(InventoryModule module) {
 		this.moduleRef = module;
 		this.inventoryModule = module;
 	}
-	
+
 	@GrubsCommandHandler(
 		command = "kitget",
 		desc = "Load a kit into your inventory.",
@@ -29,10 +29,10 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 	public void onKitGetCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
-		
+
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
-			
+
 			if (args.length > 0) {
 				String argName = args[0];
 				if (this.inventoryModule.itemKitPresets.containsKey(argName)) {
@@ -44,14 +44,14 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 						this.inventoryModule.itemKitArmorPresets.get(argName)
 					);
 					GrubsMessager.sendMessage(
-						executingPlayer, 
+						executingPlayer,
 						GrubsMessager.MessageLevel.INFO,
 						"Inventory updated."
 					);
 				}
 				else {
 					GrubsMessager.sendMessage(
-						executingPlayer, 
+						executingPlayer,
 						GrubsMessager.MessageLevel.ERROR,
 						"No kit named '" + argName + "' found."
 					);
@@ -59,14 +59,14 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 			}
 			else {
 				GrubsMessager.sendMessage(
-					executingPlayer, 
+					executingPlayer,
 					GrubsMessager.MessageLevel.ERROR,
 					"Missing command argument."
 				);
 			}
 		}
 	}
-	
+
 	@GrubsCommandHandler(
 		command = "kitset",
 		desc = "Create a new item kit preset based on current inventory.",
@@ -75,15 +75,15 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 	public void onKitSetCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
-		
+
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
-			
+
 			if (args.length > 0) {
 				String argName = args[0];
 				if (this.inventoryModule.itemKitPresets.containsKey(argName)) {
 					GrubsMessager.sendMessage(
-						executingPlayer, 
+						executingPlayer,
 						GrubsMessager.MessageLevel.ERROR,
 						"Kit '" + argName + "' already exists."
 					);
@@ -96,7 +96,7 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 						argName, executingPlayer.getInventory().getArmorContents()
 					);
 					GrubsMessager.sendMessage(
-						executingPlayer, 
+						executingPlayer,
 						GrubsMessager.MessageLevel.INFO,
 						"Kit '" + argName + "' saved."
 					);
@@ -105,14 +105,14 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 			}
 			else {
 				GrubsMessager.sendMessage(
-					executingPlayer, 
+					executingPlayer,
 					GrubsMessager.MessageLevel.ERROR,
 					"Missing command argument."
 				);
 			}
 		}
 	}
-	
+
 	@GrubsCommandHandler(
 		command = "kitlist",
 		desc = "List all saved kit presets."
@@ -128,7 +128,7 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 		}
 		else {
 			GrubsMessager.sendMessage(
-				sender, 
+				sender,
 				GrubsMessager.MessageLevel.ERROR,
 				msgIdentifier + "No kits in list."
 			);
@@ -143,14 +143,14 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 	public void onKitDeleteCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
-		
+
 		if (args.length > 0) {
 			String argName = args[0];
 			if (this.inventoryModule.itemKitPresets.containsKey(argName)) {
 				this.inventoryModule.itemKitPresets.remove(argName);
 				this.inventoryModule.itemKitArmorPresets.remove(argName);
 				GrubsMessager.sendMessage(
-					sender, 
+					sender,
 					GrubsMessager.MessageLevel.INFO,
 					"Kit '" + argName + "' deleted."
 				);
@@ -158,7 +158,7 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 			}
 			else {
 				GrubsMessager.sendMessage(
-					sender, 
+					sender,
 					GrubsMessager.MessageLevel.ERROR,
 					"No kit named '" + argName + "' found."
 				);
@@ -166,27 +166,27 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 		}
 		else {
 			GrubsMessager.sendMessage(
-				sender, 
+				sender,
 				GrubsMessager.MessageLevel.ERROR,
 				"Missing command argument."
 			);
 		}
 	}
-	
+
 	@GrubsCommandHandler(
 		command = "clearinv",
 		desc = "Empty out current inventory."
 	)
 	public void onClearInventoryCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
-		
+
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
-			
+
 			executingPlayer.getInventory().clear();
 			executingPlayer.getInventory().setArmorContents(new ItemStack[4]);
 			GrubsMessager.sendMessage(
-				executingPlayer, 
+				executingPlayer,
 				GrubsMessager.MessageLevel.INFO,
 				"Inventory cleared."
 			);

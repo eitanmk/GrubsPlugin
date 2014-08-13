@@ -16,11 +16,11 @@ public class Channel implements Serializable {
 	private static final long serialVersionUID = -1413121016289041397L;
 
 	protected static final Logger log = Logger.getLogger("Minecraft");
-	
+
 	private String name;
 	private ArrayList<ChannelNode> transmitters = new ArrayList<ChannelNode>();
 	private ArrayList<ChannelNode> receivers = new ArrayList<ChannelNode>();
-	
+
 	public Channel(String name) {
 		this.name = name;
 	}
@@ -28,23 +28,23 @@ public class Channel implements Serializable {
 	public String getName() {
 		return name;
 	}
-	
+
 	public void addTransmitter(Block block) {
 		ChannelNode node = new ChannelNode(block);
 		transmitters.add(node);
 
 		if (transmitters.size() == 1 && !receivers.isEmpty()) {
-			// if we just added the first transmitter and there were receivers, 
+			// if we just added the first transmitter and there were receivers,
 			//  put them back into their default state
 			updateReceivers(block.getWorld(), isTransmitting());
 		}
 	}
-	
+
 	public void addReceiver(Block block, boolean isInverted) {
 		ChannelNode node = new ChannelNode(block);
 		node.setIsInverted(isInverted);
 		receivers.add(node);
-		
+
 		// might have to turn the new one on immediately
 		if (!transmitters.isEmpty()) {
 			if (isTransmitting()) {
@@ -55,17 +55,17 @@ public class Channel implements Serializable {
 			}
 		}
 	}
-	
+
 	public ChannelNode getTransmitterAt(Location loc) {
 		for (ChannelNode node : transmitters) {
 			if (node.isAtLocation(loc)) {
 				return node;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	public ChannelNode getReceiverAt(Location loc) {
 		for (ChannelNode node : receivers) {
 			if (node.isAtLocation(loc)) {
@@ -74,25 +74,25 @@ public class Channel implements Serializable {
 		}
 		return null;
 	}
-	
+
 	public void removeTransmitterAt(Location loc) {
 		ChannelNode node = getTransmitterAt(loc);
 		if (node != null) {
 			transmitters.remove(node);
-			
+
 			if (transmitters.isEmpty() && !receivers.isEmpty()) {
 				allReceiversToSigns(loc.getWorld());
 			}
 		}
 	}
-	
+
 	public void removeReceiverAt(Location loc) {
 		ChannelNode node = getReceiverAt(loc);
 		if (node != null) {
 			receivers.remove(node);
 		}
 	}
-	
+
 	public boolean isTransmitting() {
 		boolean transmitting = false;
 		for (ChannelNode node : transmitters) {
@@ -100,37 +100,37 @@ public class Channel implements Serializable {
 		}
 		return transmitting;
 	}
-	
+
 	public boolean isEmpty() {
 		return (transmitters.size() == 0 && receivers.size() == 0);
 	}
-	
-	public void handlePowerChangedOn(Block block) {		
+
+	public void handlePowerChangedOn(Block block) {
 		// only replace signs if we aren't already transmitting
-		if (!isTransmitting()) {			
+		if (!isTransmitting()) {
 			updateReceivers(block.getWorld(), true);
 		}
-		
+
 		// update the transmitter power state
 		ChannelNode node = getTransmitterAt(block.getLocation());
 		if (node != null) {
 			node.setIsPowered(true);
-		}		
+		}
 	}
-	
+
 	public void handlePowerChangedOff(Block block) {
 		// update the transmitter power state
 		ChannelNode node = getTransmitterAt(block.getLocation());
 		if (node != null) {
 			node.setIsPowered(false);
 		}
-		
+
 		// if that was the last transmitter off, replace the torches
 		if (!isTransmitting()) {
 			updateReceivers(block.getWorld(), false);
 		}
 	}
-	
+
 	private void updateReceivers(World world, boolean powerOn) {
 		for (ChannelNode receiver : receivers) {
 			if (powerOn) {
@@ -141,20 +141,20 @@ public class Channel implements Serializable {
 			}
 		}
 	}
-	
+
 	private void allReceiversToSigns(World world) {
 		for (ChannelNode receiver : receivers) {
 			receiver.toSign(world, this.name);
 		}
 	}
-	
+
 	public boolean handlePhysicsChange(Block block) {
 		// does this location affect us?
 		ChannelNode target = this.getTransmitterAt(block.getLocation());
 		if (target == null) {
 			target = this.getReceiverAt(block.getLocation());
 		}
-		
+
 		if (target == null) {
 			return false;
 		}
@@ -164,14 +164,14 @@ public class Channel implements Serializable {
 				this.removeTransmitterAt(block.getLocation());
 				this.removeReceiverAt(block.getLocation());
 			}
-			
+
 			return removeNode;
 		}
 	}
-	
+
 	public void cleanup(World world) {
 		ArrayList<Location> locations = new ArrayList<Location>();
-		
+
 		// for transmitters, ensure there is a sign at that location
 		Iterator<ChannelNode> transmitterIterator = transmitters.iterator();
 		while (transmitterIterator.hasNext()) {
@@ -205,7 +205,7 @@ public class Channel implements Serializable {
 				}
 			}
 		}
-		
+
 		// for receivers
 		Iterator<ChannelNode> receiverIterator = receivers.iterator();
 		while (receiverIterator.hasNext()) {
@@ -247,10 +247,10 @@ public class Channel implements Serializable {
 			}
 		}
 	}
-	
+
 	public String toString() {
 		String retVal = "";
-		
+
 		retVal += "Channel name: " + this.name + "\n";
 		retVal += "# Transmitters: " + transmitters.size() + "\n";
 		retVal += "# Receivers: " + receivers.size() + "\n";
@@ -264,4 +264,4 @@ public class Channel implements Serializable {
 		}
 		return retVal;
 	}
- }
+}

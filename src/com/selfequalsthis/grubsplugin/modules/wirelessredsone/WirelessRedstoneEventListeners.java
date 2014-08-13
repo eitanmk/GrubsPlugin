@@ -16,18 +16,18 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class WirelessRedstoneEventListeners implements Listener {
 	protected final Logger log = Logger.getLogger("Minecraft");
-	
+
 	private GrubsWirelessRedstone controllerRef;
-	
+
 	public WirelessRedstoneEventListeners(GrubsWirelessRedstone gwr) {
 		this.controllerRef = gwr;
 	}
-	
-	
+
+
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockBreak(BlockBreakEvent event) {
 		if (event.getBlock().getState() instanceof Sign) {
-			Sign signObj = (Sign)event.getBlock().getState();			
+			Sign signObj = (Sign)event.getBlock().getState();
 			if (GrubsWirelessRedstone.isValidNode(signObj.getLines())) {
 				this.controllerRef.removeNode(signObj);
 			}
@@ -36,7 +36,7 @@ public class WirelessRedstoneEventListeners implements Listener {
 			this.controllerRef.removeReceiverOnAnyChannel(event.getBlock());
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockRedstoneChange(BlockRedstoneEvent event) {
 		if (event.getBlock().getState() instanceof Sign) {
@@ -49,26 +49,26 @@ public class WirelessRedstoneEventListeners implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onSignChange(SignChangeEvent event) {
 		if (GrubsWirelessRedstone.isValidNode(event.getLines())) {
 			this.controllerRef.addNode(event.getBlock(), event.getLines());
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onBlockPhysics(BlockPhysicsEvent event) {	
+	public void onBlockPhysics(BlockPhysicsEvent event) {
 		if ((event.getBlock().getState() instanceof Sign) || event.getBlock().getType() == Material.REDSTONE_TORCH_ON) {
 			this.controllerRef.checkChannelsForPhysicsUpdates(event.getBlock());
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		World world = event.getPlayer().getWorld();
 		int numPlayers = world.getPlayers().size();
-		
+
 		// before this player logs out, so there is still 1 in world
 		if (numPlayers == 1) {
 			this.controllerRef.saveChannels();

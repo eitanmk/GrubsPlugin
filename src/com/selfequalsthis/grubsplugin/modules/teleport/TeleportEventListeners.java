@@ -10,17 +10,17 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class TeleportEventListeners implements Listener {
 
 	private TeleportModule tpModule;
-	
+
 	public TeleportEventListeners(TeleportModule module) {
 		this.tpModule = module;
 	}
-	
+
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		Player deadPlayer = event.getEntity();
 		this.tpModule.savePlayerSpecialLocation(deadPlayer, "grave");
 	}
-	
+
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player quittingPlayer = event.getPlayer();

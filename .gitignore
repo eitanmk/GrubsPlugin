@@ -12,3 +12,6 @@ artifact/*
 
 #ignore the eclipse project
 .project
+
+#ignore eclipse settings
+.settings

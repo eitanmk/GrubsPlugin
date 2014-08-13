@@ -46,7 +46,7 @@
 				name: ${plugin.name}
 				main: ${plugin.main}
 				version: ${plugin.version}
-				
+
 				commands:
 			</header>
 			<fileset dir="${build.dir}/commands" includes="*.part" />
@@ -54,11 +54,18 @@
 	</target>
 
 	<target name="build.plugin">
+		<javac includeAntRuntime="false" srcdir="${src.dir}" destdir="${class.dir}" compiler="javac1.6">
+			<classpath>
+				<pathelement location="${lib.dir}/bukkit/bukkit-1.6.4-R2.0.jar" />
+			</classpath>
+			<compilerarg line="-s ${build.dir}" />
+		</javac>
 		<jar destfile="${artifact.dir}/GrubsPlugin.jar">
 			<fileset dir="${class.dir}" includes="**/*.class" />
-			<fileset dir="${build.dir}" includes="plugin.yml" />
+			<fileset dir="." includes="plugin.yml" />
 		</jar>
 	</target>
 
-	<target name="build.all" depends="clean,init,build.processor,build.plugin.manifest,build.plugin" />
+	<target name="build.all.annotate" depends="clean,init,build.processor,build.plugin.manifest,build.plugin" />
+	<target name="build.all" depends="clean,init,build.plugin" />
 </project>

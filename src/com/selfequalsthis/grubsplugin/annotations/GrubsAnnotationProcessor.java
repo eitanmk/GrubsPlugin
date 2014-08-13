@@ -33,15 +33,17 @@ public class GrubsAnnotationProcessor extends AbstractProcessor {
 
 				Filer filer = this.processingEnv.getFiler();
 				try {
-					FileObject fileObj = filer.createResource(StandardLocation.SOURCE_OUTPUT,
-															  "commands",
-															  command + ".part",
-															  element);
+					FileObject fileObj = filer.createResource(
+						StandardLocation.SOURCE_OUTPUT,
+						"commands",
+						command + ".part",
+						element
+					);
 					fileObj.openWriter()
-						.append("    " + command + ":\n")
-						.append("        description: " + desc + "\n")
-						.append("        usage: " + usage + "\n")
-						.close();
+					.append("    " + command + ":\n")
+					.append("        description: " + desc + "\n")
+					.append("        usage: " + usage + "\n")
+					.close();
 				} catch (IOException e) { }
 			}
 		}

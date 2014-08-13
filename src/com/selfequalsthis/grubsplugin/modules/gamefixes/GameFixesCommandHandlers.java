@@ -5,14 +5,14 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.selfequalsthis.grubsplugin.AbstractGrubsCommandHandler;
-import com.selfequalsthis.grubsplugin.AbstractGrubsModule;
-import com.selfequalsthis.grubsplugin.GrubsCommandInfo;
-import com.selfequalsthis.grubsplugin.GrubsMessager;
 import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
+import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandler;
+import com.selfequalsthis.grubsplugin.command.GrubsCommandInfo;
+import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
+import com.selfequalsthis.grubsplugin.utils.GrubsMessager;
 
 public class GameFixesCommandHandlers extends AbstractGrubsCommandHandler {
-	
+
 	public GameFixesCommandHandlers(AbstractGrubsModule module) {
 		this.moduleRef = module;
 	}
@@ -23,10 +23,10 @@ public class GameFixesCommandHandlers extends AbstractGrubsCommandHandler {
 	)
 	public void onEjectCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
-		
+
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
-			
+
 			if (executingPlayer.isInsideVehicle()) {
 				executingPlayer.leaveVehicle();
 			}
@@ -35,17 +35,17 @@ public class GameFixesCommandHandlers extends AbstractGrubsCommandHandler {
 			}
 		}
 	}
-	
+
 	@GrubsCommandHandler(
 		command = "getchunks",
 		desc = "Reload chunks from the server if some are missing."
 	)
 	public void onGetChunksCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
-		
+
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
-			
+
 			World world = executingPlayer.getWorld();
 			Chunk playerChunk = world.getChunkAt(executingPlayer.getLocation());
 
@@ -58,11 +58,11 @@ public class GameFixesCommandHandlers extends AbstractGrubsCommandHandler {
 			int endZ  = playerChunkZ + 1;
 
 			for (int x = startX; x <= endX; ++x) {
-			    for (int z = startZ; z <= endZ; ++z) {
-			        world.refreshChunk(x, z);
-			    }
+				for (int z = startZ; z <= endZ; ++z) {
+					world.refreshChunk(x, z);
+				}
 			}
-			
+
 			GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.INFO, "Chunks re-sent.");
 		}
 	}

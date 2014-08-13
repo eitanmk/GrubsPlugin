@@ -15,5 +15,5 @@ public class GameFixesEventListeners implements Listener {
 		Chunk destChunk = world.getChunkAt(event.getTo());
 		world.refreshChunk(destChunk.getX(), destChunk.getZ());
 	}
-	
+
 }
