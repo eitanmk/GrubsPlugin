@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
-import com.selfequalsthis.grubsplugin.modules.module_loader.ModuleLoaderModule;
+import com.selfequalsthis.grubsplugin.modules.moduleloader.ModuleLoaderModule;
 
 public class GrubsPlugin extends JavaPlugin {
 

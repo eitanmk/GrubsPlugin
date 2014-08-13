@@ -1,4 +1,4 @@
-package com.selfequalsthis.grubsplugin.modules.module_loader;
+package com.selfequalsthis.grubsplugin.modules.moduleloader;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,6 +11,7 @@ import java.util.Properties;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
+import com.selfequalsthis.grubsplugin.modules.defendtheshed.DefendShedModule;
 import com.selfequalsthis.grubsplugin.modules.gamefixes.GameFixesModule;
 import com.selfequalsthis.grubsplugin.modules.gameinfo.GameInfoModule;
 import com.selfequalsthis.grubsplugin.modules.gametweaks.GameTweaksModule;
@@ -36,6 +37,7 @@ public class ModuleLoaderModule extends AbstractGrubsModule {
 		this.commandHandlers = new ModuleLoaderCommandHandlers(this);
 
 		// all new modules need to be listed here
+		this.allModules.put("defendshed", new DefendShedModule(plugin));
 		this.allModules.put("gamefixes", new GameFixesModule(plugin));
 		this.allModules.put("gameinfo", new GameInfoModule(plugin));
 		this.allModules.put("gametweaks",new GameTweaksModule(plugin));
