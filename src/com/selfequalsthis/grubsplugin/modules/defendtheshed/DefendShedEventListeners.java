@@ -13,8 +13,20 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class DefendShedEventListeners implements Listener {
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerMove(PlayerMoveEvent event) {
+		Player player = event.getPlayer();
+		if (GrubsDefendShed.getGameState() == GrubsDefendShed.GAME_STATES.IN_PROGRESS &&
+			GrubsDefendShed.isPlaying(player)) {
+			player.setSneaking(true);
+			return;
+		}
+	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onEntityDamage(EntityDamageEvent event) {
@@ -40,7 +52,7 @@ public class DefendShedEventListeners implements Listener {
 
 					// only if the shooter is "it" do we respawn
 					if (GrubsDefendShed.isItPlayer(shooter)) {
-						GrubsDefendShed.teleportToRestartPoint(source);
+						GrubsDefendShed.respawnPlayer(source);
 					}
 				}
 			}
@@ -58,7 +70,7 @@ public class DefendShedEventListeners implements Listener {
 			Action action = event.getAction();
 
 			if (action == Action.RIGHT_CLICK_BLOCK && GrubsDefendShed.isTargetButton(target)) {
-				GrubsDefendShed.completeGame();
+				GrubsDefendShed.playersWin();
 			}
 		}
 	}
@@ -69,6 +81,16 @@ public class DefendShedEventListeners implements Listener {
 		if (GrubsDefendShed.getGameState() == GrubsDefendShed.GAME_STATES.IN_PROGRESS &&
 			GrubsDefendShed.isPlaying(source)) {
 			event.setCancelled(true);
+			return;
+		}
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerRespawn(PlayerRespawnEvent event) {
+		Player player = event.getPlayer();
+		if (GrubsDefendShed.getGameState() == GrubsDefendShed.GAME_STATES.IN_PROGRESS &&
+			GrubsDefendShed.isPlaying(player)) {
+			GrubsDefendShed.respawnPlayer(player);
 			return;
 		}
 	}

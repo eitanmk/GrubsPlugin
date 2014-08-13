@@ -48,6 +48,9 @@ public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 			else if (subcommand.equalsIgnoreCase("players")) {
 				this.handleSubCommandPlayers(args, executingPlayer);
 			}
+			else if (subcommand.equalsIgnoreCase("it")) {
+				this.handleSubCommandItPlayer(args, executingPlayer);
+			}
 			else if (subcommand.equalsIgnoreCase("target")) {
 				this.handleSubCommandTarget(args, executingPlayer);
 			}
@@ -60,6 +63,10 @@ public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 			else if (subcommand.equalsIgnoreCase("start")) {
 				this.handleSubCommandStart(executingPlayer);
 			}
+			else if (subcommand.equalsIgnoreCase("cancel")) {
+				GrubsDefendShed.gameCancelled();
+				GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "Game cancelled.");
+			}
 			else {
 				GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "Unknown subcommand.");
 			}
@@ -68,11 +75,11 @@ public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 
 	private void handleSubCommandCreate(Player executingPlayer) {
 		if (GrubsDefendShed.getGameState() == GrubsDefendShed.GAME_STATES.UNINITIALIZED) {
-			GrubsDefendShed.createNewGame(executingPlayer);
+			GrubsDefendShed.createNewGame();
 			GrubsMessager.sendMessage(
 				executingPlayer,
 				GrubsMessager.MessageLevel.INFO,
-				"New game ready for setup. Add players next."
+				"New game ready for setup. Add players next: /defendshed players <name1> [...<nameN>]"
 			);
 		}
 		else {
@@ -90,7 +97,7 @@ public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 		}
 
 		if (GrubsDefendShed.getGameState() == GrubsDefendShed.GAME_STATES.ACCEPT_PLAYERS ||
-				GrubsDefendShed.getGameState() == GrubsDefendShed.GAME_STATES.ACCEPT_TARGET) {
+				GrubsDefendShed.getGameState() == GrubsDefendShed.GAME_STATES.ACCEPT_IT_PLAYER) {
 
 			ArrayList<Player> playersToAdd = new ArrayList<Player>(10);
 
@@ -139,7 +146,7 @@ public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 				GrubsMessager.sendMessage(
 					executingPlayer,
 					GrubsMessager.MessageLevel.INFO,
-					"You can add more players or set target button next."
+					"You can add more players or set who is 'it' next: /defendshed it <player>"
 				);
 			}
 		}
@@ -148,6 +155,58 @@ public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 				executingPlayer,
 				GrubsMessager.MessageLevel.ERROR,
 				"Current game not accepting players."
+			);
+		}
+	}
+
+	private void handleSubCommandItPlayer(String[] args, Player executingPlayer) {
+		if (args.length == 1) {
+			GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "Not enough arguments.");
+		}
+
+		String playerName = args[0];
+
+		if (GrubsDefendShed.getGameState() == GrubsDefendShed.GAME_STATES.ACCEPT_IT_PLAYER) {
+			List<Player> matches = Bukkit.matchPlayer(playerName);
+
+			if (matches.size() == 0) {
+				GrubsMessager.sendMessage(
+					executingPlayer,
+					GrubsMessager.MessageLevel.ERROR,
+					"No players matching '" + playerName + "'."
+				);
+			}
+			else if (matches.size() == 1) {
+				Player p = matches.get(0);
+				if (GrubsDefendShed.isPlaying(p)) {
+					GrubsDefendShed.setItPlayer(p);
+					GrubsMessager.sendMessage(
+						executingPlayer,
+						GrubsMessager.MessageLevel.INFO,
+						"" + p.getDisplayName() + " is 'it'. Put target button in crosshairs: /defendshed target"
+					);
+				}
+				else {
+					GrubsMessager.sendMessage(
+						executingPlayer,
+						GrubsMessager.MessageLevel.ERROR,
+						"Player " + p.getDisplayName() + " isn't currently added to this game and can't be set as 'it'."
+					);
+				}
+			}
+			else {
+				GrubsMessager.sendMessage(
+					executingPlayer,
+					GrubsMessager.MessageLevel.ERROR,
+					"Ambiguous player name. Use exact, full player name."
+				);
+			}
+		}
+		else {
+			GrubsMessager.sendMessage(
+				executingPlayer,
+				GrubsMessager.MessageLevel.ERROR,
+				"Current game in incorrect state for setting 'it' player."
 			);
 		}
 	}
@@ -163,7 +222,7 @@ public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 				GrubsMessager.sendMessage(
 					executingPlayer,
 					GrubsMessager.MessageLevel.INFO,
-					"Target set. Set game time limit next."
+					"Target set. Set game time limit next: /defendshed time <minutes>"
 				);
 			}
 			else {
@@ -193,7 +252,7 @@ public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 			GrubsMessager.sendMessage(
 				executingPlayer,
 				GrubsMessager.MessageLevel.INFO,
-				"Move to the spawn point and set spawn next."
+				"Move to the spawn point and set spawn next: /defendshed spawn"
 			);
 		}
 		else {
@@ -211,7 +270,7 @@ public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 			GrubsMessager.sendMessage(
 				executingPlayer,
 				GrubsMessager.MessageLevel.INFO,
-				"Game setup complete. Ready to start."
+				"Game setup complete. Ready to start: /defendshed start"
 			);
 		}
 		else {
