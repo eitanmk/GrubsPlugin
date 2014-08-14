@@ -37,7 +37,7 @@ public class DefendShedEventListeners implements Listener {
 				GrubsDefendShed.getGameState() == GrubsDefendShed.GAME_STATES.IN_PROGRESS &&
 				GrubsDefendShed.isPlaying(source)) {
 
-				// "it" player can't shoot themselves
+				// "it" player shouldn't get respawned
 				if (GrubsDefendShed.isItPlayer(source)) {
 					return;
 				}
@@ -52,6 +52,7 @@ public class DefendShedEventListeners implements Listener {
 
 					// only if the shooter is "it" do we respawn
 					if (GrubsDefendShed.isItPlayer(shooter)) {
+						event.setCancelled(true);
 						GrubsDefendShed.respawnPlayer(source);
 					}
 				}

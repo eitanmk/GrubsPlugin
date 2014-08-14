@@ -3,6 +3,7 @@ package com.selfequalsthis.grubsplugin.modules.defendtheshed;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Logger;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -13,6 +14,8 @@ import com.selfequalsthis.grubsplugin.utils.GrubsMessager;
 
 public class GrubsDefendShed {
 
+	private final static Logger log = Logger.getLogger("Minecraft");
+
 	private static Player itPlayer = null;
 	private static ArrayList<Player> playerList = new ArrayList<Player>(10);
 	private static int gameLengthMinutes = 0;
@@ -21,7 +24,6 @@ public class GrubsDefendShed {
 	private static Location spawnLocation = null;
 
 	private static Timer gameTimer;
-	private static TimerTask countInTask;
 	private static TimerTask gameDurationTask;
 	private static TimerTask timeUpdateTask;
 
@@ -101,9 +103,10 @@ public class GrubsDefendShed {
 				setSurvivalMode(p);
 				respawnPlayer(p);
 			}
+			GrubsMessager.sendMessage(p, GrubsMessager.MessageLevel.MONITOR, "GO!");
 		}
 
-		gameTimer.schedule(countInTask, 3000L, 1000L);
+		startGameTimers();
 	}
 
 	public static void showTimeUpdate() {
@@ -119,7 +122,10 @@ public class GrubsDefendShed {
 		// set sneaking
 		p.setSneaking(true);
 		// fill up health
+		log.info("before health: " + p.getHealth());
 		p.setHealth(p.getMaxHealth());
+		log.info("after health: " + p.getHealth());
+		log.info("max health: " + p.getMaxHealth());
 		// fill up hunger bar
 		p.setFoodLevel(100); // 20 is max, anything higher gets reduced to 20
 		// teleport to start
@@ -152,6 +158,7 @@ public class GrubsDefendShed {
 	private static void completeGame() {
 		for (Player p : playerList) {
 			GrubsMessager.sendMessage(p, GrubsMessager.MessageLevel.MONITOR, "Game over.");
+			p.setSneaking(false);
 		}
 
 		currentState = GAME_STATES.UNINITIALIZED;
@@ -184,33 +191,6 @@ public class GrubsDefendShed {
 
 	private static void resetTimerTasks() {
 		gameTimer = new Timer();
-
-		countInTask = new TimerTask() {
-			private int count = 15;
-
-			public void run() {
-				if (count > 0) {
-					for (Player p : GrubsDefendShed.playerList) {
-						GrubsMessager.sendMessage(
-							p,
-							GrubsMessager.MessageLevel.MONITOR,
-							"Game starting in " + count + " seconds."
-						);
-					}
-
-					count--;
-				}
-				else {
-					for (Player p : GrubsDefendShed.playerList) {
-						GrubsMessager.sendMessage(p, GrubsMessager.MessageLevel.MONITOR, "GO!");
-					}
-
-					this.cancel();
-
-					GrubsDefendShed.startGameTimers();
-				}
-			}
-		};
 
 		gameDurationTask = new TimerTask() {
 			public void run() {

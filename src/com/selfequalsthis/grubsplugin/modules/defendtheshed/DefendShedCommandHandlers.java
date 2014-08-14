@@ -214,7 +214,6 @@ public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 	private void handleSubCommandTarget(String[] args, Player executingPlayer) {
 		if (GrubsDefendShed.getGameState() == GrubsDefendShed.GAME_STATES.ACCEPT_TARGET) {
 			Block block = executingPlayer.getTargetBlock(null, 256);
-			log.info(block.toString());
 			Material target = block.getType();
 			log.info(target.toString());
 			if (target == Material.STONE_BUTTON || target == Material.WOOD_BUTTON) {
