@@ -1,4 +1,4 @@
-package com.selfequalsthis.grubsplugin.modules.module_loader;
+package com.selfequalsthis.grubsplugin.modules.moduleloader;
 
 import org.bukkit.command.CommandSender;
 

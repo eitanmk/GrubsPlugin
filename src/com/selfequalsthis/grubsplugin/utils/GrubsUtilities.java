@@ -2,8 +2,6 @@ package com.selfequalsthis.grubsplugin.utils;
 
 import org.bukkit.command.CommandSender;
 
-import com.selfequalsthis.grubsplugin.utils.GrubsMessager.MessageLevel;
-
 public class GrubsUtilities {
 
 	public static String join(String[] input, String delimiter) {

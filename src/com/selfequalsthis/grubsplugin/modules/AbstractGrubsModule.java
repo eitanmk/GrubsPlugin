@@ -32,6 +32,10 @@ public abstract class AbstractGrubsModule {
 	}
 
 	protected void registerCommands(AbstractGrubsCommandHandler executor) {
+		if (executor == null) {
+			this.log("Command handler class is null! Don't forget to instantiate it!");
+		}
+
 		GrubsCommandManager cmdMgr = GrubsCommandManager.getInstance();
 		HashMap<String,Method> commandData = cmdMgr.getCommandData(executor);
 
@@ -62,6 +66,10 @@ public abstract class AbstractGrubsModule {
 	}
 
 	protected void registerEventHandlers(Listener listener) {
+		if (listener == null) {
+			this.log("Event listener class is null! Don't forget to instantiate it!");
+		}
+
 		ArrayList<String> listenerData = this.getEventListenerData(listener);
 
 		if (listenerData == null || listenerData.size() == 0) {
