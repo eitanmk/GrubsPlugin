@@ -28,20 +28,67 @@ public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+		ArrayList<String> retVals = null;
 		ArrayList<String> argsList = new ArrayList<String>(Arrays.asList(args));
-		String subCommand = argsList.get(0);
-		argsList.remove(0);
 
-		for (int i = 0; i < args.length; ++i) {
-			log.info("|" + args[i] + "|");
+		if (argsList.size() == 1) {
+			String subCommand = argsList.get(0);
+			retVals = new ArrayList<String>();
+
+			if (subCommand.equalsIgnoreCase("")) {
+				switch (GrubsDefendShed.getGameState()) {
+					case UNINITIALIZED:
+						retVals.add("create");
+						break;
+					case ACCEPT_PLAYERS:
+						retVals.add("players");
+						break;
+					case ACCEPT_IT_PLAYER:
+						retVals.add("players");
+						retVals.add("it");
+						break;
+					case ACCEPT_TARGET:
+						retVals.add("target");
+						break;
+					case ACCEPT_TIME_LIMIT:
+						retVals.add("time");
+						break;
+					case ACCEPT_SPAWN_LOCATION:
+						retVals.add("spawn");
+						break;
+					case READY_TO_START:
+						retVals.add("start");
+						break;
+					default:
+						retVals.add("cancel");
+				}
+			}
+			else {
+				String[] subCommands = new String[] {
+					"cancel", "create",
+					"it",
+					"players",
+					"spawn", "start",
+					"target", "time"
+				};
+
+				for (int i = 0, len = subCommands.length; i < len; ++i) {
+					String cur = subCommands[i];
+					if (cur.startsWith(subCommand)) {
+						retVals.add(cur);
+					}
+				}
+			}
 		}
-		return null;
+
+
+		return retVals;
 	}
 
 	@GrubsCommandHandler(
 		command = "defendshed",
 		desc = "Used to setup new games of Defend the Shed.",
-		usage = "/<command> create|players|target|time|spawn|start"
+		usage = "/<command> create|players|it|target|time|spawn|start"
 	)
 	public void onDefendshedCommand(GrubsCommandInfo cmd) {
 		CommandSender sender = cmd.sender;
