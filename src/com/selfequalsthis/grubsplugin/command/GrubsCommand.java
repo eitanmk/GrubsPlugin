@@ -1,35 +1,23 @@
 package com.selfequalsthis.grubsplugin.command;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import java.lang.reflect.Constructor;
 
-public class GrubsCommand extends Command {
+import org.bukkit.command.PluginCommand;
+import org.bukkit.plugin.Plugin;
 
-	private CommandExecutor executor = null;
+public class GrubsCommand {
 
-	public GrubsCommand(String name) {
-		super(name);
-	}
-
-	public void setExecutor(CommandExecutor exe){
-		this.executor = exe;
-	}
-
-	@Override
-	public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-		boolean success = false;
-
-		if (this.executor != null) {
-			success = this.executor.onCommand(sender, this, commandLabel, args);
-			if (!success && this.usageMessage.length() > 0) {
-				for (String line : usageMessage.replace("<command>", commandLabel).split("\n")) {
-					sender.sendMessage(line);
-				}
-			}
+	public static PluginCommand makeCommand(String name, Plugin pluginRef) {
+		PluginCommand pcmd = null;
+		try {
+			Constructor<PluginCommand> construct = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
+			construct.setAccessible(true);
+			pcmd = construct.newInstance(name, pluginRef);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
-		return false;
+		return pcmd;
 	}
 
 }

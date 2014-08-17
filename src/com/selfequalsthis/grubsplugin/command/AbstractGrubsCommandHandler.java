@@ -2,15 +2,16 @@ package com.selfequalsthis.grubsplugin.command;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 
 import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 import com.selfequalsthis.grubsplugin.utils.GrubsUtilities;
 
-public abstract class AbstractGrubsCommandHandler implements CommandExecutor {
+public abstract class AbstractGrubsCommandHandler implements TabExecutor {
 
 	protected AbstractGrubsModule moduleRef = null;
 	public HashMap<String,Method> handlers = new HashMap<String,Method>();
@@ -37,6 +38,11 @@ public abstract class AbstractGrubsCommandHandler implements CommandExecutor {
 		}
 
 		return true;
+	}
+
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+		return null;
 	}
 
 }

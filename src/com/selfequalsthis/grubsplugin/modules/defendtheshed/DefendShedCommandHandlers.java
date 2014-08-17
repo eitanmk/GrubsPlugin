@@ -1,12 +1,14 @@
 package com.selfequalsthis.grubsplugin.modules.defendtheshed;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -22,6 +24,18 @@ public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 
 	public DefendShedCommandHandlers(AbstractGrubsModule module) {
 		this.moduleRef = module;
+	}
+
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+		ArrayList<String> argsList = new ArrayList<String>(Arrays.asList(args));
+		String subCommand = argsList.get(0);
+		argsList.remove(0);
+
+		for (int i = 0; i < args.length; ++i) {
+			log.info("|" + args[i] + "|");
+		}
+		return null;
 	}
 
 	@GrubsCommandHandler(

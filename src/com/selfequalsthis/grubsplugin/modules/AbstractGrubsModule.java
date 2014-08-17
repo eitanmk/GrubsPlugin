@@ -47,7 +47,7 @@ public abstract class AbstractGrubsModule {
 			this.log("Registering command '" + command + "'");
 		}
 
-		cmdMgr.registerCommands(executor);
+		cmdMgr.registerCommands(executor, this.pluginRef);
 	}
 
 	protected void unregisterCommands(AbstractGrubsCommandHandler executor) {

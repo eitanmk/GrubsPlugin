@@ -7,9 +7,11 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.command.SimpleCommandMap;
+import org.bukkit.command.TabExecutor;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.SimplePluginManager;
 
 import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
@@ -43,10 +45,11 @@ public class GrubsCommandManager {
 		}
 	}
 
-	public void registerCommand(String name, CommandExecutor exec, String desc, String usage) {
-		GrubsCommand cmd = new GrubsCommand(name);
+	public void registerCommand(String name, TabExecutor exec, String desc, String usage, Plugin pluginRef) {
+		PluginCommand cmd = GrubsCommand.makeCommand(name, pluginRef);
 		this.commandMap.register("Grubs", cmd);
 		cmd.setExecutor(exec);
+		cmd.setTabCompleter(exec);
 		cmd.setDescription(desc);
 		cmd.setUsage(usage);
 	}
@@ -59,7 +62,7 @@ public class GrubsCommandManager {
 		}
 	}
 
-	public void registerCommands(AbstractGrubsCommandHandler executor) {
+	public void registerCommands(AbstractGrubsCommandHandler executor, Plugin pluginRef) {
 		HashMap<String,Method> commandData = this.getCommandData(executor);
 
 		if (commandData == null || commandData.size() == 0) {
@@ -71,7 +74,7 @@ public class GrubsCommandManager {
 			executor.handlers.put(command.toLowerCase(), method);
 
 			GrubsCommandHandler eh = method.getAnnotation(GrubsCommandHandler.class);
-			this.registerCommand(command, executor, eh.desc(), eh.usage());
+			this.registerCommand(command, executor, eh.desc(), eh.usage(), pluginRef);
 		}
 	}
 
