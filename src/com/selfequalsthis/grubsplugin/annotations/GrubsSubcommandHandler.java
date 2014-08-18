@@ -7,9 +7,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface GrubsCommandHandler {
-	String command();
-	String desc() default "FIXME: no description set";
-	String usage() default "/<command>";
-	String[] subcommands() default {};
+public @interface GrubsSubcommandHandler {
+	String name();
+	String forCommand();
 }

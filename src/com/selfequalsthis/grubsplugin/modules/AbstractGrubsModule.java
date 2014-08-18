@@ -3,11 +3,15 @@ package com.selfequalsthis.grubsplugin.modules;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -34,20 +38,42 @@ public abstract class AbstractGrubsModule {
 		this.logger.info(this.logPrefix + msg);
 	}
 
+	public void warn(String msg) {
+		this.logger.warning(this.logPrefix + msg);
+	}
+
 	protected void registerCommands(AbstractGrubsCommandHandler executor) {
 		if (executor == null) {
 			this.log("Command handler class is null! Don't forget to instantiate it!");
 		}
 
 		GrubsCommandManager cmdMgr = GrubsCommandManager.getInstance();
-		HashMap<String,Method> commandData = cmdMgr.getCommandData(executor);
+		HashMap<String,Method> commandMapping = cmdMgr.getCommandMethods(executor);
 
-		if (commandData == null || commandData.size() == 0) {
+		if (commandMapping == null || commandMapping.size() == 0) {
 			return;
 		}
 
-		for (String command : commandData.keySet()) {
+		for (String command : commandMapping.keySet()) {
 			this.log("Registering command '" + command + "'");
+
+			HashMap<String,Method> subcommandMapping = cmdMgr.getSubcommandMethods(executor, command);
+			for (String subcommand: subcommandMapping.keySet()) {
+				this.log("Registering subcommand '" + subcommand + "' for command '" + command + "'");
+
+				// validate the method
+				Method subcommandHandler = subcommandMapping.get(subcommand);
+				boolean isPublic = Modifier.isPublic(subcommandHandler.getModifiers());
+				List<Class<?>> argTypes = Arrays.asList(subcommandHandler.getParameterTypes());
+				boolean hasCorrectParams = argTypes.get(0) == Player.class && argTypes.get(1) == String[].class;
+
+				if (!isPublic) {
+					this.warn("Subcommand handler '" + subcommand + "' for command '" + command +"' is not public!");
+				}
+				if (!hasCorrectParams) {
+					this.warn("Subcommand handler '" + subcommand + "' for command '" + command +"' has incorrect argument types!");
+				}
+			}
 		}
 
 		cmdMgr.registerCommands(executor, this.pluginRef);
@@ -55,7 +81,7 @@ public abstract class AbstractGrubsModule {
 
 	protected void unregisterCommands(AbstractGrubsCommandHandler executor) {
 		GrubsCommandManager cmdMgr = GrubsCommandManager.getInstance();
-		HashMap<String,Method> commandData = cmdMgr.getCommandData(executor);
+		HashMap<String,Method> commandData = cmdMgr.getCommandMethods(executor);
 
 		if (commandData == null || commandData.size() == 0) {
 			return;

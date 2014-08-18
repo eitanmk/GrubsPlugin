@@ -23,7 +23,7 @@ public class GrubsDefendShed {
 	private static Block targetButton = null;
 	private static Location spawnLocation = null;
 
-	private static Timer gameTimer;
+	private static Timer gameTimer = new Timer();
 	private static TimerTask gameDurationTask;
 	private static TimerTask timeUpdateTask;
 

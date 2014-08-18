@@ -15,6 +15,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.SimplePluginManager;
 
 import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
+import com.selfequalsthis.grubsplugin.annotations.GrubsSubcommandHandler;
+import com.selfequalsthis.grubsplugin.utils.GrubsUtilities;
 
 public class GrubsCommandManager {
 	private static GrubsCommandManager instance = null;
@@ -63,7 +65,7 @@ public class GrubsCommandManager {
 	}
 
 	public void registerCommands(AbstractGrubsCommandHandler executor, Plugin pluginRef) {
-		HashMap<String,Method> commandData = this.getCommandData(executor);
+		HashMap<String,Method> commandData = this.getCommandMethods(executor);
 
 		if (commandData == null || commandData.size() == 0) {
 			return;
@@ -71,15 +73,27 @@ public class GrubsCommandManager {
 
 		for (String command : commandData.keySet()) {
 			Method method = commandData.get(command);
-			executor.handlers.put(command.toLowerCase(), method);
+			executor.addCommandMapping(command.toLowerCase(), method);
 
-			GrubsCommandHandler eh = method.getAnnotation(GrubsCommandHandler.class);
-			this.registerCommand(command, executor, eh.desc(), eh.usage(), pluginRef);
+			GrubsCommandHandler ch = method.getAnnotation(GrubsCommandHandler.class);
+			String desc = ch.desc();
+			String usage = ch.usage();
+			String[] subcommands = ch.subcommands();
+			if (subcommands.length > 0) {
+				usage = usage + " " + GrubsUtilities.join(subcommands, "|");
+			}
+
+			HashMap<String,Method> subcommandData = this.getSubcommandMethods(executor, command);
+			if (subcommandData.size() > 0) {
+				executor.addSubcommandMappings(command, subcommandData);
+			}
+
+			this.registerCommand(command, executor, desc, usage, pluginRef);
 		}
 	}
 
 	public void unregisterCommands(AbstractGrubsCommandHandler executor) {
-		HashMap<String,Method> commandData = this.getCommandData(executor);
+		HashMap<String,Method> commandData = this.getCommandMethods(executor);
 
 		if (commandData == null || commandData.size() == 0) {
 			return;
@@ -90,7 +104,7 @@ public class GrubsCommandManager {
 		}
 	}
 
-	public HashMap<String,Method> getCommandData(AbstractGrubsCommandHandler executor) {
+	public HashMap<String,Method> getCommandMethods(AbstractGrubsCommandHandler executor) {
 		HashMap<String,Method> ret = new HashMap<String,Method>();
 
 		Method[] methods;
@@ -103,10 +117,35 @@ public class GrubsCommandManager {
 
 		for (int i = 0; i < methods.length; i++) {
 			Method method = methods[i];
-			GrubsCommandHandler eh = method.getAnnotation(GrubsCommandHandler.class);
-			if (eh == null) continue;
-			String command = eh.command();
+			GrubsCommandHandler ch = method.getAnnotation(GrubsCommandHandler.class);
+			if (ch == null) continue;
+			String command = ch.command();
 			ret.put(command, method);
+		}
+
+		return ret;
+	}
+
+	public HashMap<String,Method> getSubcommandMethods(AbstractGrubsCommandHandler executor, String commandName) {
+		HashMap<String,Method> ret = new HashMap<String,Method>();
+
+		Method[] methods;
+		try {
+			methods = executor.getClass().getDeclaredMethods();
+		}
+		catch (NoClassDefFoundError e) {
+			return null;
+		}
+
+		for (int i = 0; i < methods.length; i++) {
+			Method method = methods[i];
+			GrubsSubcommandHandler sch = method.getAnnotation(GrubsSubcommandHandler.class);
+			if (sch == null) continue;
+			String subCommandName = sch.name();
+			String forCommand = sch.forCommand();
+			if (forCommand.equalsIgnoreCase(commandName)) {
+				ret.put(subCommandName, method);
+			}
 		}
 
 		return ret;
