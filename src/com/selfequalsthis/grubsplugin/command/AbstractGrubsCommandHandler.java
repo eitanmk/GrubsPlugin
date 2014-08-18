@@ -28,9 +28,8 @@ public abstract class AbstractGrubsCommandHandler implements TabExecutor {
 
 		Method handler = this.handlers.get(cmdName);
 		if (handler != null) {
-			GrubsCommandInfo info = new GrubsCommandInfo(sender, command, label, args);
 			try {
-				handler.invoke(this, info);
+				handler.invoke(this, sender, command, label, args);
 			}
 			catch (Exception e) {
 				this.moduleRef.log("Unable to execute command handler for '" + cmdName + "'");

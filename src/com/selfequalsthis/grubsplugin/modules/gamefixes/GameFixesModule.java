@@ -6,9 +6,6 @@ import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 
 public class GameFixesModule extends AbstractGrubsModule {
 
-	private GameFixesEventListeners eventListeners;
-	private GameFixesCommandHandlers commandHandlers;
-
 	public GameFixesModule(JavaPlugin plugin) {
 		this.pluginRef = plugin;
 		this.logPrefix = "[GameFixesModule]: ";

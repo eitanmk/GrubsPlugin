@@ -10,8 +10,6 @@ import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 
 public class GameInfoModule extends AbstractGrubsModule {
 
-	private GameInfoCommandHandlers commandHandlers;
-
 	public GameInfoModule(JavaPlugin plugin) {
 		this.pluginRef = plugin;
 		this.logPrefix = "[GameInfoModule]: ";

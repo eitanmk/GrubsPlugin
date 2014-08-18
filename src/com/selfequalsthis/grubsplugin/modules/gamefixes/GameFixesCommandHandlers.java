@@ -2,12 +2,12 @@ package com.selfequalsthis.grubsplugin.modules.gamefixes;
 
 import org.bukkit.Chunk;
 import org.bukkit.World;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandler;
-import com.selfequalsthis.grubsplugin.command.GrubsCommandInfo;
 import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 import com.selfequalsthis.grubsplugin.utils.GrubsMessager;
 
@@ -21,8 +21,7 @@ public class GameFixesCommandHandlers extends AbstractGrubsCommandHandler {
 		command = "eject",
 		desc = "Eject from a vehicle."
 	)
-	public void onEjectCommand(GrubsCommandInfo cmd) {
-		CommandSender sender = cmd.sender;
+	public void onEjectCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
@@ -40,8 +39,7 @@ public class GameFixesCommandHandlers extends AbstractGrubsCommandHandler {
 		command = "getchunks",
 		desc = "Reload chunks from the server if some are missing."
 	)
-	public void onGetChunksCommand(GrubsCommandInfo cmd) {
-		CommandSender sender = cmd.sender;
+	public void onGetChunksCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;

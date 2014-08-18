@@ -1,15 +1,13 @@
 package com.selfequalsthis.grubsplugin.modules.lasertag;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandler;
-import com.selfequalsthis.grubsplugin.command.GrubsCommandInfo;
 import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 import com.selfequalsthis.grubsplugin.utils.GrubsMessager;
 
@@ -24,9 +22,7 @@ public class LaserTagCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Used to setup new games of laser tag.",
 		usage = "/<command> create|players|time|restart|start"
 	)
-	public void onLasertagCommand(GrubsCommandInfo cmd) {
-		CommandSender sender = cmd.sender;
-		String[] args = cmd.args;
+	public void onLasertagCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
@@ -87,37 +83,21 @@ public class LaserTagCommandHandlers extends AbstractGrubsCommandHandler {
 			ArrayList<Player> playersToAdd = new ArrayList<Player>(10);
 
 			for (int i = 1, len = args.length; i < len; ++i) {
-				List<Player> matches = Bukkit.matchPlayer(args[i]);
-
-				if (matches.size() == 0) {
+				Player curPlayer = Bukkit.getPlayer(args[i]);
+				if (curPlayer == null) {
 					GrubsMessager.sendMessage(
 						executingPlayer,
 						GrubsMessager.MessageLevel.ERROR,
-						"No players matching '" + args[i] + "'."
+						"Player '" + args[i] + "' not found."
 					);
 				}
-				else if (matches.size() == 1) {
+				else {
 					GrubsMessager.sendMessage(
 						executingPlayer,
 						GrubsMessager.MessageLevel.INFO,
-						"Added player " + matches.get(0).getDisplayName() + "."
+						"Added player " + curPlayer.getDisplayName() + "."
 					);
-					playersToAdd.add(matches.get(0));
-				}
-				else {
-					String matchStr = "";
-					String separator = "";
-					for (int m = 0, matchNum = matches.size(); m < matchNum; ++m) {
-						matchStr = separator + matches.get(m);
-						if (m == 0) {
-							separator = ", ";
-						}
-					}
-					GrubsMessager.sendMessage(
-						executingPlayer,
-						GrubsMessager.MessageLevel.INQUIRY,
-						"Matches for '" + args[i] + "': " + matchStr
-					);
+					playersToAdd.add(curPlayer);
 				}
 			}
 

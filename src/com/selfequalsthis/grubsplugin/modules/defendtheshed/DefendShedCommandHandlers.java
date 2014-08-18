@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 
 import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandler;
-import com.selfequalsthis.grubsplugin.command.GrubsCommandInfo;
 import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 import com.selfequalsthis.grubsplugin.utils.GrubsMessager;
 
@@ -90,9 +89,7 @@ public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Used to setup new games of Defend the Shed.",
 		usage = "/<command> create|players|it|target|time|spawn|start"
 	)
-	public void onDefendshedCommand(GrubsCommandInfo cmd) {
-		CommandSender sender = cmd.sender;
-		String[] args = cmd.args;
+	public void onDefendshedCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
@@ -163,37 +160,21 @@ public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 			ArrayList<Player> playersToAdd = new ArrayList<Player>(10);
 
 			for (int i = 1, len = args.length; i < len; ++i) {
-				List<Player> matches = Bukkit.matchPlayer(args[i]);
-
-				if (matches.size() == 0) {
+				Player curPlayer = Bukkit.getPlayer(args[i]);
+				if (curPlayer == null) {
 					GrubsMessager.sendMessage(
 						executingPlayer,
 						GrubsMessager.MessageLevel.ERROR,
-						"No players matching '" + args[i] + "'."
+						"Player '" + args[i] + "' not found."
 					);
 				}
-				else if (matches.size() == 1) {
+				else {
 					GrubsMessager.sendMessage(
 						executingPlayer,
 						GrubsMessager.MessageLevel.INFO,
-						"Added player " + matches.get(0).getDisplayName() + "."
+						"Added player " + curPlayer.getDisplayName() + "."
 					);
-					playersToAdd.add(matches.get(0));
-				}
-				else {
-					String matchStr = "";
-					String separator = "";
-					for (int m = 0, matchNum = matches.size(); m < matchNum; ++m) {
-						matchStr = separator + matches.get(m);
-						if (m == 0) {
-							separator = ", ";
-						}
-					}
-					GrubsMessager.sendMessage(
-						executingPlayer,
-						GrubsMessager.MessageLevel.INQUIRY,
-						"Matches for '" + args[i] + "': " + matchStr
-					);
+					playersToAdd.add(curPlayer);
 				}
 			}
 
@@ -228,39 +209,30 @@ public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 		String playerName = args[1];
 
 		if (GrubsDefendShed.getGameState() == GrubsDefendShed.GAME_STATES.ACCEPT_IT_PLAYER) {
-			List<Player> matches = Bukkit.matchPlayer(playerName);
-
-			if (matches.size() == 0) {
+			Player player = Bukkit.getPlayer(playerName);
+			if (player == null) {
 				GrubsMessager.sendMessage(
 					executingPlayer,
 					GrubsMessager.MessageLevel.ERROR,
-					"No players matching '" + playerName + "'."
+					"Player '" + playerName + "' not found."
 				);
 			}
-			else if (matches.size() == 1) {
-				Player p = matches.get(0);
-				if (GrubsDefendShed.isPlaying(p)) {
-					GrubsDefendShed.setItPlayer(p);
+			else {
+				if (GrubsDefendShed.isPlaying(player)) {
+					GrubsDefendShed.setItPlayer(player);
 					GrubsMessager.sendMessage(
 						executingPlayer,
 						GrubsMessager.MessageLevel.INFO,
-						"" + p.getDisplayName() + " is 'it'. Put target button in crosshairs: /defendshed target"
+						"" + player.getDisplayName() + " is 'it'. Put target button in crosshairs: /defendshed target"
 					);
 				}
 				else {
 					GrubsMessager.sendMessage(
 						executingPlayer,
 						GrubsMessager.MessageLevel.ERROR,
-						"Player " + p.getDisplayName() + " isn't currently added to this game and can't be set as 'it'."
+						"Player " + player.getDisplayName() + " isn't currently added to this game and can't be set as 'it'."
 					);
 				}
-			}
-			else {
-				GrubsMessager.sendMessage(
-					executingPlayer,
-					GrubsMessager.MessageLevel.ERROR,
-					"Ambiguous player name. Use exact, full player name."
-				);
 			}
 		}
 		else {

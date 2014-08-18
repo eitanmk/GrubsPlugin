@@ -17,8 +17,6 @@ public class InventoryModule extends AbstractGrubsModule {
 	public HashMap<String,ItemStack[]> itemKitArmorPresets = new HashMap<String,ItemStack[]>();
 	private Properties itemKitProperties = new Properties();
 
-	private InventoryCommandHandlers commandHandlers;
-
 	public InventoryModule(JavaPlugin plugin) {
 		this.pluginRef = plugin;
 		this.logPrefix = "[InventoryModule]: ";

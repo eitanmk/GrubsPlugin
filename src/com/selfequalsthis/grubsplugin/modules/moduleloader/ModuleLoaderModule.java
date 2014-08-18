@@ -28,8 +28,6 @@ public class ModuleLoaderModule extends AbstractGrubsModule {
 	public HashMap<String,AbstractGrubsModule> allModules = new HashMap<String,AbstractGrubsModule>();
 	public HashMap<String,AbstractGrubsModule> activeModules = new HashMap<String,AbstractGrubsModule>();
 
-	private ModuleLoaderCommandHandlers commandHandlers;
-
 	public ModuleLoaderModule(JavaPlugin plugin) {
 		this.pluginRef = plugin;
 		this.logPrefix = "[ModuleLoaderModule]: ";

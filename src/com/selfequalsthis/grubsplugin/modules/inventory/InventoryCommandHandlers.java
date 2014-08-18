@@ -2,13 +2,13 @@ package com.selfequalsthis.grubsplugin.modules.inventory;
 
 import java.util.Set;
 
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandler;
-import com.selfequalsthis.grubsplugin.command.GrubsCommandInfo;
 import com.selfequalsthis.grubsplugin.utils.GrubsMessager;
 import com.selfequalsthis.grubsplugin.utils.GrubsUtilities;
 
@@ -26,9 +26,7 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Load a kit into your inventory.",
 		usage = "/<command> <preset name>"
 	)
-	public void onKitGetCommand(GrubsCommandInfo cmd) {
-		CommandSender sender = cmd.sender;
-		String[] args = cmd.args;
+	public void onKitGetCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
@@ -72,9 +70,7 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Create a new item kit preset based on current inventory.",
 		usage = "/<command> <preset name>"
 	)
-	public void onKitSetCommand(GrubsCommandInfo cmd) {
-		CommandSender sender = cmd.sender;
-		String[] args = cmd.args;
+	public void onKitSetCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
@@ -117,8 +113,7 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 		command = "kitlist",
 		desc = "List all saved kit presets."
 	)
-	public void onKitListCommand(GrubsCommandInfo cmd) {
-		CommandSender sender = cmd.sender;
+	public void onKitListCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		String msgIdentifier = "[Items] ";
 		Set<String> keys = this.inventoryModule.itemKitPresets.keySet();
@@ -140,9 +135,7 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Delete a saved kit preset.",
 		usage = "/<command> <preset name>"
 	)
-	public void onKitDeleteCommand(GrubsCommandInfo cmd) {
-		CommandSender sender = cmd.sender;
-		String[] args = cmd.args;
+	public void onKitDeleteCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (args.length > 0) {
 			String argName = args[0];
@@ -177,8 +170,7 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 		command = "clearinv",
 		desc = "Empty out current inventory."
 	)
-	public void onClearInventoryCommand(GrubsCommandInfo cmd) {
-		CommandSender sender = cmd.sender;
+	public void onClearInventoryCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;

@@ -24,9 +24,6 @@ public class TeleportModule extends AbstractGrubsModule {
 	public HashMap<String,Location> teleportPresets = new HashMap<String,Location>();
 	private Properties teleportProperties = new Properties();
 
-	private TeleportEventListeners eventListeners;
-	private TeleportCommandHandlers commandHandlers;
-
 	public TeleportModule(JavaPlugin plugin) {
 		this.pluginRef = plugin;
 		this.logPrefix = "[TeleportModule]: ";

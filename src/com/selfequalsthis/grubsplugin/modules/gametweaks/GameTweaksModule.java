@@ -10,9 +10,6 @@ public class GameTweaksModule extends AbstractGrubsModule {
 
 	private int timeLockTaskId = -1;
 
-	private GameTweaksEventListeners eventListeners;
-	private GameTweaksCommandHandlers commandHandlers;
-
 	public GameTweaksModule(JavaPlugin plugin) {
 		this.pluginRef = plugin;
 		this.logPrefix = "[GameTweaksModule]: ";

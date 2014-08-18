@@ -8,8 +8,6 @@ import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 public class WirelessRedstoneModule extends AbstractGrubsModule {
 
 	private GrubsWirelessRedstone wrController;
-	private WirelessRedstoneEventListeners eventListeners;
-	private WirelessRedstoneCommandHandlers commandHandlers;
 
 	public WirelessRedstoneModule(JavaPlugin plugin) {
 		this.pluginRef = plugin;

@@ -6,9 +6,6 @@ import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 
 public class WeatherControlModule extends AbstractGrubsModule {
 
-	private WeatherControlEventListeners eventListeners;
-	private WeatherControlCommandHandlers commandHandlers;
-
 	public WeatherControlModule(JavaPlugin plugin) {
 		this.pluginRef = plugin;
 		this.logPrefix = "[WeatherControlModule]: ";

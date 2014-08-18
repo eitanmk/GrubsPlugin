@@ -1,10 +1,10 @@
 package com.selfequalsthis.grubsplugin.modules.moduleloader;
 
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandler;
-import com.selfequalsthis.grubsplugin.command.GrubsCommandInfo;
 import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 
 public class ModuleLoaderCommandHandlers extends AbstractGrubsCommandHandler {
@@ -21,9 +21,7 @@ public class ModuleLoaderCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Change modules enabled state.",
 		usage = "/<command> [list|enable|disable] <module-name>"
 	)
-	public boolean onGpmoduleCommand(GrubsCommandInfo cmd) {
-		CommandSender sender = cmd.sender;
-		String[] args = cmd.args;
+	public boolean onGpmoduleCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (args.length < 1) {
 			return false;

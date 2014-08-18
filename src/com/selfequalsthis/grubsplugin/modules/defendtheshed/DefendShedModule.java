@@ -6,9 +6,6 @@ import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 
 public class DefendShedModule extends AbstractGrubsModule {
 
-	private DefendShedEventListeners eventListeners;
-	private DefendShedCommandHandlers commandHandlers;
-
 	public DefendShedModule(JavaPlugin plugin) {
 		this.pluginRef = plugin;
 		this.logPrefix = "[DefendShedModule]: ";

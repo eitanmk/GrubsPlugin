@@ -1,17 +1,15 @@
 package com.selfequalsthis.grubsplugin.modules.gameinfo;
 
 import java.util.HashMap;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandler;
-import com.selfequalsthis.grubsplugin.command.GrubsCommandInfo;
 import com.selfequalsthis.grubsplugin.utils.GrubsMessager;
 
 public class GameInfoCommandHandlers extends AbstractGrubsCommandHandler {
@@ -28,9 +26,7 @@ public class GameInfoCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Get the id value of the targeted block, or the id of the requested material name.",
 		usage = "/<command> [<name>]"
 	)
-	public void onDataValCommand(GrubsCommandInfo cmd) {
-		CommandSender sender = cmd.sender;
-		String[] args = cmd.args;
+	public void onDataValCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (args.length > 0) {
 			// lookup the text typed
@@ -70,9 +66,7 @@ public class GameInfoCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Get the name of the targeted block, or the name of requested material id.",
 		usage = "/<command> [<id>]"
 	)
-	public void onDataNameCommand(GrubsCommandInfo cmd) {
-		CommandSender sender = cmd.sender;
-		String[] args = cmd.args;
+	public void onDataNameCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (args.length > 0) {
 			try {
@@ -112,8 +106,7 @@ public class GameInfoCommandHandlers extends AbstractGrubsCommandHandler {
 		command = "gettime",
 		desc = "Get the current game time."
 	)
-	public void onGetTimeCommand(GrubsCommandInfo cmd) {
-		CommandSender sender = cmd.sender;
+	public void onGetTimeCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
@@ -137,41 +130,24 @@ public class GameInfoCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Get own position, or provided player's position.",
 		usage = "/<command> [<player name>]"
 	)
-	public void onGetCoordsCommand(GrubsCommandInfo cmd) {
-		CommandSender sender = cmd.sender;
-		String[] args = cmd.args;
+	public void onGetCoordsCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (args.length > 0) {
 			String argName = args[0];
-			// match players
-			List<Player> matches = Bukkit.matchPlayer(argName);
-			if (matches.size() > 0) {
-				if (matches.size() > 1) {
-					String matchStr = "";
-					for (Player player : matches) {
-						matchStr = matchStr + player.getName() + " ";
-					}
-					GrubsMessager.sendMessage(
-						sender,
-						GrubsMessager.MessageLevel.INFO,
-						"Multiple matches: " + matchStr
-					);
-				}
-				else {
-					Player target = matches.get(0);
-					Location loc = target.getLocation();
-					GrubsMessager.sendMessage(
-						sender,
-						GrubsMessager.MessageLevel.INFO,
-						target.getName() + ": " + this.gameInfoModule.getCoordsStrFromLocation(loc)
-					);
-				}
-			}
-			else {
+			Player player = Bukkit.getPlayer(argName);
+			if (player == null) {
 				GrubsMessager.sendMessage(
 					sender,
 					GrubsMessager.MessageLevel.ERROR,
-					"No players matching '" + argName + "'."
+					"Player '" + argName + "' not found."
+				);
+			}
+			else {
+				Location loc = player.getLocation();
+				GrubsMessager.sendMessage(
+					sender,
+					GrubsMessager.MessageLevel.INFO,
+					player.getDisplayName() + ": " + this.gameInfoModule.getCoordsStrFromLocation(loc)
 				);
 			}
 		}
@@ -182,7 +158,7 @@ public class GameInfoCommandHandlers extends AbstractGrubsCommandHandler {
 				GrubsMessager.sendMessage(
 					executingPlayer,
 					GrubsMessager.MessageLevel.INFO,
-					executingPlayer.getName() + ": " + this.gameInfoModule.getCoordsStrFromLocation(loc)
+					executingPlayer.getDisplayName() + ": " + this.gameInfoModule.getCoordsStrFromLocation(loc)
 				);
 			}
 		}
@@ -193,49 +169,32 @@ public class GameInfoCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Send current position to another player.",
 		usage = "/<command> <player name>"
 	)
-	public void onSendCoordsCommand(GrubsCommandInfo cmd) {
-		CommandSender sender = cmd.sender;
-		String[] args = cmd.args;
+	public void onSendCoordsCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
 			if (args.length > 0) {
 				String argName = args[0];
-				// match players
-				List<Player> matches = Bukkit.matchPlayer(argName);
-				if (matches.size() > 0) {
-					if (matches.size() > 1) {
-						String matchStr = "";
-						for (Player player : matches) {
-							matchStr = matchStr + player.getName() + " ";
-						}
-						GrubsMessager.sendMessage(
-							executingPlayer,
-							GrubsMessager.MessageLevel.INFO,
-							"Multiple matches: " + matchStr
-						);
-					}
-					else {
-						Player target = matches.get(0);
-						Location loc = executingPlayer.getLocation();
-						GrubsMessager.sendMessage(
-							target,
-							GrubsMessager.MessageLevel.INFO,
-							executingPlayer.getName() + ": " +
-								this.gameInfoModule.getCoordsStrFromLocation(loc)
-						);
-						GrubsMessager.sendMessage(
-							executingPlayer,
-							GrubsMessager.MessageLevel.INFO,
-							"Coordinates sent to " + target.getName()
-						);
-					}
+				Player target = Bukkit.getPlayer(argName);
+				if (target == null) {
+					GrubsMessager.sendMessage(
+						sender,
+						GrubsMessager.MessageLevel.ERROR,
+						"Player '" + argName + "' not found."
+					);
 				}
 				else {
+					Location loc = executingPlayer.getLocation();
+					GrubsMessager.sendMessage(
+						target,
+						GrubsMessager.MessageLevel.INFO,
+						executingPlayer.getDisplayName() + ": " + this.gameInfoModule.getCoordsStrFromLocation(loc)
+					);
+
 					GrubsMessager.sendMessage(
 						executingPlayer,
-						GrubsMessager.MessageLevel.ERROR,
-						"No players matching '" + argName + "'."
+						GrubsMessager.MessageLevel.INFO,
+						"Coordinates sent to " + target.getDisplayName()
 					);
 				}
 			}

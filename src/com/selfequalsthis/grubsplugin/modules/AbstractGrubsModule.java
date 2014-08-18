@@ -24,6 +24,9 @@ public abstract class AbstractGrubsModule {
 	protected String logPrefix = "";
 	protected String dataFileName = null;
 
+	protected Listener eventListeners = null;
+	protected AbstractGrubsCommandHandler commandHandlers = null;
+
 	public void enable() { }
 	public void disable() {	}
 

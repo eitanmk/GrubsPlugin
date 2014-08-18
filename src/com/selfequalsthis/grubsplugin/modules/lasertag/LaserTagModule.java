@@ -6,9 +6,6 @@ import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 
 public class LaserTagModule extends AbstractGrubsModule {
 
-	private LaserTagEventListeners eventListeners;
-	private LaserTagCommandHandlers commandHandlers;
-
 	public LaserTagModule(JavaPlugin plugin) {
 		this.pluginRef = plugin;
 		this.logPrefix = "[LaserTagModule]: ";

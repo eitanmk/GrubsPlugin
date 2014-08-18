@@ -1,14 +1,13 @@
 package com.selfequalsthis.grubsplugin.modules.gametweaks;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.World;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandler;
-import com.selfequalsthis.grubsplugin.command.GrubsCommandInfo;
 import com.selfequalsthis.grubsplugin.utils.GrubsMessager;
 
 public class GameTweaksCommandHandlers extends AbstractGrubsCommandHandler {
@@ -21,41 +20,11 @@ public class GameTweaksCommandHandlers extends AbstractGrubsCommandHandler {
 	}
 
 	@GrubsCommandHandler(
-		command = "buildmode",
-		desc = "Toggle creative \"build\" mode.",
-		usage = "/<command> off|on"
-	)
-	public void onBuildModeCommand(GrubsCommandInfo cmd) {
-		CommandSender sender = cmd.sender;
-		String[] args = cmd.args;
-
-		if (sender instanceof Player) {
-			Player executingPlayer = (Player) sender;
-
-			if (args.length > 0) {
-				if (args[0].equalsIgnoreCase("on")) {
-					executingPlayer.setGameMode(GameMode.CREATIVE);
-					GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.INFO, "Creative build mode enabled.");
-				}
-				else {
-					executingPlayer.setGameMode(GameMode.SURVIVAL);
-					GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.INFO, "Build mode disabled.");
-				}
-			}
-			else {
-				GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "Missing command argument.");
-			}
-		}
-	}
-
-	@GrubsCommandHandler(
 		command = "timelock",
 		desc = "Toggle freezing time to current value, or to the specified time value or preset.",
 		usage = "/<command> off|on|day|night|<0-24000>"
 	)
-	public void onTimeLockCommand(GrubsCommandInfo cmd) {
-		CommandSender sender = cmd.sender;
-		String[] args = cmd.args;
+	public void onTimeLockCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (args.length > 0) {
 			String argVal = args[0];
