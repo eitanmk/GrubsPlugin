@@ -26,7 +26,7 @@ public class GameInfoCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Get the id value of the targeted block, or the id of the requested material name.",
 		usage = "/<command> [<name>]"
 	)
-	public void onDataValCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onDataValCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (args.length > 0) {
 			// lookup the text typed
@@ -59,6 +59,8 @@ public class GameInfoCommandHandlers extends AbstractGrubsCommandHandler {
 				);
 			}
 		}
+
+		return true;
 	}
 
 	@GrubsCommandHandler(
@@ -66,7 +68,7 @@ public class GameInfoCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Get the name of the targeted block, or the name of requested material id.",
 		usage = "/<command> [<id>]"
 	)
-	public void onDataNameCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onDataNameCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (args.length > 0) {
 			try {
@@ -100,13 +102,15 @@ public class GameInfoCommandHandlers extends AbstractGrubsCommandHandler {
 				);
 			}
 		}
+
+		return true;
 	}
 
 	@GrubsCommandHandler(
 		command = "gettime",
 		desc = "Get the current game time."
 	)
-	public void onGetTimeCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onGetTimeCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
@@ -123,6 +127,8 @@ public class GameInfoCommandHandlers extends AbstractGrubsCommandHandler {
 				"Current time is: " + Bukkit.getServer().getWorlds().get(0).getTime()
 			);
 		}
+
+		return true;
 	}
 
 	@GrubsCommandHandler(
@@ -130,7 +136,7 @@ public class GameInfoCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Get own position, or provided player's position.",
 		usage = "/<command> [<player name>]"
 	)
-	public void onGetCoordsCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onGetCoordsCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (args.length > 0) {
 			String argName = args[0];
@@ -162,6 +168,8 @@ public class GameInfoCommandHandlers extends AbstractGrubsCommandHandler {
 				);
 			}
 		}
+
+		return true;
 	}
 
 	@GrubsCommandHandler(
@@ -169,7 +177,7 @@ public class GameInfoCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Send current position to another player.",
 		usage = "/<command> <player name>"
 	)
-	public void onSendCoordsCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onSendCoordsCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
@@ -206,6 +214,8 @@ public class GameInfoCommandHandlers extends AbstractGrubsCommandHandler {
 				);
 			}
 		}
+
+		return true;
 	}
 
 }

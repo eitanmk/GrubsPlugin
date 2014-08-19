@@ -21,7 +21,7 @@ public class GameFixesCommandHandlers extends AbstractGrubsCommandHandler {
 		command = "eject",
 		desc = "Eject from a vehicle."
 	)
-	public void onEjectCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onEjectCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
@@ -33,13 +33,15 @@ public class GameFixesCommandHandlers extends AbstractGrubsCommandHandler {
 				GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "You are not in a vehicle.");
 			}
 		}
+
+		return true;
 	}
 
 	@GrubsCommandHandler(
 		command = "getchunks",
 		desc = "Reload chunks from the server if some are missing."
 	)
-	public void onGetChunksCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onGetChunksCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
@@ -63,6 +65,8 @@ public class GameFixesCommandHandlers extends AbstractGrubsCommandHandler {
 
 			GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.INFO, "Chunks re-sent.");
 		}
+
+		return true;
 	}
 
 }

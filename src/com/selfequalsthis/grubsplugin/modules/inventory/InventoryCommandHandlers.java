@@ -26,7 +26,7 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Load a kit into your inventory.",
 		usage = "/<command> <preset name>"
 	)
-	public void onKitGetCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onKitGetCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
@@ -63,6 +63,8 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 				);
 			}
 		}
+
+		return true;
 	}
 
 	@GrubsCommandHandler(
@@ -70,7 +72,7 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Create a new item kit preset based on current inventory.",
 		usage = "/<command> <preset name>"
 	)
-	public void onKitSetCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onKitSetCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
@@ -107,13 +109,15 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 				);
 			}
 		}
+
+		return true;
 	}
 
 	@GrubsCommandHandler(
 		command = "kitlist",
 		desc = "List all saved kit presets."
 	)
-	public void onKitListCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onKitListCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		String msgIdentifier = "[Items] ";
 		Set<String> keys = this.inventoryModule.itemKitPresets.keySet();
@@ -128,6 +132,8 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 				msgIdentifier + "No kits in list."
 			);
 		}
+
+		return true;
 	}
 
 	@GrubsCommandHandler(
@@ -135,7 +141,7 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Delete a saved kit preset.",
 		usage = "/<command> <preset name>"
 	)
-	public void onKitDeleteCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onKitDeleteCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (args.length > 0) {
 			String argName = args[0];
@@ -164,13 +170,15 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 				"Missing command argument."
 			);
 		}
+
+		return true;
 	}
 
 	@GrubsCommandHandler(
 		command = "clearinv",
 		desc = "Empty out current inventory."
 	)
-	public void onClearInventoryCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onClearInventoryCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
@@ -183,6 +191,8 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 				"Inventory cleared."
 			);
 		}
+
+		return true;
 	}
 
 }

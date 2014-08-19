@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -57,21 +59,46 @@ public abstract class AbstractGrubsModule {
 		for (String command : commandMapping.keySet()) {
 			this.log("Registering command '" + command + "'");
 
+			// validate the command
+			Method commandHandler = commandMapping.get(command);
+			boolean isCommandPublic = Modifier.isPublic(commandHandler.getModifiers());
+			List<Class<?>> cArgTypes = Arrays.asList(commandHandler.getParameterTypes());
+			boolean commandHasCorrectArgs = cArgTypes.size() == 4 &&
+					cArgTypes.get(0) == CommandSender.class &&
+					cArgTypes.get(1) == Command.class &&
+					cArgTypes.get(2) == String.class &&
+					cArgTypes.get(3) == String[].class;
+			boolean commandReturnsBool = commandHandler.getReturnType() == boolean.class;
+			if (!isCommandPublic) {
+				this.warn("Command handler for '" + command +"' is not public!");
+			}
+			if (!commandHasCorrectArgs) {
+				this.warn("Command handler for '" + command +"' has incorrect argument types!");
+			}
+			if (!commandReturnsBool) {
+				this.warn("Command handler for '" + command +"' doesn't return a boolean!");
+			}
+
+
 			HashMap<String,Method> subcommandMapping = cmdMgr.getSubcommandMethods(executor, command);
 			for (String subcommand: subcommandMapping.keySet()) {
 				this.log("Registering subcommand '" + subcommand + "' for command '" + command + "'");
 
-				// validate the method
+				// validate the subcommand
 				Method subcommandHandler = subcommandMapping.get(subcommand);
-				boolean isPublic = Modifier.isPublic(subcommandHandler.getModifiers());
-				List<Class<?>> argTypes = Arrays.asList(subcommandHandler.getParameterTypes());
-				boolean hasCorrectParams = argTypes.get(0) == Player.class && argTypes.get(1) == String[].class;
+				boolean isSubcommandPublic = Modifier.isPublic(subcommandHandler.getModifiers());
+				List<Class<?>> scArgTypes = Arrays.asList(subcommandHandler.getParameterTypes());
+				boolean subcommandHasCorrectArgs = scArgTypes.get(0) == Player.class && scArgTypes.get(1) == String[].class;
+				boolean subcommandReturnsBool = subcommandHandler.getReturnType() == boolean.class;
 
-				if (!isPublic) {
+				if (!isSubcommandPublic) {
 					this.warn("Subcommand handler '" + subcommand + "' for command '" + command +"' is not public!");
 				}
-				if (!hasCorrectParams) {
+				if (!subcommandHasCorrectArgs) {
 					this.warn("Subcommand handler '" + subcommand + "' for command '" + command +"' has incorrect argument types!");
+				}
+				if (!subcommandReturnsBool) {
+					this.warn("Subcommand handler '" + subcommand + "' for command '" + command +"' doesn't return a boolean!");
 				}
 			}
 		}

@@ -22,9 +22,10 @@ public class WirelessRedstoneCommandHandlers extends AbstractGrubsCommandHandler
 		command = "wrchannelclean",
 		desc = "Utility to clean corrupted wireless redstone channels."
 	)
-	public void onChannelCleanCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onChannelCleanCommand(CommandSender sender, Command command, String alias, String[] args) {
 		World worldObj = null;
 
+		// TODO take a world name as an optional second parameter
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
 			worldObj = executingPlayer.getWorld();
@@ -34,5 +35,7 @@ public class WirelessRedstoneCommandHandlers extends AbstractGrubsCommandHandler
 		}
 
 		this.wrModule.repairChannels(worldObj);
+
+		return true;
 	}
 }

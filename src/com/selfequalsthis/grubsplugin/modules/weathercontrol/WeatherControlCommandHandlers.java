@@ -23,7 +23,7 @@ public class WeatherControlCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Hit targeted block or a player with lightening, but do no damage.",
 		usage = "/<command> [<player>]"
 	)
-	public void onStrikeCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onStrikeCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (args.length > 0) {
 			Player target = Bukkit.getPlayer(args[0]);
@@ -50,6 +50,8 @@ public class WeatherControlCommandHandlers extends AbstractGrubsCommandHandler {
 				targetWorld.strikeLightningEffect(target);
 			}
 		}
+
+		return true;
 	}
 
 	@GrubsCommandHandler(
@@ -57,7 +59,7 @@ public class WeatherControlCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Hit targeted block or a player with lightening, doing damage.",
 		usage = "/<command> [<player>]"
 	)
-	public void onZapCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onZapCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (args.length > 0) {
 			Player target = Bukkit.getPlayer(args[0]);
@@ -84,6 +86,8 @@ public class WeatherControlCommandHandlers extends AbstractGrubsCommandHandler {
 				targetWorld.strikeLightning(target);
 			}
 		}
+
+		return true;
 	}
 
 }

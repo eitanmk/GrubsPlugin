@@ -22,39 +22,43 @@ public class LaserTagCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Used to setup new games of laser tag.",
 		usage = "/<command> create|players|time|restart|start"
 	)
-	public void onLasertagCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onLasertagCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
 
 			if (args.length == 0) {
 				GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "Not enough arguments.");
+				return false;
 			}
 
 			String subcommand = args[0];
 
 			if (subcommand.equalsIgnoreCase("create")) {
-				this.handleSubCommandCreate(executingPlayer);
+				return this.handleSubCommandCreate(executingPlayer);
 			}
 			else if (subcommand.equalsIgnoreCase("players")) {
-				this.handleSubCommandPlayers(args, executingPlayer);
+				return this.handleSubCommandPlayers(args, executingPlayer);
 			}
 			else if (subcommand.equalsIgnoreCase("time")) {
-				this.handleSubCommandTime(args, executingPlayer);
+				return this.handleSubCommandTime(args, executingPlayer);
 			}
 			else if (subcommand.equalsIgnoreCase("restart")) {
-				this.handleSubCommandRestartPoint(executingPlayer);
+				return this.handleSubCommandRestartPoint(executingPlayer);
 			}
 			else if (subcommand.equalsIgnoreCase("start")) {
-				this.handleSubCommandStart(executingPlayer);
+				return this.handleSubCommandStart(executingPlayer);
 			}
 			else {
 				GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "Unknown subcommand.");
+				return false;
 			}
 		}
+
+		return true;
 	}
 
-	private void handleSubCommandCreate(Player executingPlayer) {
+	private boolean handleSubCommandCreate(Player executingPlayer) {
 		if (GrubsLaserTag.getGameState() == GrubsLaserTag.GAME_STATES.UNINITIALIZED) {
 			GrubsLaserTag.createNewGame();
 			GrubsMessager.sendMessage(
@@ -70,9 +74,11 @@ public class LaserTagCommandHandlers extends AbstractGrubsCommandHandler {
 				"Can't create a new game right now."
 			);
 		}
+
+		return true;
 	}
 
-	private void handleSubCommandPlayers(String[] args, Player executingPlayer) {
+	private boolean handleSubCommandPlayers(String[] args, Player executingPlayer) {
 		if (args.length == 1) {
 			GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "Not enough arguments.");
 		}
@@ -122,9 +128,11 @@ public class LaserTagCommandHandlers extends AbstractGrubsCommandHandler {
 				"Current game not accepting players."
 			);
 		}
+
+		return true;
 	}
 
-	private void handleSubCommandTime(String[] args, Player executingPlayer) {
+	private boolean handleSubCommandTime(String[] args, Player executingPlayer) {
 		if (args.length == 1) {
 			GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "Not enough arguments.");
 		}
@@ -150,9 +158,11 @@ public class LaserTagCommandHandlers extends AbstractGrubsCommandHandler {
 				"Current game not accepting time limit."
 			);
 		}
+
+		return true;
 	}
 
-	private void handleSubCommandRestartPoint(Player executingPlayer) {
+	private boolean handleSubCommandRestartPoint(Player executingPlayer) {
 		if (GrubsLaserTag.getGameState() == GrubsLaserTag.GAME_STATES.ACCEPT_ELIMINATION_LOCATION) {
 			GrubsLaserTag.setEliminationLocation(executingPlayer.getLocation());
 			GrubsMessager.sendMessage(
@@ -168,14 +178,18 @@ public class LaserTagCommandHandlers extends AbstractGrubsCommandHandler {
 				"Current game not accepting an restart location."
 			);
 		}
+
+		return true;
 	}
 
-	private void handleSubCommandStart(Player executingPlayer) {
+	private boolean handleSubCommandStart(Player executingPlayer) {
 		if (GrubsLaserTag.getGameState() == GrubsLaserTag.GAME_STATES.READY_TO_START) {
 			GrubsLaserTag.start();
 		}
 		else {
 			GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "Can't start a new game.");
 		}
+
+		return true;
 	}
 }

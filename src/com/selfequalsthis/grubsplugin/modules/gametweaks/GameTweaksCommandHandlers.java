@@ -24,7 +24,7 @@ public class GameTweaksCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Toggle freezing time to current value, or to the specified time value or preset.",
 		usage = "/<command> off|on|day|night|<0-24000>"
 	)
-	public void onTimeLockCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onTimeLockCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (args.length > 0) {
 			String argVal = args[0];
@@ -58,12 +58,12 @@ public class GameTweaksCommandHandlers extends AbstractGrubsCommandHandler {
 						timecode = Integer.parseInt(argVal);
 						if (timecode < 0 || timecode > 24000) {
 							GrubsMessager.sendMessage(sender, GrubsMessager.MessageLevel.ERROR, "Invalid time.");
-							return;
+							return true;
 						}
 					}
 					catch (Exception e) {
 						GrubsMessager.sendMessage(sender, GrubsMessager.MessageLevel.ERROR, "Invalid argument.");
-						return;
+						return true;
 					}
 				}
 
@@ -74,5 +74,7 @@ public class GameTweaksCommandHandlers extends AbstractGrubsCommandHandler {
 		else {
 			GrubsMessager.sendMessage(sender, GrubsMessager.MessageLevel.ERROR, "Missing command argument.");
 		}
+
+		return true;
 	}
 }

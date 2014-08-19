@@ -86,7 +86,7 @@ public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Used to setup new games of Defend the Shed.",
 		subcommands = { "create", "players", "it", "target", "time", "spawn", "start" }
 	)
-	public void onDefendshedCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onDefendshedCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
@@ -106,13 +106,15 @@ public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 				}
 			}
 		}
+
+		return true;
 	}
 
 	@GrubsSubcommandHandler(
 		name = "create",
 		forCommand = "defendshed"
 	)
-	public void handleSubCommandCreate(Player executingPlayer, String[] args) {
+	public boolean handleSubCommandCreate(Player executingPlayer, String[] args) {
 		if (GrubsDefendShed.getGameState() == GrubsDefendShed.GAME_STATES.UNINITIALIZED) {
 			GrubsDefendShed.createNewGame();
 			GrubsMessager.sendMessage(
@@ -128,13 +130,15 @@ public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 				"Can't create a new game right now."
 			);
 		}
+
+		return true;
 	}
 
 	@GrubsSubcommandHandler(
 		name = "players",
 		forCommand = "defendshed"
 	)
-	public void handleSubCommandPlayers(Player executingPlayer, String[] args) {
+	public boolean handleSubCommandPlayers(Player executingPlayer, String[] args) {
 		if (args.length == 1) {
 			GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "Not enough arguments.");
 		}
@@ -184,13 +188,15 @@ public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 				"Current game not accepting players."
 			);
 		}
+
+		return true;
 	}
 
 	@GrubsSubcommandHandler(
 		name = "it",
 		forCommand = "defendshed"
 	)
-	public void handleSubCommandItPlayer(Player executingPlayer, String[] args) {
+	public boolean handleSubCommandItPlayer(Player executingPlayer, String[] args) {
 		if (args.length == 1) {
 			GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "Not enough arguments.");
 		}
@@ -231,13 +237,15 @@ public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 				"Current game in incorrect state for setting 'it' player."
 			);
 		}
+
+		return true;
 	}
 
 	@GrubsSubcommandHandler(
 		name = "target",
 		forCommand = "defendshed"
 	)
-	public void handleSubCommandTarget(Player executingPlayer, String[] args) {
+	public boolean handleSubCommandTarget(Player executingPlayer, String[] args) {
 		if (GrubsDefendShed.getGameState() == GrubsDefendShed.GAME_STATES.ACCEPT_TARGET) {
 			Block block = executingPlayer.getTargetBlock(null, 256);
 			Material target = block.getType();
@@ -257,13 +265,15 @@ public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 				);
 			}
 		}
+
+		return true;
 	}
 
 	@GrubsSubcommandHandler(
 		name = "time",
 		forCommand = "defendshed"
 	)
-	public void handleSubCommandTime(Player executingPlayer, String[] args) {
+	public boolean handleSubCommandTime(Player executingPlayer, String[] args) {
 		if (args.length == 1) {
 			GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "Not enough arguments.");
 		}
@@ -289,13 +299,15 @@ public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 				"Current game not accepting time limit."
 			);
 		}
+
+		return true;
 	}
 
 	@GrubsSubcommandHandler(
 		name = "spawn",
 		forCommand = "defendshed"
 	)
-	public void handleSubCommandSpawnPoint(Player executingPlayer, String[] args) {
+	public boolean handleSubCommandSpawnPoint(Player executingPlayer, String[] args) {
 		if (GrubsDefendShed.getGameState() == GrubsDefendShed.GAME_STATES.ACCEPT_SPAWN_LOCATION) {
 			GrubsDefendShed.setSpawnLocation(executingPlayer.getLocation());
 			GrubsMessager.sendMessage(
@@ -311,19 +323,23 @@ public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 				"Current game not accepting a spawn location."
 			);
 		}
+
+		return true;
 	}
 
 	@GrubsSubcommandHandler(
 		name = "start",
 		forCommand = "defendshed"
 	)
-	public void handleSubCommandStart(Player executingPlayer, String[] args) {
+	public boolean handleSubCommandStart(Player executingPlayer, String[] args) {
 		if (GrubsDefendShed.getGameState() == GrubsDefendShed.GAME_STATES.READY_TO_START) {
 			GrubsDefendShed.start();
 		}
 		else {
 			GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "Can't start a new game.");
 		}
+
+		return true;
 	}
 
 }

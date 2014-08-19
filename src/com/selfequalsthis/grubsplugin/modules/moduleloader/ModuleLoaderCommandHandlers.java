@@ -72,6 +72,6 @@ public class ModuleLoaderCommandHandlers extends AbstractGrubsCommandHandler {
 			}
 		}
 
-		return false;
+		return true;
 	}
 }

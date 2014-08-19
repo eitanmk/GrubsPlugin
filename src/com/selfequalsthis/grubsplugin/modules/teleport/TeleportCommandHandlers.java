@@ -30,7 +30,7 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Teleport to the named preset location or player.",
 		usage = "/<command> <player>|<preset location>|last|grave|quit"
 	)
-	public void onGotoCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onGotoCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
@@ -112,6 +112,8 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 				);
 			}
 		}
+
+		return true;
 	}
 
 	@GrubsCommandHandler(
@@ -119,7 +121,7 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Teleports a named player to the current position.",
 		usage = "/<command> <player>"
 	)
-	public void onFetchCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onFetchCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
@@ -159,6 +161,8 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 				);
 			}
 		}
+
+		return true;
 	}
 
 	@GrubsCommandHandler(
@@ -166,7 +170,7 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Teleport named player to another user or a saved preset. ",
 		usage = "/<command> <player> <player>|<preset name>"
 	)
-	public void onSendCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onSendCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (args.length == 2) {
 			List<Player> targetMatches = Bukkit.matchPlayer(args[0]);
@@ -232,6 +236,8 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 				"Missing command argument."
 			);
 		}
+
+		return true;
 	}
 
 	@GrubsCommandHandler(
@@ -239,7 +245,7 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Create a new preset with the given name for the current position.",
 		usage = "/<command> <preset name>"
 	)
-	public void onTpSetCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onTpSetCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (sender instanceof Player) {
 			Player executingPlayer = (Player) sender;
@@ -271,6 +277,8 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 				);
 			}
 		}
+
+		return true;
 	}
 
 	@GrubsCommandHandler(
@@ -278,7 +286,7 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Delete a saved preset teleport location.",
 		usage = "/<command> <preset name>"
 	)
-	public void onTpDelCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onTpDelCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (args.length > 0) {
 			String argName = args[0];
@@ -306,13 +314,15 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 				"Missing command argument."
 			);
 		}
+
+		return true;
 	}
 
 	@GrubsCommandHandler(
 		command = "tplist",
 		desc = "List saved teleport preset names."
 	)
-	public void onTpListCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onTpListCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		String msgIdentifier = "[Teleport] ";
 		Set<String> keys = this.tpModule.teleportPresets.keySet();
@@ -336,6 +346,8 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 				msgIdentifier + "No presets in list."
 			);
 		}
+
+		return true;
 	}
 
 	@GrubsCommandHandler(
@@ -343,7 +355,7 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 		desc = "Get the coordinates of a preset teleport location.",
 		usage = "/<command> <preset name>"
 	)
-	public void onTpInfoCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onTpInfoCommand(CommandSender sender, Command command, String alias, String[] args) {
 
 		if (args.length > 0) {
 			String argName = args[0];
@@ -373,5 +385,7 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 				"Missing command argument."
 			);
 		}
+
+		return true;
 	}
 }

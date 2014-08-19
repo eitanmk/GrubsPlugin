@@ -42,8 +42,7 @@ public abstract class AbstractGrubsCommandHandler implements TabExecutor {
 		if (subcommandHandler != null) {
 			try {
 				this.moduleRef.log("Invoking subcommand '" + subcommand + "' of command '" + commandName + "'.");
-				subcommandHandler.invoke(this, executingPlayer, args);
-				handled = true;
+				handled = (Boolean) subcommandHandler.invoke(this, executingPlayer, args);
 			}
 			catch (Exception e) {
 				this.moduleRef.log("Unable to execute subcommand handler for '" + commandName + "'");
@@ -65,10 +64,11 @@ public abstract class AbstractGrubsCommandHandler implements TabExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		boolean handled = false;
 		String cmdName = command.getName().toLowerCase();
 
 		if (!sender.isOp()) {
-			return false;
+			return handled;
 		}
 
 		this.moduleRef.log(sender.getName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
@@ -76,7 +76,7 @@ public abstract class AbstractGrubsCommandHandler implements TabExecutor {
 		Method handler = this.commandMap.get(cmdName);
 		if (handler != null) {
 			try {
-				handler.invoke(this, sender, command, label, args);
+				handled = (Boolean) handler.invoke(this, sender, command, label, args);
 			}
 			catch (Exception e) {
 				this.moduleRef.log("Unable to execute command handler for '" + cmdName + "'");
@@ -84,7 +84,7 @@ public abstract class AbstractGrubsCommandHandler implements TabExecutor {
 			}
 		}
 
-		return true;
+		return handled;
 	}
 
 	@Override
