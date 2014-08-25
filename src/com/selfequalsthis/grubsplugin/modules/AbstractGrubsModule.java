@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandler;
@@ -151,6 +152,16 @@ public abstract class AbstractGrubsModule {
 		}
 
 		HandlerList.unregisterAll(listener);
+	}
+
+	protected <T> void registerService(Class<T> serviceType, T provider) {
+		this.log("Registering provider for " + serviceType.getSimpleName() + " service");
+		Bukkit.getServer().getServicesManager().register(serviceType, provider, this.pluginRef, ServicePriority.Normal);
+	}
+
+	protected <T> void unregisterService(T provider) {
+		this.log("Unregistering service provider");
+		Bukkit.getServer().getServicesManager().unregister(provider);
 	}
 
 	public File getDataFile() {

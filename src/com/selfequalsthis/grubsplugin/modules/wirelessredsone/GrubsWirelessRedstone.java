@@ -31,15 +31,12 @@ public class GrubsWirelessRedstone {
 	}
 
 	public void init() {
-
 		File dataFile = this.moduleRef.getDataFile();
 		if (dataFile != null) {
 			this.moduleRef.log("Loading Wireless Redstone channels.");
 			this.loadChannels();
 			this.moduleRef.log("Loaded " + channels.size() + " channels.");
 		}
-
-
 	}
 
 	public void shutdown() {
