@@ -9,15 +9,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.UUID;
-import java.util.logging.Logger;
-
 import org.bukkit.Location;
 
 import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 import com.selfequalsthis.grubsplugin.service.RegionService;
 
 public class RegionsServiceProvider implements RegionService {
-	protected final Logger logger = Logger.getLogger("Minecraft");
 
 	private AbstractGrubsModule moduleRef;
 
@@ -48,17 +45,10 @@ public class RegionsServiceProvider implements RegionService {
 		if (worldRegions != null) {
 			for (String name : worldRegions.keySet()) {
 				Region curReg = worldRegions.get(name);
-				logger.info(curReg.getName() + ": " + curReg.polygon.npoints);
-				for (int i = 0; i < curReg.polygon.npoints; ++i) {
-					logger.info("" + curReg.polygon.xpoints[i] +","+curReg.polygon.ypoints[i]);
-				}
-				logger.info("loc: " + loc.getBlockX() + "," + loc.getBlockZ());
 				if (curReg.containsLocation(loc)) {
-					logger.info("conatains loc");
 					retVal = name;
 					break;
 				}
-				logger.info("doesn't conatian loc");
 			}
 		}
 
@@ -153,7 +143,6 @@ public class RegionsServiceProvider implements RegionService {
 			while (obj != null) {
 				if (obj instanceof Region) {
 					Region loadedRegion = (Region)obj;
-					loadedRegion.polygon.invalidate();
 					UUID loadedRegionWorldUID = loadedRegion.getWorldUID();
 					String loadedRegionName = loadedRegion.getName();
 

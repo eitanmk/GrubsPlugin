@@ -12,7 +12,7 @@ public class Region implements Serializable {
 
 	private UUID worldId;
 	private String name;
-	public Polygon polygon;
+	private Polygon polygon;
 	private boolean complete = false;
 
 	public Region(String regionName, UUID worldId) {
@@ -30,7 +30,7 @@ public class Region implements Serializable {
 	}
 
 	public boolean containsLocation(Location loc) {
-		return this.worldId == loc.getWorld().getUID() && this.polygon.contains(loc.getBlockX(), loc.getBlockZ());
+		return this.complete && this.worldId.equals(loc.getWorld().getUID()) && this.polygon.contains(loc.getBlockX(), loc.getBlockZ());
 	}
 
 	public void addVertex(Location loc) {
