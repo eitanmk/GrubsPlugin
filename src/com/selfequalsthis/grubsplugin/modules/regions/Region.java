@@ -1,6 +1,7 @@
 package com.selfequalsthis.grubsplugin.modules.regions;
 
 import java.awt.Polygon;
+import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -13,6 +14,7 @@ public class Region implements Serializable {
 	private UUID worldId;
 	private String name;
 	private Polygon polygon;
+	private Rectangle bounds;
 	private boolean complete = false;
 
 	public Region(String regionName, UUID worldId) {
@@ -30,7 +32,10 @@ public class Region implements Serializable {
 	}
 
 	public boolean containsLocation(Location loc) {
-		return this.complete && this.worldId.equals(loc.getWorld().getUID()) && this.polygon.contains(loc.getBlockX(), loc.getBlockZ());
+		if (this.bounds == null) {
+			this.bounds = this.polygon.getBounds();
+		}
+		return this.complete && this.worldId.equals(loc.getWorld().getUID()) && this.bounds.contains(loc.getBlockX(), loc.getBlockZ());
 	}
 
 	public void addVertex(Location loc) {
@@ -42,10 +47,15 @@ public class Region implements Serializable {
 
 	public void complete() {
 		this.complete = true;
+		this.bounds = this.polygon.getBounds();
 	}
 
 	public boolean isComplete() {
 		return this.complete;
+	}
+
+	public int getNumVerticies() {
+		return this.polygon.npoints;
 	}
 
 }

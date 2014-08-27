@@ -172,4 +172,34 @@ public class RegionsCommandHandlers extends AbstractGrubsCommandHandler {
 		return true;
 	}
 
+	@GrubsSubcommandHandler(
+		name = "delete",
+		forCommand = "regions"
+	)
+	public boolean handleSubCommandDelete(Player executingPlayer, String[] args) {
+		if (args.length <= 1) {
+			GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "Not enough arguments.");
+			return true;
+		}
+
+		String regionName = args[1];
+
+		boolean success = this.regionController.deleteRegion(regionName, executingPlayer.getWorld().getUID());
+		if (success) {
+			GrubsMessager.sendMessage(
+				executingPlayer,
+				GrubsMessager.MessageLevel.INFO,
+				"Deleted region '" + regionName + "'."
+			);
+		}
+		else {
+			GrubsMessager.sendMessage(
+				executingPlayer,
+				GrubsMessager.MessageLevel.INFO,
+				"Unable to delete region '" + regionName + "'."
+			);
+		}
+
+		return true;
+	}
 }

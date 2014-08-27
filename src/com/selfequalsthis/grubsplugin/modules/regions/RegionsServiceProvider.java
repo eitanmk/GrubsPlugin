@@ -84,6 +84,12 @@ public class RegionsServiceProvider implements RegionService {
 			return false;
 		}
 
+		// check to make sure this vertex isn't contained by another region
+		String overlap = this.getRegion(loc);
+		if (overlap != null) {
+			return false;
+		}
+
 		reg.addVertex(loc);
 		return true;
 	}
@@ -95,6 +101,10 @@ public class RegionsServiceProvider implements RegionService {
 		}
 
 		if (reg.isComplete()) {
+			return false;
+		}
+
+		if (reg.getNumVerticies() < 3) {
 			return false;
 		}
 
@@ -112,6 +122,18 @@ public class RegionsServiceProvider implements RegionService {
 
 		return retVal;
 	}
+
+	public boolean deleteRegion(String regionName, UUID worldId) {
+		HashMap<String,Region> worldRegions = this.regionMap.get(worldId);
+		if (worldRegions.containsKey(regionName)) {
+			worldRegions.remove(regionName);
+			this.saveRegions();
+			return true;
+		}
+
+		return false;
+	}
+
 
 
 	private Region getRegion(UUID worldId, String name) {
