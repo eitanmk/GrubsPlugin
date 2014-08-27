@@ -1,5 +1,7 @@
 package com.selfequalsthis.grubsplugin.modules.regions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Location;
@@ -25,7 +27,54 @@ public class RegionsCommandHandlers extends AbstractGrubsCommandHandler {
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-		return null;
+		ArrayList<String> retVals = null;
+		ArrayList<String> argsList = new ArrayList<String>(Arrays.asList(args));
+
+		if (sender instanceof Player) {
+			Player player = (Player)sender;
+
+			String[] subCommands = new String[] {
+				"complete", "create",
+				"delete",
+				"list",
+				"vertex"
+			};
+
+			if (argsList.size() == 1) {
+				String subCommand = argsList.get(0);
+				retVals = new ArrayList<String>();
+
+				if (subCommand.equalsIgnoreCase("")) {
+					for (int i = 0, len = subCommands.length; i < len; ++i) {
+						String cur = subCommands[i];
+						retVals.add(cur);
+					}
+				}
+				else {
+					for (int i = 0, len = subCommands.length; i < len; ++i) {
+						String cur = subCommands[i];
+						if (cur.startsWith(subCommand)) {
+							retVals.add(cur);
+						}
+					}
+				}
+			}
+			else if (argsList.size() > 1) {
+				String subCommandParam = argsList.get(1);
+				if (!subCommandParam.equalsIgnoreCase("")) {
+					retVals = new ArrayList<String>();
+					String[] worldRegions = this.regionController.listRegions(player.getWorld().getUID());
+					for (int i = 0, len = worldRegions.length; i < len; ++i) {
+						String cur = worldRegions[i];
+						if (cur.startsWith(subCommandParam)) {
+							retVals.add(cur);
+						}
+					}
+				}
+			}
+		}
+
+		return retVals;
 	}
 
 	@GrubsCommandHandler(
