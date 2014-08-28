@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import com.selfequalsthis.grubsplugin.service.RegionService;
 import com.selfequalsthis.grubsplugin.utils.GrubsMessager;
 
+// TODO move this event handler to a dedicated region announcer module
 public class RegionsEventListeners implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)

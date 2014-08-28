@@ -21,6 +21,7 @@ public class RegionsModule extends AbstractGrubsModule {
 
 	@Override
 	public void enable() {
+		// TODO register the service regardless of the enabled/disabled status of a module
 		this.registerService(RegionService.class, this.serviceProvider);
 		this.registerCommands(this.commandHandlers);
 		this.registerEventHandlers(this.eventListeners);
@@ -34,6 +35,7 @@ public class RegionsModule extends AbstractGrubsModule {
 
 		this.unregisterCommands(this.commandHandlers);
 		this.unregisterEventHandlers(this.eventListeners);
+		// TODO never unregister a service
 		this.unregisterService(this.serviceProvider);
 	}
 

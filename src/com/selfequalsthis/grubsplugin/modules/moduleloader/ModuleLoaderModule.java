@@ -36,6 +36,7 @@ public class ModuleLoaderModule extends AbstractGrubsModule {
 		this.commandHandlers = new ModuleLoaderCommandHandlers(this);
 
 		// all new modules need to be listed here
+		// TODO is there a way to automate this list?
 		this.allModules.put("defendshed", new DefendShedModule(plugin));
 		this.allModules.put("gamefixes", new GameFixesModule(plugin));
 		this.allModules.put("gameinfo", new GameInfoModule(plugin));

@@ -25,6 +25,7 @@ public class RegionsCommandHandlers extends AbstractGrubsCommandHandler {
 		this.regionController = service;
 	}
 
+	// TODO consider delegating to subcommands to autocomplete their params
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
 		ArrayList<String> retVals = null;
@@ -33,6 +34,7 @@ public class RegionsCommandHandlers extends AbstractGrubsCommandHandler {
 		if (sender instanceof Player) {
 			Player player = (Player)sender;
 
+			// TODO should be able to derive this
 			String[] subCommands = new String[] {
 				"complete", "create",
 				"delete",
@@ -80,7 +82,7 @@ public class RegionsCommandHandlers extends AbstractGrubsCommandHandler {
 	@GrubsCommandHandler(
 		command = "regions",
 		desc = "Used to manage regions.",
-		subcommands = { "create", "vertex", "complete", "list", "delete" }
+		subcommands = { "create", "vertex", "complete", "list", "delete" } // TODO shouldn't need this
 	)
 	public boolean onRegionsCommand(CommandSender sender, Command command, String alias, String[] args) {
 
@@ -91,6 +93,7 @@ public class RegionsCommandHandlers extends AbstractGrubsCommandHandler {
 				GrubsMessager.sendMessage(executingPlayer, GrubsMessager.MessageLevel.ERROR, "Not enough arguments.");
 			}
 
+			// TODO figure out how to delegate subcommands better
 			if (! this.invokeSubcommandHandler(command, executingPlayer, args) ) {
 				String subcommand = args[0];
 				if (subcommand.equalsIgnoreCase("cancel")) {

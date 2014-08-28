@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 import com.selfequalsthis.grubsplugin.utils.GrubsUtilities;
 
+// TODO is this really an abstract class?
 public abstract class AbstractGrubsCommandHandler implements TabExecutor {
 
 	protected AbstractGrubsModule moduleRef = null;

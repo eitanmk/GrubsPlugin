@@ -37,6 +37,7 @@ public abstract class AbstractGrubsModule {
 	public void enable() { }
 	public void disable() {	}
 
+	// TODO is there a better way to do logging?
 	public void log(String msg) {
 		this.logger.info(this.logPrefix + msg);
 	}

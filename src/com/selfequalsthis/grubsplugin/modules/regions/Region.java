@@ -16,6 +16,7 @@ public class Region implements Serializable {
 	private Polygon polygon;
 	private Rectangle bounds;
 	private boolean complete = false;
+	// TODO min and max Y to constrict region height - default to full world height
 
 	public Region(String regionName, UUID worldId) {
 		this.name = regionName;
@@ -31,10 +32,12 @@ public class Region implements Serializable {
 		return this.worldId;
 	}
 
+	// TODO need a "trueContains" function to check polygon surface instead of bounding rect
 	public boolean containsLocation(Location loc) {
 		if (this.bounds == null) {
 			this.bounds = this.polygon.getBounds();
 		}
+		// TODO will have to include check to make sure location Y val is within height of region
 		return this.complete && this.worldId.equals(loc.getWorld().getUID()) && this.bounds.contains(loc.getBlockX(), loc.getBlockZ());
 	}
 
