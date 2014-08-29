@@ -17,7 +17,7 @@ public class InventoryCommandHandlers extends AbstractGrubsCommandHandler {
 	private InventoryModule inventoryModule;
 
 	public InventoryCommandHandlers(InventoryModule module) {
-		this.moduleRef = module;
+		this.componentRef = module;
 		this.inventoryModule = module;
 	}
 

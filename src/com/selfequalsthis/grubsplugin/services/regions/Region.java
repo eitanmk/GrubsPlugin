@@ -1,4 +1,4 @@
-package com.selfequalsthis.grubsplugin.modules.regions;
+package com.selfequalsthis.grubsplugin.services.regions;
 
 import java.awt.Polygon;
 import java.awt.Rectangle;

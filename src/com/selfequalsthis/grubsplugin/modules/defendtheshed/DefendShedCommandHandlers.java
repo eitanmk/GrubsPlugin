@@ -19,7 +19,7 @@ import com.selfequalsthis.grubsplugin.utils.GrubsMessager;
 public class DefendShedCommandHandlers extends AbstractGrubsCommandHandler {
 
 	public DefendShedCommandHandlers(AbstractGrubsModule module) {
-		this.moduleRef = module;
+		this.componentRef = module;
 	}
 
 	@Override

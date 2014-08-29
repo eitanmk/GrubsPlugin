@@ -17,7 +17,7 @@ public class GameInfoCommandHandlers extends AbstractGrubsCommandHandler {
 	private GameInfoModule gameInfoModule;
 
 	public GameInfoCommandHandlers(GameInfoModule module) {
-		this.moduleRef = module;
+		this.componentRef = module;
 		this.gameInfoModule = module;
 	}
 

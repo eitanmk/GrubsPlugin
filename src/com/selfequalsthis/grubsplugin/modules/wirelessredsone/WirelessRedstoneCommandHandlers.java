@@ -14,7 +14,7 @@ public class WirelessRedstoneCommandHandlers extends AbstractGrubsCommandHandler
 	private WirelessRedstoneModule wrModule;
 
 	public WirelessRedstoneCommandHandlers(WirelessRedstoneModule module) {
-		this.moduleRef = module;
+		this.componentRef = module;
 		this.wrModule = module;
 	}
 

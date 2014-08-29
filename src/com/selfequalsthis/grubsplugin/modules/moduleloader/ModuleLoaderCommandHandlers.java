@@ -12,7 +12,7 @@ public class ModuleLoaderCommandHandlers extends AbstractGrubsCommandHandler {
 	private ModuleLoaderModule mlModule;
 
 	public ModuleLoaderCommandHandlers(ModuleLoaderModule module) {
-		this.moduleRef = module;
+		this.componentRef = module;
 		this.mlModule = module;
 	}
 

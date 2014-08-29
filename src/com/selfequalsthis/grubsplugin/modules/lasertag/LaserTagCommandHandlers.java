@@ -14,7 +14,7 @@ import com.selfequalsthis.grubsplugin.utils.GrubsMessager;
 public class LaserTagCommandHandlers extends AbstractGrubsCommandHandler {
 
 	public LaserTagCommandHandlers(AbstractGrubsModule module) {
-		this.moduleRef = module;
+		this.componentRef = module;
 	}
 
 	@GrubsCommandHandler(

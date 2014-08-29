@@ -14,7 +14,7 @@ import com.selfequalsthis.grubsplugin.utils.GrubsMessager;
 public class GameFixesCommandHandlers extends AbstractGrubsCommandHandler {
 
 	public GameFixesCommandHandlers(AbstractGrubsModule module) {
-		this.moduleRef = module;
+		this.componentRef = module;
 	}
 
 	@GrubsCommandHandler(

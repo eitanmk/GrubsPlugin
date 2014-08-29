@@ -1,4 +1,4 @@
-package com.selfequalsthis.grubsplugin.modules.regions;
+package com.selfequalsthis.grubsplugin.services.regions;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -7,7 +7,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import com.selfequalsthis.grubsplugin.service.RegionService;
+import com.selfequalsthis.grubsplugin.services.RegionService;
 import com.selfequalsthis.grubsplugin.utils.GrubsMessager;
 
 // TODO move this event handler to a dedicated region announcer module

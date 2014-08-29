@@ -9,13 +9,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
-import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
+import com.selfequalsthis.grubsplugin.AbstractGrubsComponent;
 import com.selfequalsthis.grubsplugin.utils.GrubsUtilities;
 
 // TODO is this really an abstract class?
 public abstract class AbstractGrubsCommandHandler implements TabExecutor {
 
-	protected AbstractGrubsModule moduleRef = null;
+	protected AbstractGrubsComponent componentRef = null;
 	private HashMap<String,Method> commandMap = new HashMap<String,Method>();
 	private HashMap<String,HashMap<String,Method>> subcommandMap = new HashMap<String,HashMap<String,Method>>();
 
@@ -42,11 +42,11 @@ public abstract class AbstractGrubsCommandHandler implements TabExecutor {
 		Method subcommandHandler = this.getSubcommandHandler(commandName, subcommand);
 		if (subcommandHandler != null) {
 			try {
-				this.moduleRef.log("Invoking subcommand '" + subcommand + "' of command '" + commandName + "'.");
+				this.componentRef.log("Invoking subcommand '" + subcommand + "' of command '" + commandName + "'.");
 				handled = (Boolean) subcommandHandler.invoke(this, executingPlayer, args);
 			}
 			catch (Exception e) {
-				this.moduleRef.log("Unable to execute subcommand handler for '" + commandName + "'");
+				this.componentRef.log("Unable to execute subcommand handler for '" + commandName + "'");
 				e.printStackTrace();
 			}
 		}
@@ -72,7 +72,7 @@ public abstract class AbstractGrubsCommandHandler implements TabExecutor {
 			return handled;
 		}
 
-		this.moduleRef.log(sender.getName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
+		this.componentRef.log(sender.getName() + ": " + cmdName + " " + GrubsUtilities.join(args, " "));
 
 		Method handler = this.commandMap.get(cmdName);
 		if (handler != null) {
@@ -80,7 +80,7 @@ public abstract class AbstractGrubsCommandHandler implements TabExecutor {
 				handled = (Boolean) handler.invoke(this, sender, command, label, args);
 			}
 			catch (Exception e) {
-				this.moduleRef.log("Unable to execute command handler for '" + cmdName + "'");
+				this.componentRef.log("Unable to execute command handler for '" + cmdName + "'");
 				e.printStackTrace();
 			}
 		}

@@ -21,7 +21,7 @@ public class TeleportCommandHandlers extends AbstractGrubsCommandHandler {
 	private TeleportModule tpModule;
 
 	public TeleportCommandHandlers(TeleportModule module) {
-		this.moduleRef = module;
+		this.componentRef = module;
 		this.tpModule = module;
 	}
 

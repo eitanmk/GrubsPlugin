@@ -1,4 +1,4 @@
-package com.selfequalsthis.grubsplugin.service;
+package com.selfequalsthis.grubsplugin.services;
 
 import org.bukkit.Location;
 

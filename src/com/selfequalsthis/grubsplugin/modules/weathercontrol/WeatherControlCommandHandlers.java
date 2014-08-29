@@ -15,7 +15,7 @@ import com.selfequalsthis.grubsplugin.utils.GrubsMessager;
 public class WeatherControlCommandHandlers extends AbstractGrubsCommandHandler {
 
 	public WeatherControlCommandHandlers(AbstractGrubsModule module) {
-		this.moduleRef = module;
+		this.componentRef = module;
 	}
 
 	@GrubsCommandHandler(

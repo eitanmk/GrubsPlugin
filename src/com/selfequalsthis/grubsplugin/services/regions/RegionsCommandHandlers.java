@@ -1,4 +1,4 @@
-package com.selfequalsthis.grubsplugin.modules.regions;
+package com.selfequalsthis.grubsplugin.services.regions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
 import com.selfequalsthis.grubsplugin.annotations.GrubsSubcommandHandler;
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandler;
-import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
+import com.selfequalsthis.grubsplugin.services.AbstractGrubsService;
 import com.selfequalsthis.grubsplugin.utils.GrubsMessager;
 import com.selfequalsthis.grubsplugin.utils.GrubsUtilities;
 
@@ -20,9 +20,9 @@ public class RegionsCommandHandlers extends AbstractGrubsCommandHandler {
 
 	private RegionsServiceProvider regionController;
 
-	public RegionsCommandHandlers(AbstractGrubsModule module, RegionsServiceProvider service) {
-		this.moduleRef = module;
-		this.regionController = service;
+	public RegionsCommandHandlers(AbstractGrubsService service, RegionsServiceProvider provider) {
+		this.componentRef = service;
+		this.regionController = provider;
 	}
 
 	// TODO consider delegating to subcommands to autocomplete their params

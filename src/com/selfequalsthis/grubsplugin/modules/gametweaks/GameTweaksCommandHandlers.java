@@ -15,7 +15,7 @@ public class GameTweaksCommandHandlers extends AbstractGrubsCommandHandler {
 	private GameTweaksModule gtModule;
 
 	public GameTweaksCommandHandlers(GameTweaksModule module) {
-		this.moduleRef = module;
+		this.componentRef = module;
 		this.gtModule = module;
 	}
 

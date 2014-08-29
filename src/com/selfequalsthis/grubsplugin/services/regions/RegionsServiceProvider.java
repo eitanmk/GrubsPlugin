@@ -1,4 +1,4 @@
-package com.selfequalsthis.grubsplugin.modules.regions;
+package com.selfequalsthis.grubsplugin.services.regions;
 
 import java.io.EOFException;
 import java.io.File;
@@ -9,31 +9,32 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.UUID;
+
 import org.bukkit.Location;
 
-import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
-import com.selfequalsthis.grubsplugin.service.RegionService;
+import com.selfequalsthis.grubsplugin.services.AbstractGrubsService;
+import com.selfequalsthis.grubsplugin.services.RegionService;
 
 public class RegionsServiceProvider implements RegionService {
 
-	private AbstractGrubsModule moduleRef;
+	private AbstractGrubsService serviceRef;
 
 	private HashMap<UUID,HashMap<String,Region>> regionMap = new HashMap<UUID,HashMap<String,Region>>();
 
-	public RegionsServiceProvider(AbstractGrubsModule module) {
-		this.moduleRef = module;
+	public RegionsServiceProvider(AbstractGrubsService module) {
+		this.serviceRef = module;
 	}
 
 	public void init() {
-		File dataFile = this.moduleRef.getDataFile();
+		File dataFile = this.serviceRef.getDataFile();
 		if (dataFile != null) {
-			this.moduleRef.log("Loading regions.");
+			this.serviceRef.log("Loading regions.");
 			this.loadRegions();
 		}
 	}
 
 	public void shutdown() {
-		this.moduleRef.log("Saving regions.");
+		this.serviceRef.log("Saving regions.");
 		this.saveRegions();
 	}
 
@@ -148,9 +149,9 @@ public class RegionsServiceProvider implements RegionService {
 	}
 
 	private void loadRegions() {
-		File dataFile = this.moduleRef.getDataFile();
+		File dataFile = this.serviceRef.getDataFile();
 		if (dataFile == null) {
-			this.moduleRef.log("Error with data file. Nothing can be loaded!");
+			this.serviceRef.log("Error with data file. Nothing can be loaded!");
 			return;
 		}
 
@@ -183,7 +184,7 @@ public class RegionsServiceProvider implements RegionService {
 		}
 		catch (EOFException eof) { }
 		catch (Exception ex) {
-			this.moduleRef.log("Error reading Regions file!");
+			this.serviceRef.log("Error reading Regions file!");
 			ex.printStackTrace();
 		}
 		finally {
@@ -198,13 +199,13 @@ public class RegionsServiceProvider implements RegionService {
 	}
 
 	private void saveRegions() {
-		File dataFile = this.moduleRef.getDataFile();
+		File dataFile = this.serviceRef.getDataFile();
 		if (dataFile == null) {
-			this.moduleRef.log("Error with data file. Nothing will be saved!");
+			this.serviceRef.log("Error with data file. Nothing will be saved!");
 			return;
 		}
 
-		this.moduleRef.log("Writing Regions save file.");
+		this.serviceRef.log("Writing Regions save file.");
 		try {
 			FileOutputStream fos = new FileOutputStream(dataFile);
 			ObjectOutputStream out = new ObjectOutputStream(fos);
@@ -218,7 +219,7 @@ public class RegionsServiceProvider implements RegionService {
 			out.close();
 		}
 		catch (Exception ex) {
-			this.moduleRef.log("Error writing Regions file!");
+			this.serviceRef.log("Error writing Regions file!");
 			ex.printStackTrace();
 		}
 	}
