@@ -39,14 +39,14 @@ public class RegionsServiceProvider implements RegionService {
 	}
 
 	@Override
-	public String getRegion(Location loc) {
+	public String getRegion(Location location, boolean useBoundingBox) {
 		String retVal = null;
 
-		HashMap<String,Region> worldRegions = this.regionMap.get(loc.getWorld().getUID());
+		HashMap<String,Region> worldRegions = this.regionMap.get(location.getWorld().getUID());
 		if (worldRegions != null) {
 			for (String name : worldRegions.keySet()) {
 				Region curReg = worldRegions.get(name);
-				if (curReg.containsLocation(loc)) {
+				if (curReg.containsLocation(location, useBoundingBox)) {
 					retVal = name;
 					break;
 				}
@@ -86,7 +86,7 @@ public class RegionsServiceProvider implements RegionService {
 		}
 
 		// check to make sure this vertex isn't contained by another region
-		String overlap = this.getRegion(loc);
+		String overlap = this.getRegion(loc, true);
 		if (overlap != null) {
 			return false;
 		}

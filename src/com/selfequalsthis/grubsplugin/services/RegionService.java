@@ -4,6 +4,6 @@ import org.bukkit.Location;
 
 public interface RegionService {
 
-	public String getRegion(Location loc);
+	public String getRegion(Location location, boolean useBoundingBox);
 
 }

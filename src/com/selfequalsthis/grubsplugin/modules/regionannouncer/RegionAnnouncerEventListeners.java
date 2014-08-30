@@ -23,6 +23,17 @@ public class RegionAnnouncerEventListeners implements Listener {
 		this.playerTracker = GrubsPlayerRegionTracker.getInstance();
 	}
 
+	private String getRegion(Location loc) {
+		return this.regionService.getRegion(loc, false);
+	}
+
+	private void announceEnter(Player player, String region) {
+		GrubsMessager.sendMessage(player, GrubsMessager.MessageLevel.INFO, "Entering region '" + region + "'");
+	}
+
+	private void announceLeave(Player player, String region) {
+		GrubsMessager.sendMessage(player, GrubsMessager.MessageLevel.INFO, "Leaving region '" + region + "'");
+	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(PlayerJoinEvent event) {
@@ -31,7 +42,7 @@ public class RegionAnnouncerEventListeners implements Listener {
 		}
 
 		Player player = event.getPlayer();
-		String currentRegion = this.regionService.getRegion(player.getLocation());
+		String currentRegion = this.getRegion(player.getLocation());
 		this.playerTracker.updatePlayerRegion(player, currentRegion);
 	}
 
@@ -61,7 +72,7 @@ public class RegionAnnouncerEventListeners implements Listener {
 
 		Player player = event.getPlayer();
 		String currentRegion = this.playerTracker.getPlayerRegion(player);
-		String newLocationRegion = this.regionService.getRegion(toLocation);
+		String newLocationRegion = this.getRegion(toLocation);
 
 		// * -> * (not on a defined a region and didn't move into one)
 		if (currentRegion == null && newLocationRegion == null) {
@@ -76,8 +87,8 @@ public class RegionAnnouncerEventListeners implements Listener {
 			else {
 				// A -> B (went from one region to another)
 				this.playerTracker.updatePlayerRegion(player, newLocationRegion);
-				GrubsMessager.sendMessage(player, GrubsMessager.MessageLevel.INFO, "Leaving region '" + currentRegion + "'");
-				GrubsMessager.sendMessage(player, GrubsMessager.MessageLevel.INFO, "Entering region '" + newLocationRegion + "'");
+				this.announceLeave(player, currentRegion);
+				this.announceEnter(player, newLocationRegion);
 				return;
 			}
 		}
@@ -85,13 +96,13 @@ public class RegionAnnouncerEventListeners implements Listener {
 			if (currentRegion == null) {
 				// * -> A
 				this.playerTracker.updatePlayerRegion(player, newLocationRegion);
-				GrubsMessager.sendMessage(player, GrubsMessager.MessageLevel.INFO, "Entering region '" + newLocationRegion + "'");
+				this.announceEnter(player, newLocationRegion);
 				return;
 			}
 			else {
 				// A -> *
 				this.playerTracker.updatePlayerRegion(player, newLocationRegion);
-				GrubsMessager.sendMessage(player, GrubsMessager.MessageLevel.INFO, "Leaving region '" + currentRegion + "'");
+				this.announceLeave(player, currentRegion);
 				return;
 			}
 

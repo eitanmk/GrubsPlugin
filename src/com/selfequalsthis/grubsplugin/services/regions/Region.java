@@ -32,13 +32,28 @@ public class Region implements Serializable {
 		return this.worldId;
 	}
 
-	// TODO need a "trueContains" function to check polygon surface instead of bounding rect
-	public boolean containsLocation(Location loc) {
+	public boolean containsLocation(Location loc, boolean useBoundingBox) {
+		// TODO will have to include check to make sure location Y val is within height of region
 		if (this.bounds == null) {
 			this.bounds = this.polygon.getBounds();
 		}
-		// TODO will have to include check to make sure location Y val is within height of region
-		return this.complete && this.worldId.equals(loc.getWorld().getUID()) && this.bounds.contains(loc.getBlockX(), loc.getBlockZ());
+
+		// region not done, pretend like it's not here
+		if (!this.complete) {
+			return false;
+		}
+
+		// region from a different world, so we're not inside it
+		if (!this.worldId.equals(loc.getWorld().getUID())) {
+			return false;
+		}
+
+		if (useBoundingBox) {
+			return this.bounds.contains(loc.getBlockX(), loc.getBlockZ());
+		}
+		else {
+			return this.polygon.contains(loc.getBlockX(), loc.getBlockZ());
+		}
 	}
 
 	public void addVertex(Location loc) {
