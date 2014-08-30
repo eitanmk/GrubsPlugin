@@ -17,6 +17,7 @@ import com.selfequalsthis.grubsplugin.modules.gameinfo.GameInfoModule;
 import com.selfequalsthis.grubsplugin.modules.gametweaks.GameTweaksModule;
 import com.selfequalsthis.grubsplugin.modules.inventory.InventoryModule;
 import com.selfequalsthis.grubsplugin.modules.lasertag.LaserTagModule;
+import com.selfequalsthis.grubsplugin.modules.regionannouncer.RegionAnnouncerModule;
 import com.selfequalsthis.grubsplugin.modules.teleport.TeleportModule;
 import com.selfequalsthis.grubsplugin.modules.weathercontrol.WeatherControlModule;
 import com.selfequalsthis.grubsplugin.modules.wirelessredsone.WirelessRedstoneModule;
@@ -42,6 +43,7 @@ public class ModuleLoaderModule extends AbstractGrubsModule {
 		this.allModules.put("gametweaks",new GameTweaksModule(plugin));
 		this.allModules.put("inventory", new InventoryModule(plugin));
 		this.allModules.put("lasertag", new LaserTagModule(plugin));
+		this.allModules.put("regionannouncer", new RegionAnnouncerModule(plugin));
 		this.allModules.put("teleport", new TeleportModule(plugin));
 		this.allModules.put("weather", new WeatherControlModule(plugin));
 		this.allModules.put("wirelessredstone", new WirelessRedstoneModule(plugin));
