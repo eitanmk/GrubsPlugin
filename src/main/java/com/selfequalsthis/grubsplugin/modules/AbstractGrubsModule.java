@@ -2,25 +2,15 @@ package com.selfequalsthis.grubsplugin.modules;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.logging.Logger;
 
-import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.slf4j.Logger;
 
-import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandler;
-import com.selfequalsthis.grubsplugin.command.GrubsCommandManager;
+import com.selfequalsthis.grubsplugin.GrubsPlugin;
 
 public abstract class AbstractGrubsModule {
 
-	protected final Logger logger = Logger.getLogger("Minecraft");
-
-	protected JavaPlugin pluginRef = null;
+	protected Logger logger = null;
+	protected GrubsPlugin pluginRef = null;
 	protected String logPrefix = "";
 	protected String dataFileName = null;
 
@@ -31,7 +21,7 @@ public abstract class AbstractGrubsModule {
 		this.logger.info(this.logPrefix + msg);
 	}
 
-	protected void registerCommands(AbstractGrubsCommandHandler executor) {
+	/*protected void registerCommands(AbstractGrubsCommandHandler executor) {
 		if (executor == null) {
 			this.log("Command handler class is null! Don't forget to instantiate it!");
 		}
@@ -96,6 +86,7 @@ public abstract class AbstractGrubsModule {
 
 		HandlerList.unregisterAll(listener);
 	}
+	*/
 
 	public File getDataFile() {
 		if (this.dataFileName == null) {
@@ -120,7 +111,7 @@ public abstract class AbstractGrubsModule {
 		return dataFile;
 	}
 
-
+	/*
 	private ArrayList<String> getEventListenerData(Listener listener) {
 		ArrayList<String> ret = new ArrayList<String>();
 
@@ -146,5 +137,6 @@ public abstract class AbstractGrubsModule {
 
 		return ret;
 	}
+	*/
 
 }

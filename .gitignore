@@ -15,3 +15,7 @@ artifact/*
 
 #ignore eclipse settings
 .settings
+
+#ignore stupid OSX files
+.DS_Store
+/bin/

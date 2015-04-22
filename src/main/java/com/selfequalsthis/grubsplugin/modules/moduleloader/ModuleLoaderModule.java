@@ -8,18 +8,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Properties;
 
-import org.bukkit.plugin.java.JavaPlugin;
-
+import com.selfequalsthis.grubsplugin.GrubsPlugin;
 import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
-import com.selfequalsthis.grubsplugin.modules.defendtheshed.DefendShedModule;
-import com.selfequalsthis.grubsplugin.modules.gamefixes.GameFixesModule;
-import com.selfequalsthis.grubsplugin.modules.gameinfo.GameInfoModule;
-import com.selfequalsthis.grubsplugin.modules.gametweaks.GameTweaksModule;
-import com.selfequalsthis.grubsplugin.modules.inventory.InventoryModule;
-import com.selfequalsthis.grubsplugin.modules.lasertag.LaserTagModule;
-import com.selfequalsthis.grubsplugin.modules.teleport.TeleportModule;
-import com.selfequalsthis.grubsplugin.modules.weathercontrol.WeatherControlModule;
-import com.selfequalsthis.grubsplugin.modules.wirelessredsone.WirelessRedstoneModule;
 
 public class ModuleLoaderModule extends AbstractGrubsModule {
 
@@ -28,15 +18,16 @@ public class ModuleLoaderModule extends AbstractGrubsModule {
 	public HashMap<String,AbstractGrubsModule> allModules = new HashMap<String,AbstractGrubsModule>();
 	public HashMap<String,AbstractGrubsModule> activeModules = new HashMap<String,AbstractGrubsModule>();
 
-	private ModuleLoaderCommandHandlers commandHandlers;
+	//private ModuleLoaderCommandHandlers commandHandlers;
 
-	public ModuleLoaderModule(JavaPlugin plugin) {
+	public ModuleLoaderModule(GrubsPlugin plugin) {
 		this.pluginRef = plugin;
 		this.logPrefix = "[ModuleLoaderModule]: ";
 		this.dataFileName = "active-modules.dat";
-		this.commandHandlers = new ModuleLoaderCommandHandlers(this);
+		//this.commandHandlers = new ModuleLoaderCommandHandlers(this);
 
 		// all new modules need to be listed here
+		/*
 		this.allModules.put("defendshed", new DefendShedModule(plugin));
 		this.allModules.put("gamefixes", new GameFixesModule(plugin));
 		this.allModules.put("gameinfo", new GameInfoModule(plugin));
@@ -46,11 +37,12 @@ public class ModuleLoaderModule extends AbstractGrubsModule {
 		this.allModules.put("teleport", new TeleportModule(plugin));
 		this.allModules.put("weather", new WeatherControlModule(plugin));
 		this.allModules.put("wirelessredstone", new WirelessRedstoneModule(plugin));
+		*/
 	}
 
 	@Override
 	public void enable() {
-		this.registerCommands(this.commandHandlers);
+		//this.registerCommands(this.commandHandlers);
 
 		ArrayList<String> modulesToLoad = getModulesToLoad();
 		for (String moduleKey : modulesToLoad) {
@@ -75,7 +67,7 @@ public class ModuleLoaderModule extends AbstractGrubsModule {
 			gm.disable();
 		}
 
-		this.unregisterCommands(this.commandHandlers);
+		//this.unregisterCommands(this.commandHandlers);
 	}
 
 	private ArrayList<String> getModulesToLoad() {
@@ -141,4 +133,5 @@ public class ModuleLoaderModule extends AbstractGrubsModule {
 			this.log("Failed to write module properties file.");
 		}
 	}
+
 }
