@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Properties;
 
+import org.spongepowered.api.Game;
+
 import com.selfequalsthis.grubsplugin.GrubsPlugin;
 import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 
@@ -18,13 +20,14 @@ public class ModuleLoaderModule extends AbstractGrubsModule {
 	public HashMap<String,AbstractGrubsModule> allModules = new HashMap<String,AbstractGrubsModule>();
 	public HashMap<String,AbstractGrubsModule> activeModules = new HashMap<String,AbstractGrubsModule>();
 
-	//private ModuleLoaderCommandHandlers commandHandlers;
+	private ModuleLoaderCommandHandlers commandHandlers;
 
-	public ModuleLoaderModule(GrubsPlugin plugin) {
+	public ModuleLoaderModule(GrubsPlugin plugin, Game game) {
 		this.pluginRef = plugin;
+		this.game = game;
 		this.logPrefix = "[ModuleLoaderModule]: ";
 		this.dataFileName = "active-modules.dat";
-		//this.commandHandlers = new ModuleLoaderCommandHandlers(this);
+		this.commandHandlers = new ModuleLoaderCommandHandlers(this);
 
 		// all new modules need to be listed here
 		/*
@@ -42,7 +45,7 @@ public class ModuleLoaderModule extends AbstractGrubsModule {
 
 	@Override
 	public void enable() {
-		//this.registerCommands(this.commandHandlers);
+		this.registerCommands(this.commandHandlers);
 
 		ArrayList<String> modulesToLoad = getModulesToLoad();
 		for (String moduleKey : modulesToLoad) {
@@ -67,7 +70,7 @@ public class ModuleLoaderModule extends AbstractGrubsModule {
 			gm.disable();
 		}
 
-		//this.unregisterCommands(this.commandHandlers);
+		this.unregisterCommands(this.commandHandlers);
 	}
 
 	private ArrayList<String> getModulesToLoad() {

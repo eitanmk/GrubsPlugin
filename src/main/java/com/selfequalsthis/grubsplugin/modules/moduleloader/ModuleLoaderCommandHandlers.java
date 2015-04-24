@@ -1,19 +1,16 @@
 package com.selfequalsthis.grubsplugin.modules.moduleloader;
 
-import org.bukkit.command.CommandSender;
-
 import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandler;
 import com.selfequalsthis.grubsplugin.command.GrubsCommandInfo;
-import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 
 public class ModuleLoaderCommandHandlers extends AbstractGrubsCommandHandler {
 
-	private ModuleLoaderModule mlModule;
+	//private ModuleLoaderModule mlModule;
 
 	public ModuleLoaderCommandHandlers(ModuleLoaderModule module) {
 		this.moduleRef = module;
-		this.mlModule = module;
+		//this.mlModule = module;
 	}
 
 	@GrubsCommandHandler(
@@ -22,7 +19,7 @@ public class ModuleLoaderCommandHandlers extends AbstractGrubsCommandHandler {
 		usage = "/<command> [list|enable|disable] <module-name>"
 	)
 	public boolean onGpmoduleCommand(GrubsCommandInfo cmd) {
-		CommandSender sender = cmd.sender;
+		/*CommandSender sender = cmd.sender;
 		String[] args = cmd.args;
 
 		if (args.length < 1) {
@@ -73,7 +70,7 @@ public class ModuleLoaderCommandHandlers extends AbstractGrubsCommandHandler {
 				sender.sendMessage("Module [" + moduleName + "] disabled.");
 			}
 		}
-
+*/
 		return false;
 	}
 }

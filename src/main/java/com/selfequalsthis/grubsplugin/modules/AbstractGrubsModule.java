@@ -2,15 +2,21 @@ package com.selfequalsthis.grubsplugin.modules;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
 
 import org.slf4j.Logger;
+import org.spongepowered.api.Game;
 
 import com.selfequalsthis.grubsplugin.GrubsPlugin;
+import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandler;
+import com.selfequalsthis.grubsplugin.command.GrubsCommandManager;
 
 public abstract class AbstractGrubsModule {
 
 	protected Logger logger = null;
 	protected GrubsPlugin pluginRef = null;
+	protected Game game = null;
 	protected String logPrefix = "";
 	protected String dataFileName = null;
 
@@ -21,12 +27,12 @@ public abstract class AbstractGrubsModule {
 		this.logger.info(this.logPrefix + msg);
 	}
 
-	/*protected void registerCommands(AbstractGrubsCommandHandler executor) {
+	protected void registerCommands(AbstractGrubsCommandHandler executor) {
 		if (executor == null) {
 			this.log("Command handler class is null! Don't forget to instantiate it!");
 		}
 
-		GrubsCommandManager cmdMgr = GrubsCommandManager.getInstance();
+		GrubsCommandManager cmdMgr = GrubsCommandManager.getInstance(this.pluginRef, this.game);
 		HashMap<String,Method> commandData = cmdMgr.getCommandData(executor);
 
 		if (commandData == null || commandData.size() == 0) {
@@ -41,7 +47,7 @@ public abstract class AbstractGrubsModule {
 	}
 
 	protected void unregisterCommands(AbstractGrubsCommandHandler executor) {
-		GrubsCommandManager cmdMgr = GrubsCommandManager.getInstance();
+		GrubsCommandManager cmdMgr = GrubsCommandManager.getInstance(this.pluginRef, this.game);
 		HashMap<String,Method> commandData = cmdMgr.getCommandData(executor);
 
 		if (commandData == null || commandData.size() == 0) {
@@ -54,7 +60,7 @@ public abstract class AbstractGrubsModule {
 
 		cmdMgr.unregisterCommands(executor);
 	}
-
+/*
 	protected void registerEventHandlers(Listener listener) {
 		if (listener == null) {
 			this.log("Event listener class is null! Don't forget to instantiate it!");

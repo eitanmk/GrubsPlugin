@@ -3,6 +3,7 @@ package com.selfequalsthis.grubsplugin;
 import java.io.File;
 
 import org.slf4j.Logger;
+import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.state.ServerStartingEvent;
 import org.spongepowered.api.event.state.ServerStoppingEvent;
@@ -25,10 +26,17 @@ public class GrubsPlugin {
 	@ConfigDir(sharedRoot = false)
 	private File dataFolder;
 	
+	@Inject
+	private Game game;
+	
 	private AbstractGrubsModule moduleLoader;
 	
 	public Logger getLogger() {
 	    return this.logger;
+	}
+	
+	public File getDataFolder() {
+		return this.dataFolder;
 	}
 	
 	@Subscribe
@@ -42,7 +50,7 @@ public class GrubsPlugin {
 		}
 		
 		this.logger.info(this.logPrefix + "Initializing module loader...");
-		this.moduleLoader = new ModuleLoaderModule(this);
+		this.moduleLoader = new ModuleLoaderModule(this, this.game);
 		this.moduleLoader.enable();
 		
 		this.logger.info(this.logPrefix + "Plugin is enabled.");
@@ -56,10 +64,6 @@ public class GrubsPlugin {
 		this.moduleLoader.disable();
 		
 		this.logger.info(this.logPrefix + "Plugin is disabled.");
-	}
-	
-	public File getDataFolder() {
-		return this.dataFolder;
 	}
 	
 }

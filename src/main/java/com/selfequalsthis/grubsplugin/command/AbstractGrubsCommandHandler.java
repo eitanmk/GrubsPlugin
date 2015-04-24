@@ -3,12 +3,12 @@ package com.selfequalsthis.grubsplugin.command;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import org.spongepowered.api.util.command.CommandResult;
+import org.spongepowered.api.util.command.CommandSource;
+import org.spongepowered.api.util.command.args.CommandContext;
+import org.spongepowered.api.util.command.spec.CommandExecutor;
 
 import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
-import com.selfequalsthis.grubsplugin.utils.GrubsUtilities;
 
 public abstract class AbstractGrubsCommandHandler implements CommandExecutor {
 
@@ -16,7 +16,8 @@ public abstract class AbstractGrubsCommandHandler implements CommandExecutor {
 	public HashMap<String,Method> handlers = new HashMap<String,Method>();
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public CommandResult execute(CommandSource src, CommandContext args) {
+		/*
 		String cmdName = command.getName().toLowerCase();
 
 		if (!sender.isOp()) {
@@ -37,6 +38,9 @@ public abstract class AbstractGrubsCommandHandler implements CommandExecutor {
 		}
 
 		return true;
+		*/
+		
+		return CommandResult.empty();
 	}
 
 }
