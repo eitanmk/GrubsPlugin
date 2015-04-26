@@ -16,54 +16,54 @@ import com.selfequalsthis.grubsplugin.modules.moduleloader.ModuleLoaderModule;
 
 @Plugin(id = "grubsplugin", name = "GrubsPlugin", version = "1.0")
 public class GrubsPlugin {
-	
-	private final String logPrefix = "[GrubsPlugin]: ";
 
-	@Inject
-	private Logger logger;
-	
-	@Inject
-	@ConfigDir(sharedRoot = false)
-	private File dataFolder;
-	
-	@Inject
-	private Game game;
-	
-	private AbstractGrubsModule moduleLoader;
-	
-	public Logger getLogger() {
-	    return this.logger;
-	}
-	
-	public File getDataFolder() {
-		return this.dataFolder;
-	}
-	
-	@Subscribe
-	public void onServerStarting(ServerStartingEvent event) {
-		this.logger.info(this.logPrefix + "Enabling plugin...");
-		
-		File dataDir = this.getDataFolder();
-		if (!dataDir.exists()) {
-			this.logger.info(this.logPrefix + "Creating plugin data directory: " + dataDir.toString());
-			dataDir.mkdir();
-		}
-		
-		this.logger.info(this.logPrefix + "Initializing module loader...");
-		this.moduleLoader = new ModuleLoaderModule(this, this.game);
-		this.moduleLoader.enable();
-		
-		this.logger.info(this.logPrefix + "Plugin is enabled.");
-	}
-	
-	@Subscribe
-	public void onServerStopping(ServerStoppingEvent event) {
-		this.logger.info(this.logPrefix + "Disabling plugin...");
-		
-		this.logger.info(this.logPrefix + "Disabling module loader...");
-		this.moduleLoader.disable();
-		
-		this.logger.info(this.logPrefix + "Plugin is disabled.");
-	}
-	
+    private final String logPrefix = "[GrubsPlugin]: ";
+
+    @Inject
+    private Logger logger;
+
+    @Inject
+    @ConfigDir(sharedRoot = false)
+    private File dataFolder;
+
+    @Inject
+    private Game game;
+
+    private AbstractGrubsModule moduleLoader;
+
+    public Logger getLogger() {
+        return this.logger;
+    }
+
+    public File getDataFolder() {
+        return this.dataFolder;
+    }
+
+    @Subscribe
+    public void onServerStarting(ServerStartingEvent event) {
+        this.logger.info(this.logPrefix + "Enabling plugin...");
+
+        File dataDir = this.getDataFolder();
+        if (!dataDir.exists()) {
+            this.logger.info(this.logPrefix + "Creating plugin data directory: " + dataDir.toString());
+            dataDir.mkdir();
+        }
+
+        this.logger.info(this.logPrefix + "Initializing module loader...");
+        this.moduleLoader = new ModuleLoaderModule(this, this.game);
+        this.moduleLoader.enable();
+
+        this.logger.info(this.logPrefix + "Plugin is enabled.");
+    }
+
+    @Subscribe
+    public void onServerStopping(ServerStoppingEvent event) {
+        this.logger.info(this.logPrefix + "Disabling plugin...");
+
+        this.logger.info(this.logPrefix + "Disabling module loader...");
+        this.moduleLoader.disable();
+
+        this.logger.info(this.logPrefix + "Plugin is disabled.");
+    }
+
 }

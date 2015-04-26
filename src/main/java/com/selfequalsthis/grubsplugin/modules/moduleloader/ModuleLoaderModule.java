@@ -11,30 +11,26 @@ import java.util.Properties;
 import org.spongepowered.api.Game;
 
 import com.selfequalsthis.grubsplugin.GrubsPlugin;
-import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandler;
 import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 
 public class ModuleLoaderModule extends AbstractGrubsModule {
 
-	private final String moduleSettingKey = "modules";
+    private final String moduleSettingKey = "modules";
 
-	public HashMap<String,AbstractGrubsModule> allModules = new HashMap<String,AbstractGrubsModule>();
-	public HashMap<String,AbstractGrubsModule> activeModules = new HashMap<String,AbstractGrubsModule>();
+    public HashMap<String,AbstractGrubsModule> allModules = new HashMap<String,AbstractGrubsModule>();
+    public HashMap<String,AbstractGrubsModule> activeModules = new HashMap<String,AbstractGrubsModule>();
 
-	//private ModuleLoaderCommandHandlers commandHandlers;
-	private ArrayList<AbstractGrubsCommandHandler> commandHandlers = new ArrayList<AbstractGrubsCommandHandler>();
+    public ModuleLoaderModule(GrubsPlugin plugin, Game game) {
+        this.pluginRef = plugin;
+        this.game = game;
+        this.logger = plugin.getLogger();
+        this.logPrefix = "[ModuleLoaderModule]: ";
+        this.dataFileName = "active-modules.dat";
 
-	public ModuleLoaderModule(GrubsPlugin plugin, Game game) {
-		this.pluginRef = plugin;
-		this.game = game;
-		this.logger = plugin.getLogger();
-		this.logPrefix = "[ModuleLoaderModule]: ";
-		this.dataFileName = "active-modules.dat";
-		
-		this.commandHandlers.add(new ModuleLoaderCommandGpmodule(this));
+        this.commandHandlers.add(new ModuleLoaderCommandGpmodule(this));
 
-		// all new modules need to be listed here
-		/*
+        // all new modules need to be listed here
+        /*
 		this.allModules.put("defendshed", new DefendShedModule(plugin));
 		this.allModules.put("gamefixes", new GameFixesModule(plugin));
 		this.allModules.put("gameinfo", new GameInfoModule(plugin));
@@ -44,101 +40,101 @@ public class ModuleLoaderModule extends AbstractGrubsModule {
 		this.allModules.put("teleport", new TeleportModule(plugin));
 		this.allModules.put("weather", new WeatherControlModule(plugin));
 		this.allModules.put("wirelessredstone", new WirelessRedstoneModule(plugin));
-		*/
-	}
+         */
+    }
 
-	@Override
-	public void enable() {
-		this.registerCommands(this.commandHandlers);
+    @Override
+    public void enable() {
+        this.registerCommands(this.commandHandlers);
 
-		ArrayList<String> modulesToLoad = getModulesToLoad();
-		for (String moduleKey : modulesToLoad) {
-			AbstractGrubsModule gm = this.allModules.get(moduleKey);
-			if (gm != null) {
-				this.log("Enabling module [" + moduleKey + "].");
-				this.activeModules.put(moduleKey, gm);
-				gm.enable();
-			}
-		}
-	}
+        ArrayList<String> modulesToLoad = getModulesToLoad();
+        for (String moduleKey : modulesToLoad) {
+            AbstractGrubsModule gm = this.allModules.get(moduleKey);
+            if (gm != null) {
+                this.log("Enabling module [" + moduleKey + "].");
+                this.activeModules.put(moduleKey, gm);
+                gm.enable();
+            }
+        }
+    }
 
-	@Override
-	public void disable() {
-		this.log("Saving loaded modules list.");
-		saveActiveModules();
+    @Override
+    public void disable() {
+        this.log("Saving loaded modules list.");
+        saveActiveModules();
 
-		this.log("Uninitializing modules.");
-		for (String moduleKey : this.activeModules.keySet()) {
-			AbstractGrubsModule gm = this.activeModules.get(moduleKey);
-			this.log("Disabling module [" + moduleKey + "].");
-			gm.disable();
-		}
+        this.log("Uninitializing modules.");
+        for (String moduleKey : this.activeModules.keySet()) {
+            AbstractGrubsModule gm = this.activeModules.get(moduleKey);
+            this.log("Disabling module [" + moduleKey + "].");
+            gm.disable();
+        }
 
-		this.unregisterCommands(this.commandHandlers);
-	}
+        this.unregisterCommands(this.commandHandlers);
+    }
 
-	private ArrayList<String> getModulesToLoad() {
-		// initialize return value to all modules
-		ArrayList<String> ret = new ArrayList<String>(this.allModules.keySet().size());
-		String allModulesList = "";
-		String separator = "";
-		for (String key : this.allModules.keySet()) {
-			ret.add(key);
-			allModulesList = allModulesList + separator + key;
-			separator = ",";
-		}
+    private ArrayList<String> getModulesToLoad() {
+        // initialize return value to all modules
+        ArrayList<String> ret = new ArrayList<String>(this.allModules.keySet().size());
+        String allModulesList = "";
+        String separator = "";
+        for (String key : this.allModules.keySet()) {
+            ret.add(key);
+            allModulesList = allModulesList + separator + key;
+            separator = ",";
+        }
 
-		File dataFile = this.getDataFile();
-		if (dataFile != null) {
-			try {
-				Properties modulesToLoad = new Properties();
-				FileInputStream in = new FileInputStream(dataFile);
-				modulesToLoad.load(in);
-				in.close();
+        File dataFile = this.getDataFile();
+        if (dataFile != null) {
+            try {
+                Properties modulesToLoad = new Properties();
+                FileInputStream in = new FileInputStream(dataFile);
+                modulesToLoad.load(in);
+                in.close();
 
-				String moduleSettingsStr = modulesToLoad.getProperty(this.moduleSettingKey);
-				if (moduleSettingsStr != null) {
-					this.log("Modules to load: " + moduleSettingsStr);
-					String[] moduleList = moduleSettingsStr.split(",");
-					return new ArrayList<String>(Arrays.asList(moduleList));
-				}
-			}
-			catch (Exception e) {
-				this.log("Failed to read properties from modules file.");
-			}
-		}
+                String moduleSettingsStr = modulesToLoad.getProperty(this.moduleSettingKey);
+                if (moduleSettingsStr != null) {
+                    this.log("Modules to load: " + moduleSettingsStr);
+                    String[] moduleList = moduleSettingsStr.split(",");
+                    return new ArrayList<String>(Arrays.asList(moduleList));
+                }
+            }
+            catch (Exception e) {
+                this.log("Failed to read properties from modules file.");
+            }
+        }
 
-		this.log("Loading all modules: " + allModulesList);
-		return ret;
-	}
+        this.log("Loading all modules: " + allModulesList);
+        return ret;
+    }
 
-	private void saveActiveModules() {
-		File dataFile = this.getDataFile();
-		if (dataFile == null) {
-			this.log("Error with data file. Nothing will be saved!");
-			return;
-		}
+    private void saveActiveModules() {
+        File dataFile = this.getDataFile();
+        if (dataFile == null) {
+            this.log("Error with data file. Nothing will be saved!");
+            return;
+        }
 
-		String moduleKeySettingsStr = "";
-		String separator = "";
-		for (String moduleKey : this.activeModules.keySet()) {
-			moduleKeySettingsStr = moduleKeySettingsStr + separator + moduleKey;
-			separator = ",";
-		}
+        String moduleKeySettingsStr = "";
+        String separator = "";
+        for (String moduleKey : this.activeModules.keySet()) {
+            moduleKeySettingsStr = moduleKeySettingsStr + separator + moduleKey;
+            separator = ",";
+        }
 
-		Properties moduleSettings = new Properties();
-		moduleSettings.setProperty(this.moduleSettingKey, moduleKeySettingsStr);
-		this.log("Saving loaded modules: " + moduleKeySettingsStr);
+        Properties moduleSettings = new Properties();
+        moduleSettings.setProperty(this.moduleSettingKey, moduleKeySettingsStr);
+        this.log("Saving loaded modules: " + moduleKeySettingsStr);
 
-		try {
-			FileOutputStream out = new FileOutputStream(dataFile);
-			moduleSettings.store(out, "List of modules to load on startup");
-			out.flush();
-			out.close();
-		}
-		catch (Exception e) {
-			this.log("Failed to write module properties file.");
-		}
-	}
+        try {
+            FileOutputStream out = new FileOutputStream(dataFile);
+            moduleSettings.store(out, "List of modules to load on startup");
+            out.flush();
+            out.close();
+        }
+        catch (Exception e) {
+            this.log("Failed to write module properties file.");
+        }
+    }
 
 }
