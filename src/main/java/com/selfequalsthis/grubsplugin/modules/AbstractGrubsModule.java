@@ -2,15 +2,15 @@ package com.selfequalsthis.grubsplugin.modules;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.HashMap;
+import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.util.command.CommandMapping;
 
+import com.google.common.base.Optional;
 import com.selfequalsthis.grubsplugin.GrubsPlugin;
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandler;
-import com.selfequalsthis.grubsplugin.command.GrubsCommandManager;
 
 public abstract class AbstractGrubsModule {
 
@@ -27,40 +27,36 @@ public abstract class AbstractGrubsModule {
 		this.logger.info(this.logPrefix + msg);
 	}
 
-	protected void registerCommands(AbstractGrubsCommandHandler executor) {
-		if (executor == null) {
-			this.log("Command handler class is null! Don't forget to instantiate it!");
-		}
-
-		GrubsCommandManager cmdMgr = GrubsCommandManager.getInstance(this.pluginRef, this.game);
-		HashMap<String,Method> commandData = cmdMgr.getCommandData(executor);
-
-		if (commandData == null || commandData.size() == 0) {
-			this.log("No commands found to register.");
+	protected void registerCommands(ArrayList<AbstractGrubsCommandHandler> commandHandlers) {
+		
+		if (commandHandlers.isEmpty()) {
+			this.log("No commands to register.");
 			return;
 		}
 
-		for (String command : commandData.keySet()) {
-			this.log("Registering command '" + command + "'");
+		for (AbstractGrubsCommandHandler command : commandHandlers) {
+			this.log("Registering command '" + command.getCommandName() + "'");
+			this.game.getCommandDispatcher().register(this.pluginRef, command, command.getCommandName());
 		}
-
-		cmdMgr.registerCommands(executor);
 	}
 
-	protected void unregisterCommands(AbstractGrubsCommandHandler executor) {
-		GrubsCommandManager cmdMgr = GrubsCommandManager.getInstance(this.pluginRef, this.game);
-		HashMap<String,Method> commandData = cmdMgr.getCommandData(executor);
-
-		if (commandData == null || commandData.size() == 0) {
+	protected void unregisterCommands(ArrayList<AbstractGrubsCommandHandler> commandHandlers) {
+		
+		if (commandHandlers.isEmpty()) {
+			this.log("No commands to unregister.");
 			return;
 		}
 
-		for (String command : commandData.keySet()) {
-			this.log("Unregistering command '" + command + "'");
+		for (AbstractGrubsCommandHandler command : commandHandlers) {
+			
+			Optional<? extends CommandMapping> optCmdMap = this.game.getCommandDispatcher().get(command.getCommandName());
+			if (optCmdMap.isPresent()) {
+				this.log("Unregistering command '" + command.getCommandName() + "'");
+				this.game.getCommandDispatcher().removeMapping(optCmdMap.get());
+			}
 		}
-
-		cmdMgr.unregisterCommands(executor);
 	}
+	
 /*
 	protected void registerEventHandlers(Listener listener) {
 		if (listener == null) {

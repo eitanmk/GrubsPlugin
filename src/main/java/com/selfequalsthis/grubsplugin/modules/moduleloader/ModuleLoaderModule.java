@@ -11,6 +11,7 @@ import java.util.Properties;
 import org.spongepowered.api.Game;
 
 import com.selfequalsthis.grubsplugin.GrubsPlugin;
+import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandler;
 import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 
 public class ModuleLoaderModule extends AbstractGrubsModule {
@@ -20,7 +21,8 @@ public class ModuleLoaderModule extends AbstractGrubsModule {
 	public HashMap<String,AbstractGrubsModule> allModules = new HashMap<String,AbstractGrubsModule>();
 	public HashMap<String,AbstractGrubsModule> activeModules = new HashMap<String,AbstractGrubsModule>();
 
-	private ModuleLoaderCommandHandlers commandHandlers;
+	//private ModuleLoaderCommandHandlers commandHandlers;
+	private ArrayList<AbstractGrubsCommandHandler> commandHandlers = new ArrayList<AbstractGrubsCommandHandler>();
 
 	public ModuleLoaderModule(GrubsPlugin plugin, Game game) {
 		this.pluginRef = plugin;
@@ -28,7 +30,8 @@ public class ModuleLoaderModule extends AbstractGrubsModule {
 		this.logger = plugin.getLogger();
 		this.logPrefix = "[ModuleLoaderModule]: ";
 		this.dataFileName = "active-modules.dat";
-		this.commandHandlers = new ModuleLoaderCommandHandlers(this);
+		
+		this.commandHandlers.add(new ModuleLoaderCommandGpmodule(this));
 
 		// all new modules need to be listed here
 		/*
