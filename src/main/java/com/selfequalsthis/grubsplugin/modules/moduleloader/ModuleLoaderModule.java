@@ -25,6 +25,7 @@ public class ModuleLoaderModule extends AbstractGrubsModule {
 	public ModuleLoaderModule(GrubsPlugin plugin, Game game) {
 		this.pluginRef = plugin;
 		this.game = game;
+		this.logger = plugin.getLogger();
 		this.logPrefix = "[ModuleLoaderModule]: ";
 		this.dataFileName = "active-modules.dat";
 		this.commandHandlers = new ModuleLoaderCommandHandlers(this);

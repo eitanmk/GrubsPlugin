@@ -10,6 +10,7 @@ import org.spongepowered.api.util.command.CommandMapping;
 import org.spongepowered.api.util.command.spec.CommandExecutor;
 import org.spongepowered.api.util.command.spec.CommandSpec;
 
+import com.google.common.base.Optional;
 import com.selfequalsthis.grubsplugin.GrubsPlugin;
 import com.selfequalsthis.grubsplugin.annotations.GrubsCommandHandler;
 
@@ -43,8 +44,10 @@ public class GrubsCommandManager {
 	}
 
 	private void unregisterCommand(String name) {
-		CommandMapping cmdMap = (CommandMapping) this.cmdService.get(name);
-		this.cmdService.removeMapping(cmdMap);
+		Optional<? extends CommandMapping> optCmdMap = this.cmdService.get(name);
+		if (optCmdMap.isPresent()) {
+			this.cmdService.removeMapping(optCmdMap.get());
+		}
 	}
 
 	public void registerCommands(AbstractGrubsCommandHandler executor) {

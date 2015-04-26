@@ -6,11 +6,11 @@ import com.selfequalsthis.grubsplugin.command.GrubsCommandInfo;
 
 public class ModuleLoaderCommandHandlers extends AbstractGrubsCommandHandler {
 
-	//private ModuleLoaderModule mlModule;
+	private ModuleLoaderModule mlModule;
 
 	public ModuleLoaderCommandHandlers(ModuleLoaderModule module) {
 		this.moduleRef = module;
-		//this.mlModule = module;
+		this.mlModule = module;
 	}
 
 	@GrubsCommandHandler(

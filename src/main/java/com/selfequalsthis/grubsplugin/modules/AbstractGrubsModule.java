@@ -36,6 +36,7 @@ public abstract class AbstractGrubsModule {
 		HashMap<String,Method> commandData = cmdMgr.getCommandData(executor);
 
 		if (commandData == null || commandData.size() == 0) {
+			this.log("No commands found to register.");
 			return;
 		}
 
