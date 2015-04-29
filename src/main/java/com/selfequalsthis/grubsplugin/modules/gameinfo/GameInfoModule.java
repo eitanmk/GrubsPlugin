@@ -1,6 +1,7 @@
 package com.selfequalsthis.grubsplugin.modules.gameinfo;
 
 import org.spongepowered.api.Game;
+import org.spongepowered.api.world.Location;
 
 import com.selfequalsthis.grubsplugin.GrubsPlugin;
 import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
@@ -14,6 +15,9 @@ public class GameInfoModule extends AbstractGrubsModule {
 		this.logPrefix = "[GameInfoModule]: ";
 
 		this.commandHandlers.add(new GameInfoCommandGettime());
+		this.commandHandlers.add(new GameInfoCommandGetcoords(this, this.game));
+		this.commandHandlers.add(new GameInfoCommandSendcoords(this, this.game));
+
 	}
 
 	@Override
@@ -26,27 +30,7 @@ public class GameInfoModule extends AbstractGrubsModule {
 		this.unregisterCommands(this.commandHandlers);
 	}
 
-	/*
-    public HashMap<String,Integer> matchMaterialName(String name) {
-        HashMap<String,Integer> results = new HashMap<String,Integer>();
-
-        Material[] materialNames = Material.values();
-        for (Material m : materialNames) {
-            if (m.toString().indexOf(name.toUpperCase()) != -1) {
-                results.put(m.toString().toLowerCase(), m.getId());
-            }
-        }
-
-        return results;
-    }
-
-    public String matchMaterialId(int id) {
-        Material material = Material.getMaterial(id);
-        return material.toString().toLowerCase();
-    }
-
-    public String getCoordsStrFromLocation(Location loc) {
-        return "x: " + (int)loc.getX() + ", z: " + (int)loc.getZ() + " Altitude: " + (int)(loc.getY() + 1);
-    }
-	 */
+	public String getCoordsStrFromLocation(Location loc) {
+		return "x: " + loc.getBlockX() + ", z: " + loc.getBlockZ() + " Altitude: " + loc.getBlockY();
+	}
 }

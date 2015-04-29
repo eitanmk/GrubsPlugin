@@ -16,7 +16,6 @@ import org.spongepowered.api.util.command.args.CommandContext;
 import org.spongepowered.api.util.command.spec.CommandSpec;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.Maps;
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommand;
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsSubcommand;
 import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
@@ -28,8 +27,6 @@ public class ModuleLoaderCommandGpmodule extends AbstractGrubsCommand {
 
 	public ModuleLoaderCommandGpmodule(ModuleLoaderModule module) {
 		this.moduleRef = module;
-
-
 	}
 
 	@Override
@@ -39,6 +36,12 @@ public class ModuleLoaderCommandGpmodule extends AbstractGrubsCommand {
 
 	@Override
 	public void init() {
+
+		HashMap<String,String> moduleChoices = new HashMap<String,String>();
+		for (String key : this.moduleRef.allModules.keySet()) {
+			moduleChoices.put(key, key);
+		}
+
 		this.subCommands.put(Arrays.asList("list"), CommandSpec.builder()
 				.setDescription(Texts.of("List status of GrubsPlugin modules"))
 				.setArguments(none())
@@ -47,13 +50,13 @@ public class ModuleLoaderCommandGpmodule extends AbstractGrubsCommand {
 
 		this.subCommands.put(Arrays.asList("enable"), CommandSpec.builder()
 				.setDescription(Texts.of("Enable specified GrubsPlugin module"))
-				.setArguments(seq(choices(Texts.of("moduleName"), Maps.difference(this.moduleRef.allModules, this.moduleRef.activeModules).entriesDiffering())))
+				.setArguments(seq(choices(Texts.of("moduleName"), moduleChoices)))
 				.setExecutor(new EnableSubcommand())
 				.build());
 
 		this.subCommands.put(Arrays.asList("disable"), CommandSpec.builder()
 				.setDescription(Texts.of("Disable specified GrubsPlugin module"))
-				.setArguments(seq(choices(Texts.of("moduleName"), this.moduleRef.activeModules)))
+				.setArguments(seq(choices(Texts.of("moduleName"), moduleChoices)))
 				.setExecutor(new DisableSubcommand())
 				.build());
 

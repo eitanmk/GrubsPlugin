@@ -48,6 +48,8 @@ public class ModuleLoaderModule extends AbstractGrubsModule {
 
 	@Override
 	public void enable() {
+		this.registerCommands(this.commandHandlers);
+
 		ArrayList<String> modulesToLoad = getModulesToLoad();
 		for (String moduleKey : modulesToLoad) {
 			AbstractGrubsModule gm = this.allModules.get(moduleKey);
@@ -57,8 +59,6 @@ public class ModuleLoaderModule extends AbstractGrubsModule {
 				gm.enable();
 			}
 		}
-
-		this.registerCommands(this.commandHandlers);
 	}
 
 	@Override
