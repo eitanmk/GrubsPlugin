@@ -17,7 +17,6 @@ public class GameInfoModule extends AbstractGrubsModule {
 		this.commandHandlers.add(new GameInfoCommandGettime());
 		this.commandHandlers.add(new GameInfoCommandGetcoords(this, this.game));
 		this.commandHandlers.add(new GameInfoCommandSendcoords(this, this.game));
-
 	}
 
 	@Override

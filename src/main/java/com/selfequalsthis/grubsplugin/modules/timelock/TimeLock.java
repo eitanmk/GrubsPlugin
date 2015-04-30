@@ -1,6 +1,6 @@
-package com.selfequalsthis.grubsplugin.modules.gametweaks;
+package com.selfequalsthis.grubsplugin.modules.timelock;
 
-import org.bukkit.World;
+import org.spongepowered.api.world.World;
 
 public class TimeLock implements Runnable {
 
@@ -14,7 +14,7 @@ public class TimeLock implements Runnable {
 
 	@Override
 	public void run() {
-		this.world.setTime(time);
+		this.world.getProperties().setWorldTime(this.time);
 	}
 
 }

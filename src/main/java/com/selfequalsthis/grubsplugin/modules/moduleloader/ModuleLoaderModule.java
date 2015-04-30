@@ -13,6 +13,7 @@ import org.spongepowered.api.Game;
 import com.selfequalsthis.grubsplugin.GrubsPlugin;
 import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 import com.selfequalsthis.grubsplugin.modules.gameinfo.GameInfoModule;
+import com.selfequalsthis.grubsplugin.modules.timelock.TimeLockModule;
 
 public class ModuleLoaderModule extends AbstractGrubsModule {
 
@@ -33,15 +34,13 @@ public class ModuleLoaderModule extends AbstractGrubsModule {
 		// all new modules need to be listed here
 		/*
 		this.allModules.put("defendshed", new DefendShedModule(plugin));
-		this.allModules.put("gamefixes", new GameFixesModule(plugin));
 		 */
 		this.allModules.put("gameinfo", new GameInfoModule(plugin, game));
+		this.allModules.put("timelock", new TimeLockModule(plugin, game));
 		/*
-		this.allModules.put("gametweaks",new GameTweaksModule(plugin));
 		this.allModules.put("inventory", new InventoryModule(plugin));
 		this.allModules.put("lasertag", new LaserTagModule(plugin));
 		this.allModules.put("teleport", new TeleportModule(plugin));
-		this.allModules.put("weather", new WeatherControlModule(plugin));
 		this.allModules.put("wirelessredstone", new WirelessRedstoneModule(plugin));
 		 */
 	}
