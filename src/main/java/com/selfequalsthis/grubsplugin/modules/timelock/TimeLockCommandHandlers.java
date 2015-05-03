@@ -19,38 +19,31 @@ import org.spongepowered.api.util.command.spec.CommandSpec;
 import org.spongepowered.api.world.World;
 
 import com.google.common.base.Optional;
-import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommand;
+import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandlers;
 
-public class TimeLockCommandTimelock extends AbstractGrubsCommand {
+public class TimeLockCommandHandlers extends AbstractGrubsCommandHandlers {
 
 	private TimeLockModule moduleRef;
 	private Game game;
 
-	public TimeLockCommandTimelock(TimeLockModule module, Game game) {
+	public TimeLockCommandHandlers(TimeLockModule module, Game game) {
 		this.moduleRef = module;
 		this.game = game;
-	}
 
-	@Override
-	public String getCommandName() {
-		return "timelock";
-	}
-
-	@Override
-	public void init() {
 		HashMap<String,Long> predefinedSettings = new HashMap<String,Long>();
 		predefinedSettings.put("day", 6000L);
 		predefinedSettings.put("night", 18000L);
 		predefinedSettings.put("on", -1L);
 		predefinedSettings.put("off", -2L);
 
-		this.cmdSpec = CommandSpec.builder()
+		this.commands.put("timelock", CommandSpec.builder()
 				.setDescription(Texts.of("Lock/Unlock world time"))
 				.setExtendedDescription(Texts.of("Lock or unlock the current time for this world"))
 				.setArguments(seq(optionalWeak(choices(Texts.of("predefSetting"), predefinedSettings)), optionalWeak(integer(Texts.of("timeValue")))))
 				.setExecutor(new TimelockCommand())
-				.build();
+				.build());
 	}
+
 
 	private class TimelockCommand implements CommandExecutor {
 
@@ -105,6 +98,5 @@ public class TimeLockCommandTimelock extends AbstractGrubsCommand {
 		}
 
 	}
-
 
 }

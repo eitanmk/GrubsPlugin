@@ -14,9 +14,7 @@ public class GameInfoModule extends AbstractGrubsModule {
 		this.logger = plugin.getLogger();
 		this.logPrefix = "[GameInfoModule]: ";
 
-		this.commandHandlers.add(new GameInfoCommandGettime());
-		this.commandHandlers.add(new GameInfoCommandGetcoords(this, this.game));
-		this.commandHandlers.add(new GameInfoCommandSendcoords(this, this.game));
+		this.commandHandlers = new GameInfoCommandHandlers(this, this.game);
 	}
 
 	@Override

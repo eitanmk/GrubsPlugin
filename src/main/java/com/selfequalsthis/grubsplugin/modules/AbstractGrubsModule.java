@@ -2,15 +2,16 @@ package com.selfequalsthis.grubsplugin.modules;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.util.command.CommandMapping;
+import org.spongepowered.api.util.command.spec.CommandSpec;
 
 import com.google.common.base.Optional;
 import com.selfequalsthis.grubsplugin.GrubsPlugin;
-import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommand;
+import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandlers;
 
 public abstract class AbstractGrubsModule {
 
@@ -19,7 +20,7 @@ public abstract class AbstractGrubsModule {
 	protected Game game = null;
 	protected String logPrefix = "";
 	protected String dataFileName = null;
-	protected ArrayList<AbstractGrubsCommand> commandHandlers = new ArrayList<AbstractGrubsCommand>();
+	protected AbstractGrubsCommandHandlers commandHandlers = null;
 
 	public abstract void enable();
 
@@ -29,32 +30,34 @@ public abstract class AbstractGrubsModule {
 		this.logger.info(this.logPrefix + msg);
 	}
 
-	protected void registerCommands(ArrayList<AbstractGrubsCommand> commandHandlers) {
+	protected void registerCommands(AbstractGrubsCommandHandlers commandHandlers) {
 
-		if (commandHandlers.isEmpty()) {
+		HashMap<String,CommandSpec> commands = commandHandlers.getCommands();
+
+		if (commands.isEmpty()) {
 			this.log("No commands to register.");
 			return;
 		}
 
-		for (AbstractGrubsCommand command : commandHandlers) {
-			this.log("Registering command '" + command.getCommandName() + "'");
-			command.init();
-			this.game.getCommandDispatcher().register(this.pluginRef, command.getCommandSpec(), command.getCommandName());
+		for (String commandName : commands.keySet()) {
+			this.log("Registering command '" + commandName + "'");
+			this.game.getCommandDispatcher().register(this.pluginRef, commands.get(commandName), commandName);
 		}
 	}
 
-	protected void unregisterCommands(ArrayList<AbstractGrubsCommand> commandHandlers) {
+	protected void unregisterCommands(AbstractGrubsCommandHandlers commandHandlers) {
 
-		if (commandHandlers.isEmpty()) {
+		HashMap<String,CommandSpec> commands = commandHandlers.getCommands();
+
+		if (commands.isEmpty()) {
 			this.log("No commands to unregister.");
 			return;
 		}
 
-		for (AbstractGrubsCommand command : commandHandlers) {
-
-			Optional<? extends CommandMapping> optCmdMap = this.game.getCommandDispatcher().get(command.getCommandName());
+		for (String commandName : commands.keySet()) {
+			Optional<? extends CommandMapping> optCmdMap = this.game.getCommandDispatcher().get(commandName);
 			if (optCmdMap.isPresent()) {
-				this.log("Unregistering command '" + command.getCommandName() + "'");
+				this.log("Unregistering command '" + commandName + "'");
 				this.game.getCommandDispatcher().removeMapping(optCmdMap.get());
 			}
 		}

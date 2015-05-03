@@ -13,61 +13,56 @@ import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.util.command.args.CommandContext;
+import org.spongepowered.api.util.command.spec.CommandExecutor;
 import org.spongepowered.api.util.command.spec.CommandSpec;
 
 import com.google.common.base.Optional;
-import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommand;
-import com.selfequalsthis.grubsplugin.command.AbstractGrubsSubcommand;
+import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandlers;
 import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 
-public class ModuleLoaderCommandGpmodule extends AbstractGrubsCommand {
+public class ModuleLoaderCommandHandlers extends AbstractGrubsCommandHandlers {
 
 	private ModuleLoaderModule moduleRef;
-	private HashMap<List<String>, CommandSpec> subCommands = new HashMap<List<String>, CommandSpec>();
 
-	public ModuleLoaderCommandGpmodule(ModuleLoaderModule module) {
+	public ModuleLoaderCommandHandlers(ModuleLoaderModule module) {
 		this.moduleRef = module;
-	}
 
-	@Override
-	public String getCommandName() {
-		return "gpmodule";
-	}
-
-	@Override
-	public void init() {
+		HashMap<List<String>, CommandSpec> subCommands = new HashMap<List<String>, CommandSpec>();
 
 		HashMap<String,String> moduleChoices = new HashMap<String,String>();
 		for (String key : this.moduleRef.allModules.keySet()) {
 			moduleChoices.put(key, key);
 		}
 
-		this.subCommands.put(Arrays.asList("list"), CommandSpec.builder()
+		subCommands.put(Arrays.asList("list"), CommandSpec.builder()
 				.setDescription(Texts.of("List status of GrubsPlugin modules"))
 				.setArguments(none())
 				.setExecutor(new ListSubcommand())
 				.build());
 
-		this.subCommands.put(Arrays.asList("enable"), CommandSpec.builder()
+		// TODO dynamic autocomplete
+		subCommands.put(Arrays.asList("enable"), CommandSpec.builder()
 				.setDescription(Texts.of("Enable specified GrubsPlugin module"))
 				.setArguments(seq(choices(Texts.of("moduleName"), moduleChoices)))
 				.setExecutor(new EnableSubcommand())
 				.build());
 
-		this.subCommands.put(Arrays.asList("disable"), CommandSpec.builder()
+		// TODO dynamic autocomplete
+		subCommands.put(Arrays.asList("disable"), CommandSpec.builder()
 				.setDescription(Texts.of("Disable specified GrubsPlugin module"))
 				.setArguments(seq(choices(Texts.of("moduleName"), moduleChoices)))
 				.setExecutor(new DisableSubcommand())
 				.build());
 
-		this.cmdSpec = CommandSpec.builder()
+		this.commands.put("gpmodule", CommandSpec.builder()
 				.setDescription(Texts.of("Manage GrubsPlugin modules"))
 				.setExtendedDescription(Texts.of("List, enable/disable GrubsPlugin modules"))
-				.setChildren(this.subCommands)
-				.build();
+				.setChildren(subCommands)
+				.build());
 	}
 
-	private class ListSubcommand extends AbstractGrubsSubcommand {
+
+	private class ListSubcommand implements CommandExecutor {
 
 		@Override
 		public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
@@ -83,7 +78,7 @@ public class ModuleLoaderCommandGpmodule extends AbstractGrubsCommand {
 
 	}
 
-	private class EnableSubcommand extends AbstractGrubsSubcommand {
+	private class EnableSubcommand implements CommandExecutor {
 
 		@Override
 		public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
@@ -115,7 +110,7 @@ public class ModuleLoaderCommandGpmodule extends AbstractGrubsCommand {
 
 	}
 
-	private class DisableSubcommand extends AbstractGrubsSubcommand {
+	private class DisableSubcommand implements CommandExecutor {
 
 		@Override
 		public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

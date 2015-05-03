@@ -30,7 +30,7 @@ public class ModuleLoaderModule extends AbstractGrubsModule {
 		this.logPrefix = "[ModuleLoaderModule]: ";
 		this.dataFileName = "active-modules.dat";
 
-		this.commandHandlers.add(new ModuleLoaderCommandGpmodule(this));
+		this.commandHandlers = new ModuleLoaderCommandHandlers(this);
 
 		// all new modules need to be listed here
 		/*

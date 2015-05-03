@@ -29,7 +29,7 @@ public class TeleportModule extends AbstractGrubsModule {
 		this.logPrefix = "[TeleportModule]: ";
 		this.dataFileName = "teleports.dat";
 
-		this.commandHandlers.add(new TeleportModuleCommandTpset(this, this.game));
+		this.commandHandlers = new TeleportModuleCommandHandlers(this, this.game);
 		//this.eventListeners = new TeleportEventListeners(this);
 
 		this.playerSpecialLocations.put("last", "No previous location found.");
