@@ -13,6 +13,7 @@ import org.spongepowered.api.Game;
 import com.selfequalsthis.grubsplugin.GrubsPlugin;
 import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 import com.selfequalsthis.grubsplugin.modules.gameinfo.GameInfoModule;
+import com.selfequalsthis.grubsplugin.modules.teleport.TeleportModule;
 import com.selfequalsthis.grubsplugin.modules.timelock.TimeLockModule;
 
 public class ModuleLoaderModule extends AbstractGrubsModule {
@@ -37,10 +38,10 @@ public class ModuleLoaderModule extends AbstractGrubsModule {
 		 */
 		this.allModules.put("gameinfo", new GameInfoModule(plugin, game));
 		this.allModules.put("timelock", new TimeLockModule(plugin, game));
+		this.allModules.put("teleport", new TeleportModule(plugin, game));
 		/*
 		this.allModules.put("inventory", new InventoryModule(plugin));
 		this.allModules.put("lasertag", new LaserTagModule(plugin));
-		this.allModules.put("teleport", new TeleportModule(plugin));
 		this.allModules.put("wirelessredstone", new WirelessRedstoneModule(plugin));
 		 */
 	}

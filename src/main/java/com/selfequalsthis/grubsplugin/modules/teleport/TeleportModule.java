@@ -7,13 +7,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Properties;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.spongepowered.api.Game;
 
+import com.selfequalsthis.grubsplugin.GrubsPlugin;
 import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 
 public class TeleportModule extends AbstractGrubsModule {
@@ -21,18 +17,20 @@ public class TeleportModule extends AbstractGrubsModule {
 	public final static String SEPARATOR = "|||";
 
 	public HashMap<String,String> playerSpecialLocations = new HashMap<String,String>();
-	public HashMap<String,Location> teleportPresets = new HashMap<String,Location>();
+	public HashMap<String,TeleportModuleLocation> teleportPresets = new HashMap<String,TeleportModuleLocation>();
 	private Properties teleportProperties = new Properties();
 
-	private TeleportEventListeners eventListeners;
-	private TeleportCommandHandlers commandHandlers;
+	//private TeleportEventListeners eventListeners;
 
-	public TeleportModule(JavaPlugin plugin) {
+	public TeleportModule(GrubsPlugin plugin, Game game) {
 		this.pluginRef = plugin;
+		this.game = game;
+		this.logger = plugin.getLogger();
 		this.logPrefix = "[TeleportModule]: ";
 		this.dataFileName = "teleports.dat";
-		this.eventListeners = new TeleportEventListeners(this);
-		this.commandHandlers = new TeleportCommandHandlers(this);
+
+		this.commandHandlers.add(new TeleportModuleCommandTpset(this, this.game));
+		//this.eventListeners = new TeleportEventListeners(this);
 
 		this.playerSpecialLocations.put("last", "No previous location found.");
 		this.playerSpecialLocations.put("quit", "No previous quit location found.");
@@ -42,7 +40,7 @@ public class TeleportModule extends AbstractGrubsModule {
 	@Override
 	public void enable() {
 		this.registerCommands(this.commandHandlers);
-		this.registerEventHandlers(this.eventListeners);
+		//this.registerEventHandlers(this.eventListeners);
 
 		File dataFile = this.getDataFile();
 		if (dataFile != null) {
@@ -59,7 +57,7 @@ public class TeleportModule extends AbstractGrubsModule {
 		saveTeleportPresets();
 
 		this.unregisterCommands(this.commandHandlers);
-		this.unregisterEventHandlers(this.eventListeners);
+		//this.unregisterEventHandlers(this.eventListeners);
 	}
 
 	private void loadTeleportPresets() {
@@ -78,15 +76,10 @@ public class TeleportModule extends AbstractGrubsModule {
 				String realKey = (String) key;
 				String rawValue = teleportProperties.getProperty(realKey);
 
-				String[] parts = rawValue.split(",");
-				Location realLoc = new Location(Bukkit.getWorld(parts[0]),
-						Double.parseDouble(parts[1]),
-						Double.parseDouble(parts[2]),
-						Double.parseDouble(parts[3]),
-						Float.parseFloat(parts[4]),
-						Float.parseFloat(parts[5]));
-
-				teleportPresets.put(realKey, realLoc);
+				TeleportModuleLocation loc = new TeleportModuleLocation(this, this.game);
+				if (loc.fromPropValue(rawValue)) {
+					teleportPresets.put(realKey, loc);
+				}
 			}
 		}
 		catch (IOException ex) {
@@ -101,29 +94,12 @@ public class TeleportModule extends AbstractGrubsModule {
 			return;
 		}
 
-		double locParts[] = new double[3];
-		float  viewParts[] = new float[2];
-		String settingStr = "";
-
 		// empty the teleport properties file
 		teleportProperties.clear();
 
 		for (String s : teleportPresets.keySet()) {
-			Location curLoc = teleportPresets.get(s);
-			locParts[0] = curLoc.getX();
-			locParts[1] = curLoc.getY();
-			locParts[2] = curLoc.getZ();
-			viewParts[0] = curLoc.getYaw();
-			viewParts[1] = curLoc.getPitch();
-
-			settingStr = curLoc.getWorld().getName() +  "," +
-					Double.toString(locParts[0]) + "," +
-					Double.toString(locParts[1]) + "," +
-					Double.toString(locParts[2]) + "," +
-					Float.toString(viewParts[0]) + "," +
-					Float.toString(viewParts[1]);
-
-			teleportProperties.put(s, settingStr);
+			TeleportModuleLocation loc = teleportPresets.get(s);
+			teleportProperties.put(s, loc.toPropValue());
 		}
 
 		this.log("Writing Teleport presets file.");
@@ -139,6 +115,7 @@ public class TeleportModule extends AbstractGrubsModule {
 		}
 	}
 
+	/*
 	private String getPlayerSpecialLocationKey(String name, String type) {
 		if (this.playerSpecialLocations.containsKey(type)) {
 			return name + TeleportModule.SEPARATOR + type;
@@ -166,5 +143,6 @@ public class TeleportModule extends AbstractGrubsModule {
 		this.savePlayerSpecialLocation(player, "last");
 		player.teleport(location, TeleportCause.PLUGIN);
 	}
+	 */
 
 }
