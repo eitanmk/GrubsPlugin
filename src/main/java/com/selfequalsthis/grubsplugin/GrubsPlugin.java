@@ -4,9 +4,9 @@ import java.io.File;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.state.ServerStartingEvent;
-import org.spongepowered.api.event.state.ServerStoppingEvent;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.state.GameStartingServerEvent;
+import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.config.ConfigDir;
 
@@ -39,8 +39,8 @@ public class GrubsPlugin {
 		return this.dataFolder;
 	}
 
-	@Subscribe
-	public void onServerStarting(ServerStartingEvent event) {
+	@Listener
+	public void onServerStarting(GameStartingServerEvent event) {
 		this.logger.info(this.logPrefix + "Enabling plugin...");
 
 		File dataDir = this.getDataFolder();
@@ -56,8 +56,8 @@ public class GrubsPlugin {
 		this.logger.info(this.logPrefix + "Plugin is enabled.");
 	}
 
-	@Subscribe
-	public void onServerStopping(ServerStoppingEvent event) {
+	@Listener
+	public void onServerStopping(GameStoppingServerEvent event) {
 		this.logger.info(this.logPrefix + "Disabling plugin...");
 
 		this.logger.info(this.logPrefix + "Disabling module loader...");

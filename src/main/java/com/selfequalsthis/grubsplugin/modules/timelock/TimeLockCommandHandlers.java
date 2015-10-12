@@ -6,9 +6,10 @@ import static org.spongepowered.api.util.command.args.GenericArguments.optionalW
 import static org.spongepowered.api.util.command.args.GenericArguments.seq;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 import org.spongepowered.api.Game;
-import org.spongepowered.api.entity.player.Player;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
@@ -18,7 +19,6 @@ import org.spongepowered.api.util.command.spec.CommandExecutor;
 import org.spongepowered.api.util.command.spec.CommandSpec;
 import org.spongepowered.api.world.World;
 
-import com.google.common.base.Optional;
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandlers;
 
 public class TimeLockCommandHandlers extends AbstractGrubsCommandHandlers {
@@ -37,10 +37,10 @@ public class TimeLockCommandHandlers extends AbstractGrubsCommandHandlers {
 		predefinedSettings.put("off", -2L);
 
 		this.commands.put("timelock", CommandSpec.builder()
-				.setDescription(Texts.of("Lock/Unlock world time"))
-				.setExtendedDescription(Texts.of("Lock or unlock the current time for this world"))
-				.setArguments(seq(optionalWeak(choices(Texts.of("predefSetting"), predefinedSettings)), optionalWeak(integer(Texts.of("timeValue")))))
-				.setExecutor(new TimelockCommand())
+				.description(Texts.of("Lock/Unlock world time"))
+				.extendedDescription(Texts.of("Lock or unlock the current time for this world"))
+				.arguments(seq(optionalWeak(choices(Texts.of("predefSetting"), predefinedSettings)), optionalWeak(integer(Texts.of("timeValue")))))
+				.executor(new TimelockCommand())
 				.build());
 	}
 

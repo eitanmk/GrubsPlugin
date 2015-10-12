@@ -7,6 +7,7 @@ import static org.spongepowered.api.util.command.args.GenericArguments.seq;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.command.CommandException;
@@ -16,7 +17,6 @@ import org.spongepowered.api.util.command.args.CommandContext;
 import org.spongepowered.api.util.command.spec.CommandExecutor;
 import org.spongepowered.api.util.command.spec.CommandSpec;
 
-import com.google.common.base.Optional;
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandlers;
 import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 
@@ -35,29 +35,29 @@ public class ModuleLoaderCommandHandlers extends AbstractGrubsCommandHandlers {
 		}
 
 		subCommands.put(Arrays.asList("list"), CommandSpec.builder()
-				.setDescription(Texts.of("List status of GrubsPlugin modules"))
-				.setArguments(none())
-				.setExecutor(new ListSubcommand())
+				.description(Texts.of("List status of GrubsPlugin modules"))
+				.arguments(none())
+				.executor(new ListSubcommand())
 				.build());
 
 		// TODO dynamic autocomplete
 		subCommands.put(Arrays.asList("enable"), CommandSpec.builder()
-				.setDescription(Texts.of("Enable specified GrubsPlugin module"))
-				.setArguments(seq(choices(Texts.of("moduleName"), moduleChoices)))
-				.setExecutor(new EnableSubcommand())
+				.description(Texts.of("Enable specified GrubsPlugin module"))
+				.arguments(seq(choices(Texts.of("moduleName"), moduleChoices)))
+				.executor(new EnableSubcommand())
 				.build());
 
 		// TODO dynamic autocomplete
 		subCommands.put(Arrays.asList("disable"), CommandSpec.builder()
-				.setDescription(Texts.of("Disable specified GrubsPlugin module"))
-				.setArguments(seq(choices(Texts.of("moduleName"), moduleChoices)))
-				.setExecutor(new DisableSubcommand())
+				.description(Texts.of("Disable specified GrubsPlugin module"))
+				.arguments(seq(choices(Texts.of("moduleName"), moduleChoices)))
+				.executor(new DisableSubcommand())
 				.build());
 
 		this.commands.put("gpmodule", CommandSpec.builder()
-				.setDescription(Texts.of("Manage GrubsPlugin modules"))
-				.setExtendedDescription(Texts.of("List, enable/disable GrubsPlugin modules"))
-				.setChildren(subCommands)
+				.description(Texts.of("Manage GrubsPlugin modules"))
+				.extendedDescription(Texts.of("List, enable/disable GrubsPlugin modules"))
+				.children(subCommands)
 				.build());
 	}
 

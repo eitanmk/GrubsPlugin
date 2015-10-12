@@ -5,10 +5,11 @@ import static org.spongepowered.api.util.command.args.GenericArguments.seq;
 import static org.spongepowered.api.util.command.args.GenericArguments.string;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Set;
 
 import org.spongepowered.api.Game;
-import org.spongepowered.api.entity.player.Player;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
@@ -17,7 +18,6 @@ import org.spongepowered.api.util.command.args.CommandContext;
 import org.spongepowered.api.util.command.spec.CommandExecutor;
 import org.spongepowered.api.util.command.spec.CommandSpec;
 
-import com.google.common.base.Optional;
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandlers;
 
 public class TeleportModuleCommandHandlers extends AbstractGrubsCommandHandlers {
@@ -30,29 +30,29 @@ public class TeleportModuleCommandHandlers extends AbstractGrubsCommandHandlers 
 		this.game = game;
 
 		this.commands.put("tpset", CommandSpec.builder()
-				.setDescription(Texts.of("Set a new teleport preset"))
-				.setArguments(seq(string(Texts.of("name"))))
-				.setExecutor(new TpsetCommand())
+				.description(Texts.of("Set a new teleport preset"))
+				.arguments(seq(string(Texts.of("name"))))
+				.executor(new TpsetCommand())
 				.build());
 
 		this.commands.put("tplist", CommandSpec.builder()
-				.setDescription(Texts.of("List teleport presets"))
-				.setArguments(none())
-				.setExecutor(new TplistCommand())
+				.description(Texts.of("List teleport presets"))
+				.arguments(none())
+				.executor(new TplistCommand())
 				.build());
 
 		// TODO dynamic autocomplete
 		this.commands.put("tpdel", CommandSpec.builder()
-				.setDescription(Texts.of("Delete a teleport preset"))
-				.setArguments(seq(string(Texts.of("name"))))
-				.setExecutor(new TpdelCommand())
+				.description(Texts.of("Delete a teleport preset"))
+				.arguments(seq(string(Texts.of("name"))))
+				.executor(new TpdelCommand())
 				.build());
 
 		// TODO dynamic autocomplete
 		this.commands.put("goto", CommandSpec.builder()
-				.setDescription(Texts.of("Go to a teleport preset location"))
-				.setArguments(seq(string(Texts.of("name"))))
-				.setExecutor(new GotoCommand())
+				.description(Texts.of("Go to a teleport preset location"))
+				.arguments(seq(string(Texts.of("name"))))
+				.executor(new GotoCommand())
 				.build());
 	}
 
@@ -161,7 +161,7 @@ public class TeleportModuleCommandHandlers extends AbstractGrubsCommandHandlers 
 		public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 
 			if (src instanceof Player) {
-				Player p = (Player) src;
+				//Player p = (Player) src;
 			}
 
 			return CommandResult.empty();

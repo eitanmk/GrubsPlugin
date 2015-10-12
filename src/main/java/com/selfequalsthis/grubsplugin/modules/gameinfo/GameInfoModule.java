@@ -2,6 +2,7 @@ package com.selfequalsthis.grubsplugin.modules.gameinfo;
 
 import org.spongepowered.api.Game;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import com.selfequalsthis.grubsplugin.GrubsPlugin;
 import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
@@ -27,7 +28,7 @@ public class GameInfoModule extends AbstractGrubsModule {
 		this.unregisterCommands(this.commandHandlers);
 	}
 
-	public String getCoordsStrFromLocation(Location loc) {
+	public String getCoordsStrFromLocation(Location<World> loc) {
 		return "x: " + loc.getBlockX() + ", z: " + loc.getBlockZ() + " Altitude: " + loc.getBlockY();
 	}
 }

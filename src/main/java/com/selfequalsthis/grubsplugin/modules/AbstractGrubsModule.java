@@ -3,13 +3,13 @@ package com.selfequalsthis.grubsplugin.modules;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.util.command.CommandMapping;
 import org.spongepowered.api.util.command.spec.CommandSpec;
 
-import com.google.common.base.Optional;
 import com.selfequalsthis.grubsplugin.GrubsPlugin;
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandlers;
 

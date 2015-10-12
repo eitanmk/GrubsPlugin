@@ -1,12 +1,13 @@
 package com.selfequalsthis.grubsplugin.modules.teleport;
 
+import java.util.Optional;
+
 import org.spongepowered.api.Game;
-import org.spongepowered.api.entity.player.Player;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.flowpowered.math.vector.Vector3d;
-import com.google.common.base.Optional;
 
 public class TeleportModuleLocation {
 
@@ -14,7 +15,7 @@ public class TeleportModuleLocation {
 	private Game game;
 
 	private World world;
-	private Location location;
+	private Location<World> location;
 	private Vector3d rotation;
 
 	public TeleportModuleLocation(TeleportModule module, Game game) {
@@ -39,7 +40,7 @@ public class TeleportModuleLocation {
 
 		this.world = optWorld.get();
 
-		this.location = new Location(this.world,
+		this.location = new Location<World>(this.world,
 				Double.parseDouble(parts[1]),
 				Double.parseDouble(parts[2]),
 				Double.parseDouble(parts[3]));

@@ -4,8 +4,10 @@ import static org.spongepowered.api.util.command.args.GenericArguments.none;
 import static org.spongepowered.api.util.command.args.GenericArguments.optional;
 import static org.spongepowered.api.util.command.args.GenericArguments.player;
 
+import java.util.Optional;
+
 import org.spongepowered.api.Game;
-import org.spongepowered.api.entity.player.Player;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
@@ -14,7 +16,6 @@ import org.spongepowered.api.util.command.args.CommandContext;
 import org.spongepowered.api.util.command.spec.CommandExecutor;
 import org.spongepowered.api.util.command.spec.CommandSpec;
 
-import com.google.common.base.Optional;
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandlers;
 
 public class GameInfoCommandHandlers extends AbstractGrubsCommandHandlers {
@@ -27,22 +28,22 @@ public class GameInfoCommandHandlers extends AbstractGrubsCommandHandlers {
 		this.game = game;
 
 		this.commands.put("gettime", CommandSpec.builder()
-				.setDescription(Texts.of("Get current time"))
-				.setExtendedDescription(Texts.of("Get time for current world in ticks"))
-				.setArguments(none())
-				.setExecutor(new GettimeCommand())
+				.description(Texts.of("Get current time"))
+				.extendedDescription(Texts.of("Get time for current world in ticks"))
+				.arguments(none())
+				.executor(new GettimeCommand())
 				.build());
 
 		this.commands.put("getcoords", CommandSpec.builder()
-				.setDescription(Texts.of("Get coordinates for self or another player"))
-				.setArguments(optional(player(Texts.of("playerName"), this.game)))
-				.setExecutor(new GetcoordsCommand())
+				.description(Texts.of("Get coordinates for self or another player"))
+				.arguments(optional(player(Texts.of("playerName"), this.game)))
+				.executor(new GetcoordsCommand())
 				.build());
 
 		this.commands.put("sendcoords", CommandSpec.builder()
-				.setDescription(Texts.of("Send coordinates to another player"))
-				.setArguments(player(Texts.of("playerName"), this.game))
-				.setExecutor(new SendcoordsCommand())
+				.description(Texts.of("Send coordinates to another player"))
+				.arguments(player(Texts.of("playerName"), this.game))
+				.executor(new SendcoordsCommand())
 				.build());
 	}
 

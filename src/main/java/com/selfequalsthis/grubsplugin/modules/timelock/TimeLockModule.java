@@ -1,11 +1,11 @@
 package com.selfequalsthis.grubsplugin.modules.timelock;
 
+import java.util.concurrent.TimeUnit;
+
 import org.spongepowered.api.Game;
-import org.spongepowered.api.service.scheduler.SynchronousScheduler;
 import org.spongepowered.api.service.scheduler.Task;
 import org.spongepowered.api.world.World;
 
-import com.google.common.base.Optional;
 import com.selfequalsthis.grubsplugin.GrubsPlugin;
 import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 
@@ -36,16 +36,11 @@ public class TimeLockModule extends AbstractGrubsModule {
 	public void lockTime(World world, long time) {
 		this.unlockTime();
 		world.getProperties().setWorldTime(time);
-		Optional<SynchronousScheduler> scheduler = this.game.getServiceManager().provide(SynchronousScheduler.class);
-		if (scheduler.isPresent()) {
-			Optional<Task> scheduledTask = scheduler.get().runRepeatingTaskAfter(this.pluginRef, new TimeLock(world, time), 100L, 10L);
-			if (scheduledTask.isPresent()) {
-				this.timeLockTask = scheduledTask.get();
-			}
-			else {
-				this.log("Failed to start repeating task.");
-			}
-		}
+		this.timeLockTask = this.game.getScheduler().createTaskBuilder()
+			.interval(5L, TimeUnit.SECONDS)
+			.delay(10L, TimeUnit.MILLISECONDS)
+			.name("TimeLockModule - Time Lock Task")
+			.submit(this.pluginRef);
 	}
 
 	public void unlockTime() {
