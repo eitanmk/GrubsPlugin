@@ -4,15 +4,6 @@ build/*
 #ignore the artifacts
 artifact/*
 
-#don't assume any eclipse classpath
-.classpath
-
-#ignore the eclipse project
-.project
-
-#ignore eclipse settings
-.settings
-
 #ignore stupid OSX files
 .DS_Store
 
