@@ -37,6 +37,7 @@ public class TimeLockModule extends AbstractGrubsModule {
 		this.unlockTime();
 		world.getProperties().setWorldTime(time);
 		this.timeLockTask = this.game.getScheduler().createTaskBuilder()
+			.execute(new TimeLock(world, time))
 			.interval(5L, TimeUnit.SECONDS)
 			.delay(10L, TimeUnit.MILLISECONDS)
 			.name("TimeLockModule - Time Lock Task")
