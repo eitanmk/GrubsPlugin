@@ -1,15 +1,19 @@
 package com.selfequalsthis.grubsplugin.modules.moduleloader;
 
-import static org.spongepowered.api.util.command.args.GenericArguments.choices;
-import static org.spongepowered.api.util.command.args.GenericArguments.none;
 import static org.spongepowered.api.util.command.args.GenericArguments.seq;
+import static org.spongepowered.api.util.command.args.GenericArguments.string;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import org.spongepowered.api.service.pagination.PaginationService;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.action.TextActions;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
@@ -23,34 +27,23 @@ import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
 public class ModuleLoaderCommandHandlers extends AbstractGrubsCommandHandlers {
 
 	private ModuleLoaderModule moduleRef;
+	private PaginationService paginationService;
 
 	public ModuleLoaderCommandHandlers(ModuleLoaderModule module) {
 		this.moduleRef = module;
+		this.paginationService = this.moduleRef.getGame().getServiceManager().provide(PaginationService.class).get();
 
 		HashMap<List<String>, CommandSpec> subCommands = new HashMap<List<String>, CommandSpec>();
 
-		HashMap<String,String> moduleChoices = new HashMap<String,String>();
-		for (String key : this.moduleRef.allModules.keySet()) {
-			moduleChoices.put(key, key);
-		}
-
-		subCommands.put(Arrays.asList("list"), CommandSpec.builder()
-				.description(Texts.of("List status of GrubsPlugin modules"))
-				.arguments(none())
-				.executor(new ListSubcommand())
-				.build());
-
-		// TODO dynamic autocomplete
 		subCommands.put(Arrays.asList("enable"), CommandSpec.builder()
 				.description(Texts.of("Enable specified GrubsPlugin module"))
-				.arguments(seq(choices(Texts.of("moduleName"), moduleChoices)))
+				.arguments(seq(string(Texts.of("moduleName"))))
 				.executor(new EnableSubcommand())
 				.build());
 
-		// TODO dynamic autocomplete
 		subCommands.put(Arrays.asList("disable"), CommandSpec.builder()
 				.description(Texts.of("Disable specified GrubsPlugin module"))
-				.arguments(seq(choices(Texts.of("moduleName"), moduleChoices)))
+				.arguments(seq(string(Texts.of("moduleName"))))
 				.executor(new DisableSubcommand())
 				.build());
 
@@ -58,6 +51,7 @@ public class ModuleLoaderCommandHandlers extends AbstractGrubsCommandHandlers {
 				.description(Texts.of("Manage GrubsPlugin modules"))
 				.extendedDescription(Texts.of("List, enable/disable GrubsPlugin modules"))
 				.children(subCommands)
+				.executor(new ListSubcommand())
 				.build());
 	}
 
@@ -66,13 +60,31 @@ public class ModuleLoaderCommandHandlers extends AbstractGrubsCommandHandlers {
 
 		@Override
 		public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-			String resp = "";
-			String separator = "";
+			List<Text> contents = new ArrayList<>();
 			for (String key : moduleRef.allModules.keySet()) {
-				resp = resp + separator + key + (moduleRef.activeModules.containsKey(key) ? "(X)" : "( )");
-				separator = " ";
+				boolean enabled = moduleRef.activeModules.containsKey(key);
+				String statusText = enabled ? "[X]" : "[ ]";
+				String actionText = enabled ? "Disable" : "Enable";
+				String commandText = "/gpmodule " + (enabled ? "disable" : "enable") + " " + key;
+				Text pageItem = Texts.builder(statusText)
+						.append(Texts.of(" "))
+						.append(Texts.of(key))
+						.append(Texts.of(" | "))
+						.append(
+							Texts.builder(actionText)
+								.color(enabled ? TextColors.DARK_RED : TextColors.GREEN)
+								.onClick(TextActions.runCommand(commandText))
+								.build()
+						)
+						.build();
+				contents.add(pageItem);
 			}
-			src.sendMessage(Texts.of("Modules: " + resp + "."));
+
+			paginationService.builder()
+				.title(Texts.of("GrubsPlugin Modules"))
+				.contents(contents)
+				.sendTo(src);
+
 			return CommandResult.success();
 		}
 

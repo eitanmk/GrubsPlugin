@@ -30,6 +30,10 @@ public abstract class AbstractGrubsModule {
 		this.logger.info(this.logPrefix + msg);
 	}
 
+	public Game getGame() {
+		return this.game;
+	}
+
 	protected void registerCommands(AbstractGrubsCommandHandlers commandHandlers) {
 
 		HashMap<String,CommandSpec> commands = commandHandlers.getCommands();
