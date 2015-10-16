@@ -1,13 +1,23 @@
 package com.selfequalsthis.grubsplugin.module;
 
 import com.selfequalsthis.grubsplugin.AbstractGrubsComponent;
+import com.selfequalsthis.grubsplugin.event.AbstractGrubsEventListeners;
 
 public abstract class AbstractGrubsModule extends AbstractGrubsComponent {
 
+	public AbstractGrubsEventListeners eventListeners;
+	
 	public abstract void enable();
 	public abstract void disable();
 
-
+	protected void registerEventHandlers(AbstractGrubsEventListeners listeners) {
+		this.game.getEventManager().registerListeners(this.pluginRef, listeners);
+	}
+	
+	protected void unregisterEventHandlers(AbstractGrubsEventListeners listeners) {
+		this.game.getEventManager().unregisterListeners(listeners);
+	}
+	
 	/*
 	 * protected void registerEventHandlers(Listener listener) { if (listener ==
 	 * null) {
