@@ -1,4 +1,4 @@
-package com.selfequalsthis.grubsplugin.modules.teleport;
+package com.selfequalsthis.grubsplugin.module.teleport;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,7 +10,7 @@ import java.util.Properties;
 import org.spongepowered.api.Game;
 
 import com.selfequalsthis.grubsplugin.GrubsPlugin;
-import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
+import com.selfequalsthis.grubsplugin.module.AbstractGrubsModule;
 
 public class TeleportModule extends AbstractGrubsModule {
 

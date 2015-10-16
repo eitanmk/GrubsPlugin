@@ -1,4 +1,4 @@
-package com.selfequalsthis.grubsplugin.modules.gameinfo;
+package com.selfequalsthis.grubsplugin.module.gameinfo;
 
 import static org.spongepowered.api.util.command.args.GenericArguments.none;
 import static org.spongepowered.api.util.command.args.GenericArguments.optional;

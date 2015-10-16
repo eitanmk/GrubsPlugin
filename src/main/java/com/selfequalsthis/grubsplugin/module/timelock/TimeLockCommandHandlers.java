@@ -1,4 +1,4 @@
-package com.selfequalsthis.grubsplugin.modules.timelock;
+package com.selfequalsthis.grubsplugin.module.timelock;
 
 import static org.spongepowered.api.util.command.args.GenericArguments.choices;
 import static org.spongepowered.api.util.command.args.GenericArguments.integer;

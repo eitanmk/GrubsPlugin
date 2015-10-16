@@ -1,4 +1,4 @@
-package com.selfequalsthis.grubsplugin.modules.timelock;
+package com.selfequalsthis.grubsplugin.module.timelock;
 
 import java.util.concurrent.TimeUnit;
 
@@ -7,7 +7,7 @@ import org.spongepowered.api.service.scheduler.Task;
 import org.spongepowered.api.world.World;
 
 import com.selfequalsthis.grubsplugin.GrubsPlugin;
-import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
+import com.selfequalsthis.grubsplugin.module.AbstractGrubsModule;
 
 public class TimeLockModule extends AbstractGrubsModule {
 

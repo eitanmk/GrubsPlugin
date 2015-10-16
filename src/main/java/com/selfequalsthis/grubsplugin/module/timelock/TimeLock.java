@@ -1,4 +1,4 @@
-package com.selfequalsthis.grubsplugin.modules.timelock;
+package com.selfequalsthis.grubsplugin.module.timelock;
 
 import org.spongepowered.api.world.World;
 

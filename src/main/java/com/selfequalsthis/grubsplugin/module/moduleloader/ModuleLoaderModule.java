@@ -1,4 +1,4 @@
-package com.selfequalsthis.grubsplugin.modules.moduleloader;
+package com.selfequalsthis.grubsplugin.module.moduleloader;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,10 +11,10 @@ import java.util.Properties;
 import org.spongepowered.api.Game;
 
 import com.selfequalsthis.grubsplugin.GrubsPlugin;
-import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
-import com.selfequalsthis.grubsplugin.modules.gameinfo.GameInfoModule;
-import com.selfequalsthis.grubsplugin.modules.teleport.TeleportModule;
-import com.selfequalsthis.grubsplugin.modules.timelock.TimeLockModule;
+import com.selfequalsthis.grubsplugin.module.AbstractGrubsModule;
+import com.selfequalsthis.grubsplugin.module.gameinfo.GameInfoModule;
+import com.selfequalsthis.grubsplugin.module.teleport.TeleportModule;
+import com.selfequalsthis.grubsplugin.module.timelock.TimeLockModule;
 
 public class ModuleLoaderModule extends AbstractGrubsModule {
 

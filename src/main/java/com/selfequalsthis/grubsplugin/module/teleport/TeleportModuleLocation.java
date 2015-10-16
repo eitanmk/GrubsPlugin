@@ -1,4 +1,4 @@
-package com.selfequalsthis.grubsplugin.modules.teleport;
+package com.selfequalsthis.grubsplugin.module.teleport;
 
 import java.util.Optional;
 

@@ -1,11 +1,11 @@
-package com.selfequalsthis.grubsplugin.modules.gameinfo;
+package com.selfequalsthis.grubsplugin.module.gameinfo;
 
 import org.spongepowered.api.Game;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.selfequalsthis.grubsplugin.GrubsPlugin;
-import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
+import com.selfequalsthis.grubsplugin.module.AbstractGrubsModule;
 
 public class GameInfoModule extends AbstractGrubsModule {
 

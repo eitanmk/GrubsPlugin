@@ -1,12 +1,9 @@
-package com.selfequalsthis.grubsplugin.modules.moduleloader;
+package com.selfequalsthis.grubsplugin.module.moduleloader;
 
 import static org.spongepowered.api.util.command.args.GenericArguments.seq;
 import static org.spongepowered.api.util.command.args.GenericArguments.string;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 
 import org.spongepowered.api.service.pagination.PaginationService;
@@ -22,7 +19,7 @@ import org.spongepowered.api.util.command.spec.CommandExecutor;
 import org.spongepowered.api.util.command.spec.CommandSpec;
 
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandlers;
-import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
+import com.selfequalsthis.grubsplugin.module.AbstractGrubsModule;
 
 public class ModuleLoaderCommandHandlers extends AbstractGrubsCommandHandlers {
 
@@ -33,24 +30,21 @@ public class ModuleLoaderCommandHandlers extends AbstractGrubsCommandHandlers {
 		this.moduleRef = module;
 		this.paginationService = this.moduleRef.getGame().getServiceManager().provide(PaginationService.class).get();
 
-		HashMap<List<String>, CommandSpec> subCommands = new HashMap<List<String>, CommandSpec>();
-
-		subCommands.put(Arrays.asList("enable"), CommandSpec.builder()
-				.description(Texts.of("Enable specified GrubsPlugin module"))
-				.arguments(seq(string(Texts.of("moduleName"))))
-				.executor(new EnableSubcommand())
-				.build());
-
-		subCommands.put(Arrays.asList("disable"), CommandSpec.builder()
-				.description(Texts.of("Disable specified GrubsPlugin module"))
-				.arguments(seq(string(Texts.of("moduleName"))))
-				.executor(new DisableSubcommand())
-				.build());
-
 		this.commands.put("gpmodule", CommandSpec.builder()
 				.description(Texts.of("Manage GrubsPlugin modules"))
 				.extendedDescription(Texts.of("List, enable/disable GrubsPlugin modules"))
-				.children(subCommands)
+				.child(CommandSpec.builder()
+						.description(Texts.of("Enable specified GrubsPlugin module"))
+						.arguments(seq(string(Texts.of("moduleName"))))
+						.executor(new EnableSubcommand())
+						.build(),
+					"enable")
+				.child(CommandSpec.builder()
+						.description(Texts.of("Disable specified GrubsPlugin module"))
+						.arguments(seq(string(Texts.of("moduleName"))))
+						.executor(new DisableSubcommand())
+						.build(),
+					"disable")
 				.executor(new ListSubcommand())
 				.build());
 	}
@@ -60,7 +54,7 @@ public class ModuleLoaderCommandHandlers extends AbstractGrubsCommandHandlers {
 
 		@Override
 		public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-			List<Text> contents = new ArrayList<>();
+			ArrayList<Text> contents = new ArrayList<Text>();
 			for (String key : moduleRef.allModules.keySet()) {
 				boolean enabled = moduleRef.activeModules.containsKey(key);
 				String statusText = enabled ? "[X]" : "[ ]";

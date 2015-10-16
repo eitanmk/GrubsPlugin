@@ -1,4 +1,4 @@
-package com.selfequalsthis.grubsplugin.modules.teleport;
+package com.selfequalsthis.grubsplugin.module.teleport;
 
 import static org.spongepowered.api.util.command.args.GenericArguments.none;
 import static org.spongepowered.api.util.command.args.GenericArguments.seq;

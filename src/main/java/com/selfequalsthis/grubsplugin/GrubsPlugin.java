@@ -11,8 +11,10 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.config.ConfigDir;
 
 import com.google.inject.Inject;
-import com.selfequalsthis.grubsplugin.modules.AbstractGrubsModule;
-import com.selfequalsthis.grubsplugin.modules.moduleloader.ModuleLoaderModule;
+import com.selfequalsthis.grubsplugin.module.AbstractGrubsModule;
+import com.selfequalsthis.grubsplugin.module.moduleloader.ModuleLoaderModule;
+import com.selfequalsthis.grubsplugin.service.AbstractGrubsService;
+import com.selfequalsthis.grubsplugin.service.servicemanager.ServiceManagerService;
 
 @Plugin(id = "grubsplugin", name = "GrubsPlugin", version = "1.0")
 public class GrubsPlugin {
@@ -29,6 +31,7 @@ public class GrubsPlugin {
 	@Inject
 	private Game game;
 
+	private AbstractGrubsService serviceManager;
 	private AbstractGrubsModule moduleLoader;
 
 	public Logger getLogger() {
@@ -48,6 +51,10 @@ public class GrubsPlugin {
 			this.logger.info(this.logPrefix + "Creating plugin data directory: " + dataDir.toString());
 			dataDir.mkdir();
 		}
+		
+		this.logger.info(this.logPrefix + "Initializing services...");
+		this.serviceManager = new ServiceManagerService(this, this.game);
+		this.serviceManager.startup();
 
 		this.logger.info(this.logPrefix + "Initializing module loader...");
 		this.moduleLoader = new ModuleLoaderModule(this, this.game);
@@ -62,6 +69,9 @@ public class GrubsPlugin {
 
 		this.logger.info(this.logPrefix + "Disabling module loader...");
 		this.moduleLoader.disable();
+		
+		this.logger.info(this.logPrefix + "Disabling services...");
+		this.serviceManager.shutdown();
 
 		this.logger.info(this.logPrefix + "Plugin is disabled.");
 	}
