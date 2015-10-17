@@ -7,6 +7,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.DisplaceEntityEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -15,11 +16,13 @@ import com.selfequalsthis.grubsplugin.service.RegionService;
 
 public class RegionAnnouncerEventListeners extends AbstractGrubsEventListeners {
 
+	private RegionAnnouncerModule moduleRef;
 	private RegionService regionService = null;
 	private GrubsPlayerRegionTracker playerTracker = null;
 
 	public RegionAnnouncerEventListeners(RegionAnnouncerModule module) {
-		Optional<RegionService> optService = module.getGame().getServiceManager().provide(RegionService.class);
+		this.moduleRef = module;
+		Optional<RegionService> optService = this.moduleRef.getGame().getServiceManager().provide(RegionService.class);
 		if (optService.isPresent()) {
 			this.regionService = optService.get();
 		}
@@ -31,11 +34,11 @@ public class RegionAnnouncerEventListeners extends AbstractGrubsEventListeners {
 	}
 
 	private void announceEnter(Player player, String region) {
-		player.sendMessage(Texts.of("Entering region '" + region + "'"));
+		player.sendMessage(Texts.of(TextColors.GREEN, "Entering region '" + region + "'"));
 	}
 
 	private void announceLeave(Player player, String region) {
-		player.sendMessage(Texts.of("Leaving region '" + region + "'"));
+		player.sendMessage(Texts.of(TextColors.GREEN, "Leaving region '" + region + "'"));
 	}
 
 	@Listener
@@ -69,7 +72,7 @@ public class RegionAnnouncerEventListeners extends AbstractGrubsEventListeners {
 
 		// if they are on the same block, no need to update region
 		//  this case happens since this event is fired if a player just moves their head
-		if (fromLocation.getBlock().equals(toLocation.getBlock())) {
+		if (fromLocation.getBlockPosition().equals(toLocation.getBlockPosition())) {
 			return;
 		}
 
