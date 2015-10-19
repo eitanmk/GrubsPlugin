@@ -16,6 +16,7 @@ import com.selfequalsthis.grubsplugin.module.gameinfo.GameInfoModule;
 import com.selfequalsthis.grubsplugin.module.regionannouncer.RegionAnnouncerModule;
 import com.selfequalsthis.grubsplugin.module.teleport.TeleportModule;
 import com.selfequalsthis.grubsplugin.module.timelock.TimeLockModule;
+import com.selfequalsthis.grubsplugin.module.worlds.WorldsModule;
 
 public class ModuleLoaderModule extends AbstractGrubsModule {
 
@@ -34,10 +35,11 @@ public class ModuleLoaderModule extends AbstractGrubsModule {
 		this.commandHandlers = new ModuleLoaderCommandHandlers(this);
 
 		// all new modules need to be listed here
-		this.allModules.put("regionannouncer", new RegionAnnouncerModule(plugin, game));
 		this.allModules.put("gameinfo", new GameInfoModule(plugin, game));
+		this.allModules.put("regionannouncer", new RegionAnnouncerModule(plugin, game));
 		this.allModules.put("timelock", new TimeLockModule(plugin, game));
 		this.allModules.put("teleport", new TeleportModule(plugin, game));
+		this.allModules.put("worlds", new WorldsModule(plugin, game));
 
 		/*
 		this.allModules.put("defendshed", new DefendShedModule(plugin));
