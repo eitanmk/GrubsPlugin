@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import org.spongepowered.api.Game;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
@@ -19,6 +20,8 @@ import org.spongepowered.api.util.command.spec.CommandExecutor;
 import org.spongepowered.api.util.command.spec.CommandSpec;
 import org.spongepowered.api.world.DimensionTypes;
 import org.spongepowered.api.world.GeneratorTypes;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandlers;
@@ -40,6 +43,12 @@ public class WorldsCommandHandlers extends AbstractGrubsCommandHandlers {
 						.executor(new TestSubcommand())
 						.build(),
 					"test")
+				.child(CommandSpec.builder()
+						.description(Texts.of("Goto named world"))
+						.arguments(seq(string(Texts.of("name"))))
+						.executor(new GotoSubcommand())
+						.build(),
+					"goto")
 				.executor(new ListSubcommand())
 				.build());
 	}
@@ -76,6 +85,23 @@ public class WorldsCommandHandlers extends AbstractGrubsCommandHandlers {
 				.keepsSpawnLoaded(true)
 				.loadsOnStartup(true)
 				.build();
+			
+			return CommandResult.success();
+		}
+	}
+	
+private class GotoSubcommand implements CommandExecutor {
+		
+		@Override
+		public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+			Optional<String> optName = args.getOne("name");
+			String newName = optName.isPresent() ? optName.get() : "hillel";
+			Optional<World> optWorld = game.getServer().loadWorld(newName);
+			if (optWorld.isPresent() && src instanceof Player) {
+				Player p = (Player) src;
+				World w = optWorld.get();
+				p.setLocation(new Location<World>(w, w.getProperties().getSpawnPosition()));
+			}
 			
 			return CommandResult.success();
 		}
