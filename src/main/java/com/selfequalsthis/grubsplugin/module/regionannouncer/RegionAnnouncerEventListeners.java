@@ -30,7 +30,7 @@ public class RegionAnnouncerEventListeners extends AbstractGrubsEventListeners {
 	}
 
 	private String getRegion(Location<World> loc) {
-		return this.regionService.getRegion(loc, false);
+		return this.regionService.getRegion(loc.getExtent().getUniqueId(), loc.getBlockX(), loc.getBlockZ(), false);
 	}
 
 	private void announceEnter(Player player, String region) {

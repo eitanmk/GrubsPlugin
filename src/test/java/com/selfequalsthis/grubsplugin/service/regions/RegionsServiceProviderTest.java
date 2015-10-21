@@ -87,18 +87,31 @@ public class RegionsServiceProviderTest {
 	}
 
 	@Test
-	public void testGetRegion() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testListRegions() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	public void testDeleteRegion() {
-		fail("Not yet implemented");
+		String regionName = "test";
+		this.provider.createRegion(this.testWorldUniqueId, regionName);
+		boolean result = this.provider.deleteRegion(this.testWorldUniqueId, regionName);
+		assertTrue("deleting an existing region should succeed", result);
+	}
+
+	@Test
+	public void testDeleteUndefinedRegion() {
+		String regionName = "test";
+		boolean result = this.provider.deleteRegion(this.testWorldUniqueId, regionName);
+		assertFalse("deleting an undefined region should fail", result);
+	}
+
+	@Test
+	public void testGetRegion() {
+		String regionName = "test";
+		this.provider.createRegion(this.testWorldUniqueId, regionName);
+		this.provider.addVertex(this.testWorldUniqueId, regionName, 0, 0);
+		this.provider.addVertex(this.testWorldUniqueId, regionName, 10, 0);
+		this.provider.addVertex(this.testWorldUniqueId, regionName, 10, 10);
+		this.provider.addVertex(this.testWorldUniqueId, regionName, 0, 10);
+		this.provider.completeRegion(this.testWorldUniqueId, regionName);
+		String result = this.provider.getRegion(this.testWorldUniqueId, 5, 5, false);
+		assertTrue("finding a region by location in the region should succeed", result.equals(regionName));
 	}
 
 }

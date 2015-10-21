@@ -133,9 +133,9 @@ public class RegionsServiceProvider implements RegionService {
 		return retVal;
 	}
 
-	public boolean deleteRegion(String regionName, UUID worldId) {
+	public boolean deleteRegion(UUID worldId, String regionName) {
 		HashMap<String,Region> worldRegions = this.regionMap.get(worldId);
-		if (worldRegions.containsKey(regionName)) {
+		if (worldRegions != null && worldRegions.containsKey(regionName)) {
 			worldRegions.remove(regionName);
 			this.saveRegions();
 			return true;

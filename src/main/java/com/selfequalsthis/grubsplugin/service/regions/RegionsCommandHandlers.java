@@ -186,7 +186,7 @@ public class RegionsCommandHandlers extends AbstractGrubsCommandHandlers {
 			}
 			
 			String regionName = optRegionName.get();
-			boolean success = regionController.deleteRegion(regionName, executingPlayer.getWorld().getUniqueId());
+			boolean success = regionController.deleteRegion(executingPlayer.getWorld().getUniqueId(), regionName);
 			if (success) {
 				src.sendMessage(Texts.of("Deleted region [" + regionName + "]."));
 			}
