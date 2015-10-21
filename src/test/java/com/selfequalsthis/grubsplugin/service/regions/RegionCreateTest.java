@@ -30,12 +30,12 @@ public class RegionCreateTest {
 		this.testWorldUniqueId = null;
 		this.testRegion = null;
 	}
-	
+
 	@Test
 	public void testNoVerticies() {
 		assertTrue("Newly created region has no verticies", this.testRegion.getNumVerticies() == 0);
 	}
-	
+
 	@Test
 	public void testAddVertex() {
 		this.testRegion.addVertex(0, 0);
@@ -50,7 +50,7 @@ public class RegionCreateTest {
 		this.testRegion.addVertex(1, 0);
 		assertTrue("Test region should have four verticies", this.testRegion.getNumVerticies() == 4);
 	}
-	
+
 	@Test
 	public void testAddVerticesAfterComplete() {
 		this.testRegion.addVertex(0, 0);
@@ -61,5 +61,4 @@ public class RegionCreateTest {
 		this.testRegion.addVertex(1, -1);
 		assertTrue("No more vertices after region marked complete", this.testRegion.getNumVerticies() == 4);
 	}
-
 }
