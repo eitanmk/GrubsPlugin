@@ -1,10 +1,9 @@
 package com.selfequalsthis.grubsplugin.service;
 
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
+import java.util.UUID;
 
 public interface RegionService {
 
-	public String getRegion(Location<World> location, boolean useBoundingBox);
+	public String getRegion(UUID worldId, int x, int y, boolean useBoundingBox);
 
 }

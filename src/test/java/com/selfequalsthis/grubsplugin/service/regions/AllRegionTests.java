@@ -5,7 +5,8 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ RegionContainsTest.class, RegionCreateTest.class })
+@SuiteClasses({ RegionsServiceProviderTest.class, RegionTest.class })
+
 public class AllRegionTests {
 
 }

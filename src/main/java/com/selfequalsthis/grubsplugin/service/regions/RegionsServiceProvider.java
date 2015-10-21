@@ -9,12 +9,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
 
 import com.selfequalsthis.grubsplugin.service.AbstractGrubsService;
 import com.selfequalsthis.grubsplugin.service.RegionService;
@@ -43,14 +42,14 @@ public class RegionsServiceProvider implements RegionService {
 	}
 
 	@Override
-	public String getRegion(Location<World> location, boolean useBoundingBox) {
+	public String getRegion(UUID worldId, int x, int y, boolean useBoundingBox) {
 		String retVal = null;
 
-		HashMap<String,Region> worldRegions = this.regionMap.get(location.getExtent().getUniqueId());
+		HashMap<String,Region> worldRegions = this.regionMap.get(worldId);
 		if (worldRegions != null) {
 			for (String name : worldRegions.keySet()) {
 				Region curReg = worldRegions.get(name);
-				if (curReg.containsLocation(location.getBlockX(), location.getBlockZ(), location.getExtent().getUniqueId(), useBoundingBox)) {
+				if (curReg.containsLocation(worldId, x, y, useBoundingBox)) {
 					retVal = name;
 					break;
 				}
@@ -60,8 +59,8 @@ public class RegionsServiceProvider implements RegionService {
 		return retVal;
 	}
 
-	public boolean createRegion(String name, UUID worldId) {
-		Region newRegion = new Region(name, worldId);
+	public boolean createRegion(UUID worldId, String name) {
+		Region newRegion = new Region(worldId, name);
 		HashMap<String,Region> worldRegions = this.regionMap.get(worldId);
 		if (worldRegions == null) {
 			HashMap<String,Region> worldRegionMap = new HashMap<String,Region>();
@@ -79,31 +78,35 @@ public class RegionsServiceProvider implements RegionService {
 		return true;
 	}
 
-	public boolean addVertex(String regionName, Location<World> loc) {
-		Region reg = this.getRegion(loc.getExtent().getUniqueId(), regionName);
-		if (reg == null) {
+	public boolean addVertex(UUID worldId, String regionName, int x, int y) {
+		Optional<Region> optionalRegion = this.getRegionObject(worldId, regionName);
+		if (!optionalRegion.isPresent()) {
 			return false;
 		}
+
+		Region reg = optionalRegion.get();
 
 		if (reg.isComplete()) {
 			return false;
 		}
 
 		// check to make sure this vertex isn't contained by another region
-		String overlap = this.getRegion(loc, true);
+		String overlap = this.getRegion(worldId, x, y, true);
 		if (overlap != null) {
 			return false;
 		}
 
-		reg.addVertex(loc.getBlockX(), loc.getBlockZ());
+		reg.addVertex(x, y);
 		return true;
 	}
 
-	public boolean completeRegion(String regionName, UUID worldId) {
-		Region reg = this.getRegion(worldId, regionName);
-		if (reg == null) {
+	public boolean completeRegion(UUID worldId, String regionName) {
+		Optional<Region> optionalRegion = this.getRegionObject(worldId, regionName);
+		if (!optionalRegion.isPresent()) {
 			return false;
 		}
+
+		Region reg = optionalRegion.get();	
 
 		if (reg.isComplete()) {
 			return false;
@@ -143,15 +146,13 @@ public class RegionsServiceProvider implements RegionService {
 
 
 
-	private Region getRegion(UUID worldId, String name) {
-		Region retVal = null;
-
+	private Optional<Region> getRegionObject(UUID worldId, String name) {
 		HashMap<String,Region> worldRegions = this.regionMap.get(worldId);
 		if (worldRegions != null) {
-			retVal = worldRegions.get(name);
+			return Optional.of(worldRegions.get(name));
 		}
 
-		return retVal;
+		return Optional.empty();
 	}
 
 	private void loadRegions() {

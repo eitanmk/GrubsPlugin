@@ -104,7 +104,7 @@ public class RegionsCommandHandlers extends AbstractGrubsCommandHandlers {
 			}
 			
 			String regionName = optRegionName.get();
-			boolean success = regionController.createRegion(regionName, executingPlayer.getWorld().getUniqueId());
+			boolean success = regionController.createRegion(executingPlayer.getWorld().getUniqueId(), regionName);
 			if (success) {
 				src.sendMessage(Texts.of("Initialized region [" + regionName + "]."));
 			}
@@ -132,7 +132,7 @@ public class RegionsCommandHandlers extends AbstractGrubsCommandHandlers {
 			
 			String regionName = optRegionName.get();
 			Location<World> curLoc = executingPlayer.getLocation();
-			boolean success = regionController.addVertex(regionName, curLoc);
+			boolean success = regionController.addVertex(curLoc.getExtent().getUniqueId(), regionName, curLoc.getBlockX(), curLoc.getBlockY());
 			if (success) {
 				src.sendMessage(Texts.of("Vertex (" + curLoc.getBlockX() + "," + curLoc.getBlockZ() + ") added to region [" + regionName + "]."));
 			}
@@ -159,7 +159,7 @@ public class RegionsCommandHandlers extends AbstractGrubsCommandHandlers {
 			}
 			
 			String regionName = optRegionName.get();
-			boolean success = regionController.completeRegion(regionName, executingPlayer.getWorld().getUniqueId());
+			boolean success = regionController.completeRegion(executingPlayer.getWorld().getUniqueId(), regionName);
 			if (success) {
 				src.sendMessage(Texts.of("Completed region [" + regionName + "]."));
 			}

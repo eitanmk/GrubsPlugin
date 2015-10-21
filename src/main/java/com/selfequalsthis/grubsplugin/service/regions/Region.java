@@ -15,9 +15,9 @@ public class Region implements Serializable {
 	private boolean complete = false;
 	// TODO min and max Y to constrict region height - default to full world height
 
-	public Region(String regionName, UUID worldId) {
-		this.name = regionName;
+	public Region(UUID worldId, String regionName) {
 		this.worldId = worldId;
+		this.name = regionName;
 		this.polygon = new Polygon();
 	}
 
@@ -29,7 +29,7 @@ public class Region implements Serializable {
 		return this.worldId;
 	}
 
-	public boolean containsLocation(int x, int y, UUID worldId, boolean useBoundingBox) {
+	public boolean containsLocation(UUID worldId, int x, int y, boolean useBoundingBox) {
 		// TODO will have to include check to make sure location Y val is within height of region
 		if (this.bounds == null) {
 			this.bounds = this.polygon.getBounds();
