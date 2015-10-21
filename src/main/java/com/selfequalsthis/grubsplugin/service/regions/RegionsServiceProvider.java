@@ -50,7 +50,7 @@ public class RegionsServiceProvider implements RegionService {
 		if (worldRegions != null) {
 			for (String name : worldRegions.keySet()) {
 				Region curReg = worldRegions.get(name);
-				if (curReg.containsLocation(location, useBoundingBox)) {
+				if (curReg.containsLocation(location.getBlockX(), location.getBlockZ(), location.getExtent().getUniqueId(), useBoundingBox)) {
 					retVal = name;
 					break;
 				}
@@ -95,7 +95,7 @@ public class RegionsServiceProvider implements RegionService {
 			return false;
 		}
 
-		reg.addVertex(loc);
+		reg.addVertex(loc.getBlockX(), loc.getBlockZ());
 		return true;
 	}
 

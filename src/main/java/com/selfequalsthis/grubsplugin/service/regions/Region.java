@@ -5,9 +5,6 @@ import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.UUID;
 
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
-
 public class Region implements Serializable {
 	private static final long serialVersionUID = 7741887736891122465L;
 
@@ -32,7 +29,7 @@ public class Region implements Serializable {
 		return this.worldId;
 	}
 
-	public boolean containsLocation(Location<World> loc, boolean useBoundingBox) {
+	public boolean containsLocation(int x, int y, UUID worldId, boolean useBoundingBox) {
 		// TODO will have to include check to make sure location Y val is within height of region
 		if (this.bounds == null) {
 			this.bounds = this.polygon.getBounds();
@@ -44,21 +41,21 @@ public class Region implements Serializable {
 		}
 
 		// region from a different world, so we're not inside it
-		if (!this.worldId.equals(loc.getExtent().getUniqueId())) {
+		if (!this.worldId.equals(worldId)) {
 			return false;
 		}
 
 		if (useBoundingBox) {
-			return this.bounds.contains(loc.getBlockX(), loc.getBlockZ());
+			return this.bounds.contains(x, y);
 		}
 		else {
-			return this.polygon.contains(loc.getBlockX(), loc.getBlockZ());
+			return this.polygon.contains(x, y);
 		}
 	}
 
-	public void addVertex(Location<World> loc) {
+	public void addVertex(int x, int y) {
 		if (!this.complete) {
-			this.polygon.addPoint(loc.getBlockX(), loc.getBlockZ());
+			this.polygon.addPoint(x, y);
 			this.polygon.invalidate();
 		}
 	}
