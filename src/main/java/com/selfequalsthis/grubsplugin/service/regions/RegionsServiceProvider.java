@@ -1,12 +1,6 @@
 package com.selfequalsthis.grubsplugin.service.regions;
 
-import java.io.EOFException;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
@@ -31,13 +25,13 @@ public class RegionsServiceProvider implements RegionService {
 	public void init() {
 		File dataFile = this.serviceRef.getDataFile();
 		if (dataFile != null) {
-			this.serviceRef.log("Loading regions.");
+			this.serviceRef.log("Loading regions...");
 			this.loadRegions();
 		}
 	}
 
 	public void shutdown() {
-		this.serviceRef.log("Saving regions.");
+		this.serviceRef.log("Saving regions...");
 		this.saveRegions();
 	}
 
@@ -115,6 +109,7 @@ public class RegionsServiceProvider implements RegionService {
 		if (reg.getNumVerticies() < 3) {
 			return false;
 		}
+		// TODO: can two regions intersect? maybe if the complete timing is off. need to check
 
 		reg.complete();
 		this.saveRegions();
@@ -137,6 +132,12 @@ public class RegionsServiceProvider implements RegionService {
 		HashMap<String,Region> worldRegions = this.regionMap.get(worldId);
 		if (worldRegions != null && worldRegions.containsKey(regionName)) {
 			worldRegions.remove(regionName);
+
+			// remove world from mapping if it has no regions
+			if (worldRegions.size() == 0) {
+				this.regionMap.remove(worldId);
+			}
+
 			this.saveRegions();
 			return true;
 		}
@@ -161,48 +162,8 @@ public class RegionsServiceProvider implements RegionService {
 			this.serviceRef.log("Error with data file. Nothing can be loaded!");
 			return;
 		}
-
-		FileInputStream fis = null;
-		ObjectInputStream in = null;
-
-		try {
-			fis = new FileInputStream(dataFile);
-			in = new ObjectInputStream(fis);
-
-			Object obj = in.readObject();
-			while (obj != null) {
-				if (obj instanceof Region) {
-					Region loadedRegion = (Region)obj;
-					UUID loadedRegionWorldUID = loadedRegion.getWorldUID();
-					String loadedRegionName = loadedRegion.getName();
-
-					HashMap<String,Region> worldRegions = this.regionMap.get(loadedRegionWorldUID);
-					if (worldRegions == null) {
-						HashMap<String,Region> worldRegionMap = new HashMap<String,Region>();
-						worldRegionMap.put(loadedRegionName, loadedRegion);
-						this.regionMap.put(loadedRegionWorldUID, worldRegionMap);
-					}
-					else {
-						worldRegions.put(loadedRegionName, loadedRegion);
-					}
-				}
-				obj = in.readObject();
-			}
-		}
-		catch (EOFException eof) { }
-		catch (Exception ex) {
-			this.serviceRef.log("Error reading Regions file!");
-			ex.printStackTrace();
-		}
-		finally {
-			if (in != null) {
-				try {
-					in.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		this.regionMap = RegionsServiceSavefileHelper.readDataFile(dataFile);
+		this.serviceRef.log("Loaded " + this.getNumAllRegions() + " regions.");
 	}
 
 	private void saveRegions() {
@@ -212,23 +173,16 @@ public class RegionsServiceProvider implements RegionService {
 			return;
 		}
 
-		this.serviceRef.log("Writing Regions save file.");
-		try {
-			FileOutputStream fos = new FileOutputStream(dataFile);
-			ObjectOutputStream out = new ObjectOutputStream(fos);
+		RegionsServiceSavefileHelper.writeDataFile(dataFile, this.regionMap);
+		this.serviceRef.log("Wrote " + this.getNumAllRegions() + " regions to save file.");
+	}
 
-			for (HashMap<String,Region> regions : this.regionMap.values()) {
-				for (Region region : regions.values()) {
-					out.writeObject(region);
-				}
-			}
-
-			out.close();
+	private int getNumAllRegions() {
+		int count = 0;
+		for (HashMap<String,Region> regionMap : this.regionMap.values()) {
+			count += regionMap.values().size();
 		}
-		catch (Exception ex) {
-			this.serviceRef.log("Error writing Regions file!");
-			ex.printStackTrace();
-		}
+		return count;
 	}
 
 }

@@ -77,7 +77,7 @@ public class RegionsCommandHandlers extends AbstractGrubsCommandHandlers {
 			if (regionNames.size() > 0) {
 				// TODO: delete click actions?
 				paginationService.builder()
-					.title(Texts.of("GrubsPlugin Modules"))
+					.title(Texts.of("Regions"))
 					.contents(regionNames)
 					.sendTo(src);
 			}
@@ -132,7 +132,7 @@ public class RegionsCommandHandlers extends AbstractGrubsCommandHandlers {
 			
 			String regionName = optRegionName.get();
 			Location<World> curLoc = executingPlayer.getLocation();
-			boolean success = regionController.addVertex(curLoc.getExtent().getUniqueId(), regionName, curLoc.getBlockX(), curLoc.getBlockY());
+			boolean success = regionController.addVertex(curLoc.getExtent().getUniqueId(), regionName, curLoc.getBlockX(), curLoc.getBlockZ());
 			if (success) {
 				src.sendMessage(Texts.of("Vertex (" + curLoc.getBlockX() + "," + curLoc.getBlockZ() + ") added to region [" + regionName + "]."));
 			}

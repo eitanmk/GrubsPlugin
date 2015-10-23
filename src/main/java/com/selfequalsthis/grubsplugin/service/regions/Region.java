@@ -21,12 +21,24 @@ public class Region implements Serializable {
 		this.polygon = new Polygon();
 	}
 
+	public UUID getWorldUID() {
+		return this.worldId;
+	}
+
 	public String getName() {
 		return this.name;
 	}
 
-	public UUID getWorldUID() {
-		return this.worldId;
+	public Polygon getPolygon() {
+		return this.polygon;
+	}
+
+	public boolean isComplete() {
+		return this.complete;
+	}
+
+	public int getNumVerticies() {
+		return this.polygon.npoints;
 	}
 
 	public boolean containsLocation(UUID worldId, int x, int y, boolean useBoundingBox) {
@@ -63,13 +75,5 @@ public class Region implements Serializable {
 	public void complete() {
 		this.complete = true;
 		this.bounds = this.polygon.getBounds();
-	}
-
-	public boolean isComplete() {
-		return this.complete;
-	}
-
-	public int getNumVerticies() {
-		return this.polygon.npoints;
 	}
 }
