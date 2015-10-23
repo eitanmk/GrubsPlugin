@@ -2,11 +2,9 @@ package com.selfequalsthis.grubsplugin.service.regions;
 
 import java.awt.Polygon;
 import java.awt.Rectangle;
-import java.io.Serializable;
 import java.util.UUID;
 
-public class Region implements Serializable {
-	private static final long serialVersionUID = 7741887736891122465L;
+public class Region {
 
 	private UUID worldId;
 	private String name;
@@ -22,7 +20,7 @@ public class Region implements Serializable {
 	}
 
 	public UUID getWorldUID() {
-		return this.worldId;
+		return new UUID(this.worldId.getMostSignificantBits(), this.worldId.getLeastSignificantBits());
 	}
 
 	public String getName() {
@@ -30,7 +28,7 @@ public class Region implements Serializable {
 	}
 
 	public Polygon getPolygon() {
-		return this.polygon;
+		return new Polygon(this.polygon.xpoints, this.polygon.ypoints, this.polygon.npoints);
 	}
 
 	public boolean isComplete() {

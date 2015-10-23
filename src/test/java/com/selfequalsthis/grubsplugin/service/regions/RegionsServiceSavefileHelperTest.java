@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.*;
 
-public class RegionSavefileTest {
+public class RegionsServiceSavefileHelperTest {
 
 	@Before
 	public void setUp() throws Exception {
