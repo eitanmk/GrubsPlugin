@@ -16,7 +16,7 @@ public class RegionsServiceProvider implements RegionService {
 
 	private AbstractGrubsService serviceRef;
 
-	private HashMap<UUID,HashMap<String,Region>> regionMap = new HashMap<UUID,HashMap<String,Region>>();
+	private HashMap<UUID,RegionList> regionMap = new HashMap<UUID,RegionList>();
 
 	public RegionsServiceProvider(AbstractGrubsService module) {
 		this.serviceRef = module;
@@ -39,14 +39,11 @@ public class RegionsServiceProvider implements RegionService {
 	public String getRegion(UUID worldId, int x, int y, boolean useBoundingBox) {
 		String retVal = null;
 
-		HashMap<String,Region> worldRegions = this.regionMap.get(worldId);
-		if (worldRegions != null) {
-			for (String name : worldRegions.keySet()) {
-				Region curReg = worldRegions.get(name);
-				if (curReg.containsLocation(worldId, x, y, useBoundingBox)) {
-					retVal = name;
-					break;
-				}
+		Optional<RegionList> optWorldRegions = this.getWorldRegions(worldId);
+		if (optWorldRegions.isPresent()) {
+			Optional<Region> optRegion = optWorldRegions.get().containsLocation(worldId, x, y, useBoundingBox);
+			if (optRegion.isPresent()) {
+				retVal = optRegion.get().getName();
 			}
 		}
 
@@ -55,20 +52,21 @@ public class RegionsServiceProvider implements RegionService {
 
 	public boolean createRegion(UUID worldId, String name) {
 		Region newRegion = new Region(worldId, name);
-		HashMap<String,Region> worldRegions = this.regionMap.get(worldId);
-		if (worldRegions == null) {
-			HashMap<String,Region> worldRegionMap = new HashMap<String,Region>();
-			worldRegionMap.put(name, newRegion);
-			this.regionMap.put(worldId, worldRegionMap);
+		Optional<RegionList> optWorldRegions = this.getWorldRegions(worldId);
+		if (!optWorldRegions.isPresent()) {
+			RegionList worldRegionList = new RegionList();
+			worldRegionList.addRegion(newRegion);
+			this.regionMap.put(worldId, worldRegionList);
 			return true;
 		}
 
-		if (worldRegions.containsKey(name)) {
+		RegionList worldRegions = optWorldRegions.get();
+		if (worldRegions.containsRegion(name)) {
 			newRegion = null;
 			return false;
 		}
 
-		worldRegions.put(name, newRegion);
+		worldRegions.addRegion(newRegion);
 		return true;
 	}
 
@@ -118,10 +116,11 @@ public class RegionsServiceProvider implements RegionService {
 
 	public ArrayList<Text> listRegions(UUID worldId) {
 		ArrayList<Text> retVal = new ArrayList<Text>();
-		HashMap<String,Region> worldRegions = this.regionMap.get(worldId);
-		if (worldRegions != null) {
-			for (String key : worldRegions.keySet()) {
-				retVal.add(Texts.of(key));
+		Optional<RegionList> optWorldRegions = this.getWorldRegions(worldId);
+		if (optWorldRegions.isPresent()) {
+			ArrayList<String> regionNames = optWorldRegions.get().getRegionNames();
+			for (String name : regionNames) {
+				retVal.add(Texts.of(name));
 			}
 		}
 
@@ -129,9 +128,10 @@ public class RegionsServiceProvider implements RegionService {
 	}
 
 	public boolean deleteRegion(UUID worldId, String regionName) {
-		HashMap<String,Region> worldRegions = this.regionMap.get(worldId);
-		if (worldRegions != null && worldRegions.containsKey(regionName)) {
-			worldRegions.remove(regionName);
+		Optional<RegionList> optWorldRegions = this.getWorldRegions(worldId);
+		if (optWorldRegions.isPresent()) {
+			RegionList worldRegions = optWorldRegions.get();
+			worldRegions.removeRegion(regionName);
 
 			// remove world from mapping if it has no regions
 			if (worldRegions.size() == 0) {
@@ -145,18 +145,26 @@ public class RegionsServiceProvider implements RegionService {
 		return false;
 	}
 
+	private Optional<RegionList> getWorldRegions(UUID worldId) {
+		RegionList worldRegions = this.regionMap.get(worldId);
+		if (worldRegions != null) {
+			return Optional.of(worldRegions);
+		}
 
+		return Optional.empty();
+	}
 
 	private Optional<Region> getRegionObject(UUID worldId, String name) {
-		HashMap<String,Region> worldRegions = this.regionMap.get(worldId);
-		if (worldRegions != null) {
-			return Optional.of(worldRegions.get(name));
+		Optional<RegionList> optWorldRegions = this.getWorldRegions(worldId);
+		if (optWorldRegions.isPresent()) {
+			return optWorldRegions.get().getRegion(name);
 		}
 
 		return Optional.empty();
 	}
 
 	private void loadRegions() {
+		/*
 		File dataFile = this.serviceRef.getDataFile();
 		if (dataFile == null) {
 			this.serviceRef.log("Error with data file. Nothing can be loaded!");
@@ -164,9 +172,11 @@ public class RegionsServiceProvider implements RegionService {
 		}
 		this.regionMap = RegionsServiceSavefileHelper.readDataFile(dataFile);
 		this.serviceRef.log("Loaded " + this.getNumAllRegions() + " regions.");
+		*/
 	}
 
 	private void saveRegions() {
+		/*
 		File dataFile = this.serviceRef.getDataFile();
 		if (dataFile == null) {
 			this.serviceRef.log("Error with data file. Nothing will be saved!");
@@ -175,14 +185,17 @@ public class RegionsServiceProvider implements RegionService {
 
 		RegionsServiceSavefileHelper.writeDataFile(dataFile, this.regionMap);
 		this.serviceRef.log("Wrote " + this.getNumAllRegions() + " regions to save file.");
+		*/
 	}
 
+	/*
 	private int getNumAllRegions() {
 		int count = 0;
-		for (HashMap<String,Region> regionMap : this.regionMap.values()) {
-			count += regionMap.values().size();
+		for (RegionList regionList : this.regionMap.values()) {
+			count += regionList.size();
 		}
 		return count;
 	}
+	*/
 
 }
