@@ -22,6 +22,7 @@ import org.spongepowered.api.world.DimensionTypes;
 import org.spongepowered.api.world.GeneratorTypes;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
+import org.spongepowered.api.world.WorldBuilder;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandlers;
@@ -30,11 +31,11 @@ public class WorldsCommandHandlers extends AbstractGrubsCommandHandlers {
 
 	private Game game;
 	private PaginationService paginationService;
-	
+
 	public WorldsCommandHandlers(WorldsModule module, Game game) {
 		this.game = game;
 		this.paginationService = game.getServiceManager().provide(PaginationService.class).get();
-		
+
 		this.commands.put("worlds", CommandSpec.builder()
 				.description(Texts.of("Manages worlds on this server."))
 				.child(CommandSpec.builder()
@@ -52,7 +53,7 @@ public class WorldsCommandHandlers extends AbstractGrubsCommandHandlers {
 				.executor(new ListSubcommand())
 				.build());
 	}
-	
+
 	private class ListSubcommand implements CommandExecutor {
 
 		@Override
@@ -72,12 +73,12 @@ public class WorldsCommandHandlers extends AbstractGrubsCommandHandlers {
 	}
 	
 	private class TestSubcommand implements CommandExecutor {
-		
+
 		@Override
 		public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 			Optional<String> optName = args.getOne("name");
 			String newName = optName.isPresent() ? optName.get() : "testworld";
-			game.getRegistry().createWorldBuilder()
+			game.getRegistry().createBuilder(WorldBuilder.class)
 				.dimensionType(DimensionTypes.OVERWORLD)
 				.gameMode(GameModes.CREATIVE)
 				.name(newName)
@@ -85,13 +86,13 @@ public class WorldsCommandHandlers extends AbstractGrubsCommandHandlers {
 				.keepsSpawnLoaded(true)
 				.loadsOnStartup(true)
 				.build();
-			
+
 			return CommandResult.success();
 		}
 	}
 	
 private class GotoSubcommand implements CommandExecutor {
-		
+
 		@Override
 		public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 			Optional<String> optName = args.getOne("name");
@@ -102,7 +103,7 @@ private class GotoSubcommand implements CommandExecutor {
 				World w = optWorld.get();
 				p.setLocation(new Location<World>(w, w.getProperties().getSpawnPosition()));
 			}
-			
+
 			return CommandResult.success();
 		}
 	}
