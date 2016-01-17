@@ -3,7 +3,7 @@ package com.selfequalsthis.grubsplugin.module.timelock;
 import java.util.concurrent.TimeUnit;
 
 import org.spongepowered.api.Game;
-import org.spongepowered.api.service.scheduler.Task;
+import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.world.World;
 
 import com.selfequalsthis.grubsplugin.GrubsPlugin;

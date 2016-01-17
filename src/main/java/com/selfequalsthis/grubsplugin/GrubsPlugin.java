@@ -8,7 +8,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.service.config.ConfigDir;
+import org.spongepowered.api.config.ConfigDir;
 
 import com.google.inject.Inject;
 import com.selfequalsthis.grubsplugin.module.AbstractGrubsModule;

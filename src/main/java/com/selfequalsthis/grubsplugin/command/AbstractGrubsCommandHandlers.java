@@ -2,7 +2,7 @@ package com.selfequalsthis.grubsplugin.command;
 
 import java.util.HashMap;
 
-import org.spongepowered.api.util.command.spec.CommandSpec;
+import org.spongepowered.api.command.spec.CommandSpec;
 
 public abstract class AbstractGrubsCommandHandlers {
 

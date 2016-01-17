@@ -1,7 +1,7 @@
 package com.selfequalsthis.grubsplugin.module.worlds;
 
-import static org.spongepowered.api.util.command.args.GenericArguments.seq;
-import static org.spongepowered.api.util.command.args.GenericArguments.string;
+import static org.spongepowered.api.command.args.GenericArguments.seq;
+import static org.spongepowered.api.command.args.GenericArguments.string;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -11,18 +11,17 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.util.command.CommandException;
-import org.spongepowered.api.util.command.CommandResult;
-import org.spongepowered.api.util.command.CommandSource;
-import org.spongepowered.api.util.command.args.CommandContext;
-import org.spongepowered.api.util.command.spec.CommandExecutor;
-import org.spongepowered.api.util.command.spec.CommandSpec;
+import org.spongepowered.api.command.CommandException;
+import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.command.args.CommandContext;
+import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.world.DimensionTypes;
 import org.spongepowered.api.world.GeneratorTypes;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
-import org.spongepowered.api.world.WorldBuilder;
+import org.spongepowered.api.world.WorldCreationSettings;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandlers;
@@ -37,16 +36,16 @@ public class WorldsCommandHandlers extends AbstractGrubsCommandHandlers {
 		this.paginationService = game.getServiceManager().provide(PaginationService.class).get();
 
 		this.commands.put("worlds", CommandSpec.builder()
-				.description(Texts.of("Manages worlds on this server."))
+				.description(Text.of("Manages worlds on this server."))
 				.child(CommandSpec.builder()
-						.description(Texts.of("Create a test world"))
-						.arguments(seq(string(Texts.of("name"))))
+						.description(Text.of("Create a test world"))
+						.arguments(seq(string(Text.of("name"))))
 						.executor(new TestSubcommand())
 						.build(),
 					"test")
 				.child(CommandSpec.builder()
-						.description(Texts.of("Goto named world"))
-						.arguments(seq(string(Texts.of("name"))))
+						.description(Text.of("Goto named world"))
+						.arguments(seq(string(Text.of("name"))))
 						.executor(new GotoSubcommand())
 						.build(),
 					"goto")
@@ -60,11 +59,11 @@ public class WorldsCommandHandlers extends AbstractGrubsCommandHandlers {
 		public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 			ArrayList<Text> contents = new ArrayList<Text>();
 			for (WorldProperties props : game.getServer().getAllWorldProperties()) {
-				contents.add(Texts.of(props.getWorldName() + " " + props.getDimensionType().getName()));
+				contents.add(Text.of(props.getWorldName() + " " + props.getDimensionType().getName()));
 			}
 
 			paginationService.builder()
-				.title(Texts.of("Worlds"))
+				.title(Text.of("Worlds"))
 				.contents(contents)
 				.sendTo(src);
 
@@ -78,8 +77,8 @@ public class WorldsCommandHandlers extends AbstractGrubsCommandHandlers {
 		public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 			Optional<String> optName = args.getOne("name");
 			String newName = optName.isPresent() ? optName.get() : "testworld";
-			game.getRegistry().createBuilder(WorldBuilder.class)
-				.dimensionType(DimensionTypes.OVERWORLD)
+			game.getRegistry().createBuilder(WorldCreationSettings.Builder.class)
+				.dimension(DimensionTypes.OVERWORLD)
 				.gameMode(GameModes.CREATIVE)
 				.name(newName)
 				.generator(GeneratorTypes.FLAT)

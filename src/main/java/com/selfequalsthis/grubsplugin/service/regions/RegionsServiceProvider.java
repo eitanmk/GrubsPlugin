@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 
 import com.selfequalsthis.grubsplugin.service.AbstractGrubsService;
 import com.selfequalsthis.grubsplugin.service.RegionService;
@@ -120,7 +119,7 @@ public class RegionsServiceProvider implements RegionService {
 		if (optWorldRegions.isPresent()) {
 			ArrayList<String> regionNames = optWorldRegions.get().getRegionNames();
 			for (String name : regionNames) {
-				retVal.add(Texts.of(name));
+				retVal.add(Text.of(name));
 			}
 		}
 

@@ -1,22 +1,22 @@
 package com.selfequalsthis.grubsplugin.module.timelock;
 
-import static org.spongepowered.api.util.command.args.GenericArguments.choices;
-import static org.spongepowered.api.util.command.args.GenericArguments.integer;
-import static org.spongepowered.api.util.command.args.GenericArguments.optionalWeak;
-import static org.spongepowered.api.util.command.args.GenericArguments.seq;
+import static org.spongepowered.api.command.args.GenericArguments.choices;
+import static org.spongepowered.api.command.args.GenericArguments.integer;
+import static org.spongepowered.api.command.args.GenericArguments.optionalWeak;
+import static org.spongepowered.api.command.args.GenericArguments.seq;
 
 import java.util.HashMap;
 import java.util.Optional;
 
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.util.command.CommandException;
-import org.spongepowered.api.util.command.CommandResult;
-import org.spongepowered.api.util.command.CommandSource;
-import org.spongepowered.api.util.command.args.CommandContext;
-import org.spongepowered.api.util.command.spec.CommandExecutor;
-import org.spongepowered.api.util.command.spec.CommandSpec;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.command.CommandException;
+import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.command.args.CommandContext;
+import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.world.World;
 
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandlers;
@@ -37,9 +37,9 @@ public class TimeLockCommandHandlers extends AbstractGrubsCommandHandlers {
 		predefinedSettings.put("off", -2L);
 
 		this.commands.put("timelock", CommandSpec.builder()
-				.description(Texts.of("Lock/Unlock world time"))
-				.extendedDescription(Texts.of("Lock or unlock the current time for this world"))
-				.arguments(seq(optionalWeak(choices(Texts.of("predefSetting"), predefinedSettings)), optionalWeak(integer(Texts.of("timeValue")))))
+				.description(Text.of("Lock/Unlock world time"))
+				.extendedDescription(Text.of("Lock or unlock the current time for this world"))
+				.arguments(seq(optionalWeak(choices(Text.of("predefSetting"), predefinedSettings)), optionalWeak(integer(Text.of("timeValue")))))
 				.executor(new TimelockCommand())
 				.build());
 	}
@@ -53,7 +53,7 @@ public class TimeLockCommandHandlers extends AbstractGrubsCommandHandlers {
 			Optional<Integer> timeValue = args.getOne("timeValue");
 
 			if (!predefValue.isPresent() && !timeValue.isPresent()) {
-				src.sendMessage(Texts.of("Not enough arguments!"));
+				src.sendMessage(Text.of("Not enough arguments!"));
 				return CommandResult.empty();
 			}
 
@@ -75,7 +75,7 @@ public class TimeLockCommandHandlers extends AbstractGrubsCommandHandlers {
 				// "off"
 				if (time == -2L) {
 					moduleRef.unlockTime();
-					src.sendMessage(Texts.of("Time lock is now off."));
+					src.sendMessage(Text.of("Time lock is now off."));
 					return CommandResult.success();
 				}
 
@@ -87,12 +87,12 @@ public class TimeLockCommandHandlers extends AbstractGrubsCommandHandlers {
 			else if (timeValue.isPresent()) {
 				time = timeValue.get();
 				if (time < 0 || time > 24000) {
-					src.sendMessage(Texts.of("Invalid time."));
+					src.sendMessage(Text.of("Invalid time."));
 					return CommandResult.empty();
 				}
 			}
 
-			src.sendMessage(Texts.of("Setting timelock: " + time));
+			src.sendMessage(Text.of("Setting timelock: " + time));
 			moduleRef.lockTime(world, time);
 			return CommandResult.success();
 		}

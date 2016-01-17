@@ -1,22 +1,21 @@
 package com.selfequalsthis.grubsplugin.module.moduleloader;
 
-import static org.spongepowered.api.util.command.args.GenericArguments.seq;
-import static org.spongepowered.api.util.command.args.GenericArguments.string;
+import static org.spongepowered.api.command.args.GenericArguments.seq;
+import static org.spongepowered.api.command.args.GenericArguments.string;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.util.command.CommandException;
-import org.spongepowered.api.util.command.CommandResult;
-import org.spongepowered.api.util.command.CommandSource;
-import org.spongepowered.api.util.command.args.CommandContext;
-import org.spongepowered.api.util.command.spec.CommandExecutor;
-import org.spongepowered.api.util.command.spec.CommandSpec;
+import org.spongepowered.api.command.CommandException;
+import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.command.args.CommandContext;
+import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.command.spec.CommandSpec;
 
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandlers;
 import com.selfequalsthis.grubsplugin.module.AbstractGrubsModule;
@@ -31,17 +30,17 @@ public class ModuleLoaderCommandHandlers extends AbstractGrubsCommandHandlers {
 		this.paginationService = this.moduleRef.getGame().getServiceManager().provide(PaginationService.class).get();
 
 		this.commands.put("gpmodule", CommandSpec.builder()
-				.description(Texts.of("Manage GrubsPlugin modules"))
-				.extendedDescription(Texts.of("List, enable/disable GrubsPlugin modules"))
+				.description(Text.of("Manage GrubsPlugin modules"))
+				.extendedDescription(Text.of("List, enable/disable GrubsPlugin modules"))
 				.child(CommandSpec.builder()
-						.description(Texts.of("Enable specified GrubsPlugin module"))
-						.arguments(seq(string(Texts.of("moduleName"))))
+						.description(Text.of("Enable specified GrubsPlugin module"))
+						.arguments(seq(string(Text.of("moduleName"))))
 						.executor(new EnableSubcommand())
 						.build(),
 					"enable")
 				.child(CommandSpec.builder()
-						.description(Texts.of("Disable specified GrubsPlugin module"))
-						.arguments(seq(string(Texts.of("moduleName"))))
+						.description(Text.of("Disable specified GrubsPlugin module"))
+						.arguments(seq(string(Text.of("moduleName"))))
 						.executor(new DisableSubcommand())
 						.build(),
 					"disable")
@@ -60,12 +59,12 @@ public class ModuleLoaderCommandHandlers extends AbstractGrubsCommandHandlers {
 				String statusText = enabled ? "[X]" : "[ ]";
 				String actionText = enabled ? "Disable" : "Enable";
 				String commandText = "/gpmodule " + (enabled ? "disable" : "enable") + " " + key;
-				Text pageItem = Texts.builder(statusText)
-						.append(Texts.of(" "))
-						.append(Texts.of(key))
-						.append(Texts.of(" | "))
+				Text pageItem = Text.builder(statusText)
+						.append(Text.of(" "))
+						.append(Text.of(key))
+						.append(Text.of(" | "))
 						.append(
-							Texts.builder(actionText)
+							Text.builder(actionText)
 								.color(enabled ? TextColors.DARK_RED : TextColors.GREEN)
 								.onClick(TextActions.runCommand(commandText))
 								.build()
@@ -75,7 +74,7 @@ public class ModuleLoaderCommandHandlers extends AbstractGrubsCommandHandlers {
 			}
 
 			paginationService.builder()
-				.title(Texts.of("GrubsPlugin Modules"))
+				.title(Text.of("GrubsPlugin Modules"))
 				.contents(contents)
 				.sendTo(src);
 
@@ -90,25 +89,25 @@ public class ModuleLoaderCommandHandlers extends AbstractGrubsCommandHandlers {
 		public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 			Optional<String> optModuleName = args.getOne("moduleName");
 			if (!optModuleName.isPresent()) {
-				throw new CommandException(Texts.of("A module name is required!"));
+				throw new CommandException(Text.of("A module name is required!"));
 			}
 			else {
 				String moduleName = optModuleName.get();
 
 				if (!moduleRef.allModules.containsKey(moduleName)) {
-					src.sendMessage(Texts.of("Unknown module [" + moduleName + "]."));
+					src.sendMessage(Text.of("Unknown module [" + moduleName + "]."));
 					return CommandResult.success();
 				}
 
 				if (moduleRef.activeModules.containsKey(moduleName)) {
-					src.sendMessage(Texts.of("Module [" + moduleName + "] already enabled."));
+					src.sendMessage(Text.of("Module [" + moduleName + "] already enabled."));
 					return CommandResult.success();
 				}
 
 				AbstractGrubsModule gm = moduleRef.allModules.get(moduleName);
 				moduleRef.activeModules.put(moduleName, gm);
 				gm.enable();
-				src.sendMessage(Texts.of("Module [" + moduleName + "] enabled."));
+				src.sendMessage(Text.of("Module [" + moduleName + "] enabled."));
 				return CommandResult.success();
 			}
 
@@ -122,25 +121,25 @@ public class ModuleLoaderCommandHandlers extends AbstractGrubsCommandHandlers {
 		public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 			Optional<String> optModuleName = args.getOne("moduleName");
 			if (!optModuleName.isPresent()) {
-				throw new CommandException(Texts.of("A module name is required!"));
+				throw new CommandException(Text.of("A module name is required!"));
 			}
 			else {
 				String moduleName = optModuleName.get();
 
 				if (!moduleRef.allModules.containsKey(moduleName)) {
-					src.sendMessage(Texts.of("Unknown module [" + moduleName + "]."));
+					src.sendMessage(Text.of("Unknown module [" + moduleName + "]."));
 					return CommandResult.success();
 				}
 
 				if (!moduleRef.activeModules.containsKey(moduleName)) {
-					src.sendMessage(Texts.of("Module [" + moduleName + "] not enabled."));
+					src.sendMessage(Text.of("Module [" + moduleName + "] not enabled."));
 					return CommandResult.success();
 				}
 
 				AbstractGrubsModule gm = moduleRef.allModules.get(moduleName);
 				moduleRef.activeModules.remove(moduleName);
 				gm.disable();
-				src.sendMessage(Texts.of("Module [" + moduleName + "] disabled."));
+				src.sendMessage(Text.of("Module [" + moduleName + "] disabled."));
 				return CommandResult.success();
 			}
 

@@ -1,7 +1,5 @@
 package com.selfequalsthis.grubsplugin.service;
 
-import org.spongepowered.api.service.ProviderExistsException;
-
 import com.selfequalsthis.grubsplugin.AbstractGrubsComponent;
 
 public abstract class AbstractGrubsService extends AbstractGrubsComponent {
@@ -13,7 +11,7 @@ public abstract class AbstractGrubsService extends AbstractGrubsComponent {
 		this.log("Registering provider for " + serviceType.getSimpleName() + " service");
 		try {
 			this.game.getServiceManager().setProvider(this.pluginRef, serviceType, provider);
-		} catch (ProviderExistsException e) {
+		} catch (Exception e) {
 			this.log("Failed to register provider for " + serviceType.getSimpleName() + "service!");
 			e.printStackTrace();
 		}

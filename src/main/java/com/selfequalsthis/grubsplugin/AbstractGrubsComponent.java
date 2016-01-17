@@ -7,8 +7,8 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.util.command.CommandMapping;
-import org.spongepowered.api.util.command.spec.CommandSpec;
+import org.spongepowered.api.command.CommandMapping;
+import org.spongepowered.api.command.spec.CommandSpec;
 
 import com.selfequalsthis.grubsplugin.command.AbstractGrubsCommandHandlers;
 
@@ -41,7 +41,7 @@ public abstract class AbstractGrubsComponent {
 
 		for (String commandName : commands.keySet()) {
 			this.log("Registering command '" + commandName + "'");
-			this.game.getCommandDispatcher().register(this.pluginRef, commands.get(commandName), commandName);
+			this.game.getCommandManager().register(this.pluginRef, commands.get(commandName), commandName);
 		}
 	}
 
@@ -55,10 +55,10 @@ public abstract class AbstractGrubsComponent {
 		}
 
 		for (String commandName : commands.keySet()) {
-			Optional<? extends CommandMapping> optCmdMap = this.game.getCommandDispatcher().get(commandName);
+			Optional<? extends CommandMapping> optCmdMap = this.game.getCommandManager().get(commandName);
 			if (optCmdMap.isPresent()) {
 				this.log("Unregistering command '" + commandName + "'");
-				this.game.getCommandDispatcher().removeMapping(optCmdMap.get());
+				this.game.getCommandManager().removeMapping(optCmdMap.get());
 			}
 		}
 	}

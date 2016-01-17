@@ -6,7 +6,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.DisplaceEntityEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -34,11 +34,11 @@ public class RegionAnnouncerEventListeners extends AbstractGrubsEventListeners {
 	}
 
 	private void announceEnter(Player player, String region) {
-		player.sendMessage(Texts.of(TextColors.GREEN, "Entering region '" + region + "'"));
+		player.sendMessage(Text.of(TextColors.GREEN, "Entering region '" + region + "'"));
 	}
 
 	private void announceLeave(Player player, String region) {
-		player.sendMessage(Texts.of(TextColors.GREEN, "Leaving region '" + region + "'"));
+		player.sendMessage(Text.of(TextColors.GREEN, "Leaving region '" + region + "'"));
 	}
 
 	@Listener
