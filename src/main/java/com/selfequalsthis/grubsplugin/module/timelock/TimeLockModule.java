@@ -17,7 +17,7 @@ public class TimeLockModule extends AbstractGrubsModule {
 		this.pluginRef = plugin;
 		this.game = game;
 		this.logger = plugin.getLogger();
-		this.logPrefix = "[GameInfoModule]: ";
+		this.logPrefix = "[TimeLockModule]: ";
 
 		this.commandHandlers = new TimeLockCommandHandlers(this, this.game);
 	}
