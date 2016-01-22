@@ -9,7 +9,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Logger;
+
+import org.spongepowered.api.text.Text;
 
 public class GrubsWirelessRedstone {
 
@@ -44,7 +47,7 @@ public class GrubsWirelessRedstone {
 		this.saveChannels();
 		this.moduleRef.log("Saved " + channels.size() + " channels.");
 	}
-
+*/
 	public static boolean isTransmitter(String text) {
 		return text.equalsIgnoreCase(TRANSMITTER_TEXT);
 	}
@@ -52,27 +55,27 @@ public class GrubsWirelessRedstone {
 	public static boolean isReceiver(String text) {
 		return (text.equalsIgnoreCase(RECEIVER_TEXT) || text.equalsIgnoreCase(RECEIVER_INVERTED_TEXT));
 	}
-
+/*
 	public static boolean isReceiverInverted(String text) {
 		return text.equalsIgnoreCase(RECEIVER_INVERTED_TEXT);
 	}
-
+*/
 	public static boolean hasValidChannel(String text) {
 		return (text.length() > 0);
 	}
 
-	public static boolean isValidNode(String[] lines) {
-		if (!hasValidChannel(lines[1])) {
+	public static boolean isValidNode(List<Text> lines) {
+		if (!hasValidChannel(lines.get(1).toPlain())) {
 			return false;
 		}
 
-		if ( !( isTransmitter(lines[0]) || isReceiver(lines[0]) ) ) {
+		if ( !( isTransmitter(lines.get(0).toPlain()) || isReceiver(lines.get(0).toPlain()) ) ) {
 			return false;
 		}
 
 		return true;
 	}
-
+/*
 	public void addNode(Block block, String[] lines) {
 		if (!isValidNode(lines)) {
 			return;
