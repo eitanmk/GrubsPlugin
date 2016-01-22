@@ -17,29 +17,29 @@ public class WirelessRedstoneModule extends AbstractGrubsModule {
 		this.logPrefix = "[WirelessRedstoneModule]: ";
 		this.dataFileName = "wireless_redstone.dat";
 
-		this.wrController = new GrubsWirelessRedstone(this);
-		this.eventListeners = new WirelessRedstoneEventListeners(this.wrController);
-		this.commandHandlers = new WirelessRedstoneCommandHandlers(this);
+		//this.wrController = new GrubsWirelessRedstone(this);
+		this.eventListeners = new WirelessRedstoneEventListeners(this.wrController, plugin.getLogger());
+		//this.commandHandlers = new WirelessRedstoneCommandHandlers(this);
 	}
 
 	@Override
 	public void enable() {
 		this.registerEventHandlers(this.eventListeners);
-		this.registerCommands(this.commandHandlers);
+		//this.registerCommands(this.commandHandlers);
 
-		this.wrController.init();
+		//this.wrController.init();
 	}
 
 	@Override
 	public void disable() {
-		this.wrController.shutdown();
+		//this.wrController.shutdown();
 
 		this.unregisterEventHandlers(this.eventListeners);
-		this.unregisterCommands(this.commandHandlers);
+		//this.unregisterCommands(this.commandHandlers);
 	}
 
 	public void repairChannels(World world) {
-		this.wrController.cleanupChannels(world);
+		//this.wrController.cleanupChannels(world);
 	}
 
 }

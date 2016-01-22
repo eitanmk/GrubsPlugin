@@ -11,11 +11,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
-
 public class GrubsWirelessRedstone {
+
 	protected final Logger log = Logger.getLogger("Minecraft");
 
 	private WirelessRedstoneModule moduleRef;
@@ -23,7 +20,7 @@ public class GrubsWirelessRedstone {
 	public static String TRANSMITTER_TEXT = "[WRt]";
 	public static String RECEIVER_TEXT = "[WRr]";
 	public static String RECEIVER_INVERTED_TEXT = "[WRri]";
-
+	/*
 	private HashMap<String,Channel> channels = new HashMap<String,Channel>();
 
 	public GrubsWirelessRedstone(WirelessRedstoneModule module) {
@@ -246,4 +243,5 @@ public class GrubsWirelessRedstone {
 
 		this.saveChannels();
 	}
+	*/
 }

@@ -5,16 +5,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 
 public class Channel implements Serializable {
 
 	private static final long serialVersionUID = -1413121016289041397L;
-
+/*
 	protected static final Logger log = Logger.getLogger("Minecraft");
 
 	private String name;
@@ -264,5 +259,6 @@ public class Channel implements Serializable {
 		}
 		return retVal;
 	}
+	*/
 }
 

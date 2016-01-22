@@ -16,6 +16,7 @@ import com.selfequalsthis.grubsplugin.module.gameinfo.GameInfoModule;
 import com.selfequalsthis.grubsplugin.module.regionannouncer.RegionAnnouncerModule;
 import com.selfequalsthis.grubsplugin.module.teleport.TeleportModule;
 import com.selfequalsthis.grubsplugin.module.timelock.TimeLockModule;
+import com.selfequalsthis.grubsplugin.module.wirelessredstone.WirelessRedstoneModule;
 import com.selfequalsthis.grubsplugin.module.worlds.WorldsModule;
 
 public class ModuleLoaderModule extends AbstractGrubsModule {
@@ -39,6 +40,7 @@ public class ModuleLoaderModule extends AbstractGrubsModule {
 		this.allModules.put("regionannouncer", new RegionAnnouncerModule(plugin, game));
 		this.allModules.put("timelock", new TimeLockModule(plugin, game));
 		this.allModules.put("teleport", new TeleportModule(plugin, game));
+		this.allModules.put("wirelessredstone", new WirelessRedstoneModule(plugin, game));
 		this.allModules.put("worlds", new WorldsModule(plugin, game));
 
 		/*
