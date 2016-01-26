@@ -6,9 +6,12 @@ import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.property.block.PoweredProperty;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
+import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
+import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.world.World;
 
@@ -23,9 +26,22 @@ public class WirelessRedstoneEventListeners extends AbstractGrubsEventListeners 
 		//this.controllerRef = controller;
 		this.logger = logger;
 	}
-	
+
 	@Listener
-	public void onBlockChange(ChangeBlockEvent.Break event) {
+	public void onSignPlace(ChangeSignEvent event) {
+		if (! event.getCause().containsType(Player.class)) {
+			return;
+		}
+
+		this.logger.error(event.getText().lines().toString());
+		if ( GrubsWirelessRedstone.isValidNode( event.getText().lines().get() ) ) {
+			this.logger.error("TODO: add node");
+			//this.controllerRef.addNode(event.getBlock(), event.getLines());
+		}
+	}
+
+	@Listener
+	public void onBlockBreak(ChangeBlockEvent.Break event) {
 		for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
 			BlockSnapshot original = transaction.getOriginal();
 			BlockState block = original.getState();
@@ -44,38 +60,6 @@ public class WirelessRedstoneEventListeners extends AbstractGrubsEventListeners 
 	}
 
 	@Listener
-	public void onBlockRedstoneChange(ChangeBlockEvent event) {
-		/*
-		if (! event.getCause().containsType(Player.class)) {
-			return;
-		}
-		event.getTransactions().stream()
-			.forEach(transaction -> {
-				this.logger.error(transaction.getOriginal().getState().toString());
-				this.logger.error(transaction.getOriginal().getApplicableProperties().toString());
-				this.logger.error(transaction.getOriginal().getManipulators().toString());
-			});
-		/*
-		if (event.getBlock().getState() instanceof Sign) {
-			Sign signObj = (Sign)event.getBlock().getState();
-			if (GrubsWirelessRedstone.isValidNode(signObj.getLines())) {
-				if (GrubsWirelessRedstone.isTransmitter(signObj.getLine(0))) {
-					boolean poweredOn = (event.getBlock().isBlockPowered() || event.getBlock().isBlockIndirectlyPowered());
-					this.controllerRef.powerChanged(signObj, poweredOn);
-				}
-			}
-		}
-		*/
-	}
-/*
-	@Listener
-	public void onSignChange(ChangeBlockEvent.Modify event) {
-		if (GrubsWirelessRedstone.isValidNode(event.getLines())) {
-			this.controllerRef.addNode(event.getBlock(), event.getLines());
-		}
-	}
-*/
-	@Listener
 	public void onBlockPhysics(ChangeBlockEvent.Place event) {
 		event.getTransactions().stream()
 			.filter(transaction -> {
@@ -91,6 +75,24 @@ public class WirelessRedstoneEventListeners extends AbstractGrubsEventListeners 
 					//this.controllerRef.checkChannelsForPhysicsUpdates(event.getBlock());
 				}
 			});
+	}
+
+	@Listener
+	public void onNeighborNotify(NotifyNeighborBlockEvent event) {
+		if (! event.getCause().containsType(BlockSnapshot.class)) {
+			return;
+		}
+
+		BlockSnapshot source = event.getCause().first(BlockSnapshot.class).get();
+		if (source.supports(Keys.SIGN_LINES)) {
+			if ( GrubsWirelessRedstone.isValidNode( source.get(Keys.SIGN_LINES).get() ) ) {
+				PoweredProperty powered = source.getLocation().get().getProperty(PoweredProperty.class).orElse(null);
+				if (powered != null) {
+					this.logger.error(source.getState().toString() + " powered? " + powered.getValue().toString());
+					//this.controllerRef.powerChanged(signObj, poweredOn);
+				}
+			}
+		}
 	}
 
 	@Listener

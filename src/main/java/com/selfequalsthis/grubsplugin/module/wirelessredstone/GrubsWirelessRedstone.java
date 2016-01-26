@@ -55,11 +55,11 @@ public class GrubsWirelessRedstone {
 	public static boolean isReceiver(String text) {
 		return (text.equalsIgnoreCase(RECEIVER_TEXT) || text.equalsIgnoreCase(RECEIVER_INVERTED_TEXT));
 	}
-/*
+
 	public static boolean isReceiverInverted(String text) {
 		return text.equalsIgnoreCase(RECEIVER_INVERTED_TEXT);
 	}
-*/
+
 	public static boolean hasValidChannel(String text) {
 		return (text.length() > 0);
 	}
