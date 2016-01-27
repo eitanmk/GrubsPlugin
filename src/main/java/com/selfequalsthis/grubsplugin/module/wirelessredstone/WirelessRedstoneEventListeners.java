@@ -1,5 +1,7 @@
 package com.selfequalsthis.grubsplugin.module.wirelessredstone;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockState;
@@ -13,17 +15,19 @@ import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.selfequalsthis.grubsplugin.event.AbstractGrubsEventListeners;
 
 public class WirelessRedstoneEventListeners extends AbstractGrubsEventListeners {
 
-	//private GrubsWirelessRedstone controllerRef;
+	private GrubsWirelessRedstone controllerRef;
 	private Logger logger;
 
 	public WirelessRedstoneEventListeners(GrubsWirelessRedstone controller, Logger logger) {
-		//this.controllerRef = controller;
+		this.controllerRef = controller;
 		this.logger = logger;
 	}
 
@@ -33,10 +37,8 @@ public class WirelessRedstoneEventListeners extends AbstractGrubsEventListeners 
 			return;
 		}
 
-		this.logger.error(event.getText().lines().toString());
 		if ( GrubsWirelessRedstone.isValidNode( event.getText().lines().get() ) ) {
-			this.logger.error("TODO: add node");
-			//this.controllerRef.addNode(event.getBlock(), event.getLines());
+			this.controllerRef.addNode(event.getTargetTile().getLocation(), event.getText().lines().get());
 		}
 	}
 
@@ -45,16 +47,16 @@ public class WirelessRedstoneEventListeners extends AbstractGrubsEventListeners 
 		for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
 			BlockSnapshot original = transaction.getOriginal();
 			BlockState block = original.getState();
+			Location<World> location = original.getLocation().get();
 
 			if (original.supports(Keys.SIGN_LINES)) {
-				if ( GrubsWirelessRedstone.isValidNode( transaction.getOriginal().get(Keys.SIGN_LINES).get() ) ) {
-					this.logger.error("TODO: remove node from channel");
-					//this.controllerRef.removeNode(signObj);
+				List<Text> lines = original.get(Keys.SIGN_LINES).get();
+				if ( GrubsWirelessRedstone.isValidNode(lines) ) {
+					this.controllerRef.removeNode(location, lines);
 				}
 			}
 			else if (block.getType() == BlockTypes.REDSTONE_TORCH) {
-				this.logger.error("TODO: remove receiver on any channel by location");
-				//this.controllerRef.removeReceiverOnAnyChannel(event.getBlock());
+				this.controllerRef.removeReceiverOnAnyChannel(location);
 			}
 		}
 	}
@@ -71,8 +73,7 @@ public class WirelessRedstoneEventListeners extends AbstractGrubsEventListeners 
 				BlockSnapshot original = transaction.getOriginal();
 				BlockSnapshot outcome = transaction.getFinal();
 				if (original.getState().getType() != outcome.getState().getType()) {
-					this.logger.error("TODO: check channels for physics updates");
-					//this.controllerRef.checkChannelsForPhysicsUpdates(event.getBlock());
+					this.controllerRef.checkChannelsForPhysicsUpdates(original.getLocation().get());
 				}
 			});
 	}
@@ -85,11 +86,12 @@ public class WirelessRedstoneEventListeners extends AbstractGrubsEventListeners 
 
 		BlockSnapshot source = event.getCause().first(BlockSnapshot.class).get();
 		if (source.supports(Keys.SIGN_LINES)) {
+			Location<World> location = source.getLocation().get();
+			List<Text> lines = source.get(Keys.SIGN_LINES).get();
 			if ( GrubsWirelessRedstone.isValidNode( source.get(Keys.SIGN_LINES).get() ) ) {
-				PoweredProperty powered = source.getLocation().get().getProperty(PoweredProperty.class).orElse(null);
+				PoweredProperty powered = location.getProperty(PoweredProperty.class).orElse(null);
 				if (powered != null) {
-					this.logger.error(source.getState().toString() + " powered? " + powered.getValue().toString());
-					//this.controllerRef.powerChanged(signObj, poweredOn);
+					this.controllerRef.powerChanged(location, lines, powered.getValue());
 				}
 			}
 		}
@@ -102,8 +104,7 @@ public class WirelessRedstoneEventListeners extends AbstractGrubsEventListeners 
 
 		// before this player logs out, so there is still 1 in world
 		if (numPlayers == 1) {
-			this.logger.error("TODO: save WR channels when last player logs out");
-			//this.controllerRef.saveChannels();
+			this.controllerRef.saveChannels();
 		}
 	}
 

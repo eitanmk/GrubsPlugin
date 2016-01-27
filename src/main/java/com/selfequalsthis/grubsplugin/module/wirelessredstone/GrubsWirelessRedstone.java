@@ -10,20 +10,19 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 public class GrubsWirelessRedstone {
-
-	protected final Logger log = Logger.getLogger("Minecraft");
 
 	private WirelessRedstoneModule moduleRef;
 
 	public static String TRANSMITTER_TEXT = "[WRt]";
 	public static String RECEIVER_TEXT = "[WRr]";
 	public static String RECEIVER_INVERTED_TEXT = "[WRri]";
-	/*
+
 	private HashMap<String,Channel> channels = new HashMap<String,Channel>();
 
 	public GrubsWirelessRedstone(WirelessRedstoneModule module) {
@@ -31,15 +30,12 @@ public class GrubsWirelessRedstone {
 	}
 
 	public void init() {
-
 		File dataFile = this.moduleRef.getDataFile();
 		if (dataFile != null) {
 			this.moduleRef.log("Loading Wireless Redstone channels.");
 			this.loadChannels();
 			this.moduleRef.log("Loaded " + channels.size() + " channels.");
 		}
-
-
 	}
 
 	public void shutdown() {
@@ -47,7 +43,7 @@ public class GrubsWirelessRedstone {
 		this.saveChannels();
 		this.moduleRef.log("Saved " + channels.size() + " channels.");
 	}
-*/
+
 	public static boolean isTransmitter(String text) {
 		return text.equalsIgnoreCase(TRANSMITTER_TEXT);
 	}
@@ -75,13 +71,13 @@ public class GrubsWirelessRedstone {
 
 		return true;
 	}
-/*
-	public void addNode(Block block, String[] lines) {
+
+	public void addNode(Location<World> location, List<Text> lines) {
 		if (!isValidNode(lines)) {
 			return;
 		}
 
-		String channelName = lines[1];
+		String channelName = lines.get(1).toPlain();
 		Channel channelObj = null;
 		if (channels.containsKey(channelName)) {
 			this.moduleRef.log("Found channel " + channelName);
@@ -93,31 +89,32 @@ public class GrubsWirelessRedstone {
 			channels.put(channelName, channelObj);
 		}
 
-		if (isTransmitter(lines[0])) {
+		if (isTransmitter(lines.get(0).toPlain())) {
 			this.moduleRef.log("Adding as transmitter");
-			channelObj.addTransmitter(block);
+			channelObj.addTransmitter(location);
 		}
-		else if (isReceiver(lines[0])) {
+		else if (isReceiver(lines.get(0).toPlain())) {
 			this.moduleRef.log("Adding as receiver");
-			channelObj.addReceiver(block, isReceiverInverted(lines[0]));
+			channelObj.addReceiver(location, isReceiverInverted(lines.get(0).toPlain()));
 		}
+		this.moduleRef.log(channelObj.toString());
 
 		this.saveChannels();
 	}
 
-	public void removeNode(Sign sign) {
-		String channelName = sign.getLine(1);
+	public void removeNode(Location<World> location, List<Text> lines) {
+		String channelName = lines.get(1).toPlain();
 
 		if (channels.containsKey(channelName)) {
 			Channel curChannel = channels.get(channelName);
 
-			if (isTransmitter(sign.getLine(0))) {
+			if (isTransmitter(lines.get(0).toPlain())) {
 				this.moduleRef.log("Removing transmitter on channel " + channelName);
-				curChannel.removeTransmitterAt(sign.getBlock().getLocation());
+				curChannel.removeTransmitterAt(location);
 			}
-			else if (isReceiver(sign.getLine(0))) {
+			else if (isReceiver(lines.get(0).toPlain())) {
 				this.moduleRef.log("Removing receiver on channel " + channelName);
-				curChannel.removeReceiverAt(sign.getBlock().getLocation());
+				curChannel.removeReceiverAt(location);
 			}
 
 			if (curChannel.isEmpty()) {
@@ -129,19 +126,19 @@ public class GrubsWirelessRedstone {
 		}
 	}
 
-	public void powerChanged(Sign sign, boolean poweredOn) {
-		Channel curChannel = channels.get(sign.getLine(1));
+	public void powerChanged(Location<World> location, List<Text> lines, boolean poweredOn) {
+		Channel curChannel = channels.get(lines.get(1).toPlain());
 		if (curChannel != null) {
 			if (poweredOn) {
-				curChannel.handlePowerChangedOn(sign.getBlock());
+				curChannel.handlePowerChangedOn(location);
 			}
 			else {
-				curChannel.handlePowerChangedOff(sign.getBlock());
+				curChannel.handlePowerChangedOff(location);
 			}
 		}
 	}
 
-	public void loadChannels() {
+	public void loadChannels() {/*
 		File dataFile = this.moduleRef.getDataFile();
 		if (dataFile == null) {
 			this.moduleRef.log("Error with data file. Nothing can be loaded!");
@@ -178,9 +175,9 @@ public class GrubsWirelessRedstone {
 				}
 			}
 		}
-	}
+	*/}
 
-	public void saveChannels() {
+	public void saveChannels() {/*
 		File dataFile = this.moduleRef.getDataFile();
 		if (dataFile == null) {
 			this.moduleRef.log("Error with data file. Nothing will be saved!");
@@ -202,20 +199,20 @@ public class GrubsWirelessRedstone {
 			this.moduleRef.log("Error writing Wireless Redstone channels file!");
 			ex.printStackTrace();
 		}
-	}
+	*/}
 
-	public void removeReceiverOnAnyChannel(Block block) {
+	public void removeReceiverOnAnyChannel(Location<World> location) {
 		for (Channel channel : channels.values()) {
-			channel.removeReceiverAt(block.getLocation());
+			channel.removeReceiverAt(location);
 		}
 	}
 
-	public void checkChannelsForPhysicsUpdates(Block block) {
+	public void checkChannelsForPhysicsUpdates(Location<World> location) {
 		boolean removedNode = false;
 		Channel affectedChannel = null;
 
 		for (Channel channel : channels.values()) {
-			removedNode = channel.handlePhysicsChange(block);
+			removedNode = channel.handlePhysicsChange(location);
 			if (removedNode) {
 				affectedChannel = channel;
 				break;
@@ -236,15 +233,15 @@ public class GrubsWirelessRedstone {
 		Iterator<Channel> channelIterator = channels.values().iterator();
 		while (channelIterator.hasNext()) {
 			Channel channel = channelIterator.next();
-			log.info(channel.toString());
+			this.moduleRef.log(channel.toString());
 			channel.cleanup(world);
 			if (channel.isEmpty()) {
-				log.info("Deleting empty channel");
+				this.moduleRef.log("Deleting empty channel");
 				channelIterator.remove();
 			}
 		}
 
 		this.saveChannels();
 	}
-	*/
+
 }
